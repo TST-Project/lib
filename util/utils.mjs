@@ -37,10 +37,10 @@ const util = {
         }
         else {
             const subtype = el.getAttribute('subtype') || '';
-            milestone = el.querySelector('locus')?.textContent : '';
+            milestone = el.querySelector('locus')?.textContent || '';
             placement = subtype.replace(/\s/g,', ').replace(/-/g,' ');
             synch = el.getAttribute('synch');
-            inner = el.querySelector('q,quote')?.innerHTML : '';
+            inner = el.querySelector('q,quote')?.innerHTML || '';
         }
         return {inner: inner, synch: synch, milestone: milestone, placement: placement};
     },
