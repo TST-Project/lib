@@ -427,7 +427,7 @@
 <xsl:template match="x:lb">
     <xsl:element name="span">
         <xsl:attribute name="class">
-            <xsl:text>lb</xsl:text>
+            <xsl:text>lb diplo</xsl:text>
             <xsl:if test="not(@n)"><xsl:text> unnumbered</xsl:text></xsl:if>
         </xsl:attribute>
         <xsl:attribute name="lang">en</xsl:attribute>
@@ -495,7 +495,7 @@
 
 <xsl:template match="x:pb">
 <xsl:element name="span">
-    <xsl:attribute name="class">pb</xsl:attribute>
+    <xsl:attribute name="class">pb diplo</xsl:attribute>
     <xsl:attribute name="lang">en</xsl:attribute>
     <xsl:variable name="facs" select="@facs"/>
     <xsl:variable name="unit" select="//x:extent/x:measure/@unit"/>
