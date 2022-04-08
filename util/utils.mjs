@@ -26,7 +26,11 @@ const util = {
         if(el.nodeName === 'seg') {
             milestone = util.milestone(el);
             placement = util.placement(el) || '';
-            synch = el.closest('text').getAttribute('synch');
+            const text = el.closest('text');
+            const desc = el.closest('desc');
+            synch = text ? text.getAttribute('synch') :
+                        desc ? desc.getAttribute('synch') :
+                            '';
             inner = el.innerHTML;
         }
         else {
