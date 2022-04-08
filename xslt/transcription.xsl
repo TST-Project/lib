@@ -372,7 +372,7 @@
     <xsl:variable name="unit" select="@unit"/>
     <xsl:element name="span">
         <xsl:attribute name="class">
-            <xsl:text>milestone</xsl:text>
+            <xsl:text>milestone diplo</xsl:text>
             <xsl:if test="$unit = 'folio' or $unit = 'page'">
                 <xsl:text> biggap</xsl:text>
             </xsl:if>
@@ -462,7 +462,7 @@
 
 <xsl:template match="x:cb">
     <xsl:element name="span">
-        <xsl:attribute name="class">cb</xsl:attribute>
+        <xsl:attribute name="class">cb diplo</xsl:attribute>
         <xsl:attribute name="lang">en</xsl:attribute>
         <xsl:choose>
             <xsl:when test="@break = 'no'">
