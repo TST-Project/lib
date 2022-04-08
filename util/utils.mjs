@@ -24,8 +24,10 @@ const util = {
     innertext: el => {
         var synch, inner, milestone, placement;
         if(el.nodeName === 'seg') {
-            milestone = util.milestone(el) || el.closest('desc')?.querySelector('locus') || '';
-            placement = util.placement(el) || el.closest('desc')?.getAttribute('subtype') || '';
+            milestone = util.milestone(el) || 
+                el.closest('desc')?.querySelector('locus')?.textContent || '';
+            placement = util.placement(el) || 
+                el.closest('desc')?.getAttribute('subtype') || '';
             const text = el.closest('text');
             const desc = el.closest('desc');
             synch = text ? text.getAttribute('synch') :
@@ -34,13 +36,11 @@ const util = {
             inner = el.innerHTML;
         }
         else {
-            const loc = el.querySelector('locus');
             const subtype = el.getAttribute('subtype') || '';
-            milestone = loc ? loc.textContent : '';
+            milestone = el.querySelector('locus')?.textContent : '';
             placement = subtype.replace(/\s/g,', ').replace(/-/g,' ');
             synch = el.getAttribute('synch');
-            const q = el.querySelector('q,quote');
-            inner = q ? q.innerHTML : '';
+            inner = el.querySelector('q,quote')?.innerHTML : '';
         }
         return {inner: inner, synch: synch, milestone: milestone, placement: placement};
     },
