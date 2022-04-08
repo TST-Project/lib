@@ -24,8 +24,8 @@ const util = {
     innertext: el => {
         var synch, inner, milestone, placement;
         if(el.nodeName === 'seg') {
-            milestone = util.milestone(el);
-            placement = util.placement(el) || '';
+            milestone = util.milestone(el) || el.closest('desc')?.querySelector('locus') || '';
+            placement = util.placement(el) || el.closest('desc')?.getAttribute('subtype') || '';
             const text = el.closest('text');
             const desc = el.closest('desc');
             synch = text ? text.getAttribute('synch') :
