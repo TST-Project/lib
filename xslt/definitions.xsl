@@ -348,7 +348,7 @@
         <tst:entry key="chapter-heading">chapter heading</tst:entry>
         <tst:entry key="end-title">end title</tst:entry>
         <tst:entry key="foliation">foliation</tst:entry>
-        <tst:entry key="heading">heading</tst:entry>
+        <tst:entry key="header">header</tst:entry>
         <tst:entry key="intertitle">intertitle</tst:entry>
         <tst:entry key="register">register</tst:entry>
         <tst:entry key="stage-directions">stage directions</tst:entry>
