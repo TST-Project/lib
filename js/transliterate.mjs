@@ -152,15 +152,31 @@ const Transliterate = (function() {
         
         // hyphenate according to script (Tamil or Romanized)
         const lang = txtnode.parentNode.lang;
-        const hyphenlang = lang === 'ta-Taml' ? 'ta' :
-            lang === 'ta' ? 'ta-Latn' : 'sa';
-        const hyphenated = _state.hyphenator[hyphenlang].hyphenateText(txt);
-        _state.savedtext.set(txtnode,hyphenated);
-       
-        // convert Tamil to Roman
-        if(lang === 'ta-Taml')
-            return to.iast(hyphenated);
-        else return hyphenated;
+        const hyphenlang = ((lang) => {
+            switch(lang) {
+                case 'ta-Taml':
+                    return 'ta';
+                case 'ta':
+                    return 'ta-Latn';
+                case 'sa':
+                    return 'sa';
+                default:
+                    return null;
+            }
+        })(lang);
+
+        if(hyphenlang) {
+            const hyphenated = _state.hyphenator[hyphenlang].hyphenateText(txt);
+            _state.savedtext.set(txtnode,hyphenated);
+            // convert Tamil to Roman
+            if(lang === 'ta-Taml')
+                return to.iast(hyphenated);
+            else return hyphenated;
+        }
+        else {
+            _state.savedtext.set(txtnode,txt);
+            return txt;
+        }
     };
     
     const textWalk = function(func,langcode) {
