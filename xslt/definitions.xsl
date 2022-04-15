@@ -112,6 +112,7 @@
         <tst:entry key="#tamilPulliSporadic">sporadic <x:foreign xml:lang="ta">puḷḷi</x:foreign></tst:entry>
         <tst:entry key="#tamilPulliRegular">regular <x:foreign xml:lang="ta">puḷḷi</x:foreign></tst:entry>
         <tst:entry key="#tamilRa">closed <x:foreign xml:lang="ta">kāl</x:foreign>/modern <x:foreign xml:lang="ta">ra</x:foreign></tst:entry>
+        <tst:entry key="#tamilPreReform">pre-reform ligatures</tst:entry>
         <tst:entry key="#tamilMacron">disambiguating macron (-a vocalisation)</tst:entry>
         <tst:entry key="#tamilOE">long <x:foreign xml:lang="ta">ō/ē</x:foreign> (double-curled <x:foreign xml:lang="ta">kompu</x:foreign>)</tst:entry>
     </tst:group>
