@@ -340,7 +340,8 @@ const Transliterate = (function() {
             //    .toLowerCase()
             const smushed = to.smush(txt,'',true)
                 .replace(/e/g,'ē')
-                .replace(/o/g,'ō')
+                .replace(/o(?![ṁḿ])/g,'ō')
+                .replace(/ḿ/g,'ṁ') // no Jaina oṃkāra
                 .replace(/(\S)·/g,'$1\u200C');
                 //.replace(/ḷ/g,'l̥');
             return Sanscript.t(smushed,'iast','grantha');
