@@ -238,8 +238,9 @@ span.editor {font-size: 0.8rem;
 }
 
 span.note {
-          vertical-align: -20%;
-          font-size:80%;
+          /*vertical-align: -20%;
+          font-size:80%;*/
+          font-variant: sub;
 }
 span.note.inline {
     margin-left: 0;
