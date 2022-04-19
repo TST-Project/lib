@@ -476,12 +476,12 @@
     </tr>
 </xsl:template>
 
-<xsl:template match="x:msItem//x:note">
+<!--xsl:template match="x:msItem//x:note">
     <xsl:element name="p">
         <xsl:call-template name="lang"/>
         <xsl:apply-templates/>
     </xsl:element>
-</xsl:template>
+</xsl:template-->
 
 <xsl:template match="x:filiation">
     <tr>
