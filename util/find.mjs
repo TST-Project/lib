@@ -96,6 +96,7 @@ const find = {
         const names = new Map([
             ['Bibliothèque nationale de France. Département des Manuscrits','BnF'],
             ['Bibliothèque nationale de France. Département des Manuscrits.','BnF'],
+            ['Biblioteca Apostolica Vaticana','Vatican'],
             ['Bibliothèque nationale et universitaire de Strasbourg','Bnu Strasbourg'],
             ['Staats- und UniversitätsBibliothek Hamburg Carl von Ossietzky','Hamburg Stabi'],
             ['Bodleian Library, University of Oxford','Oxford'],
