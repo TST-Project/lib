@@ -23,12 +23,15 @@ const TSTViewer = (function() {
         const viewer = document.getElementById('viewer');
         if(viewer) {
             _state.manifest = viewer.dataset.manifest;
+            const param = (new URLSearchParams(window.location.search)).get('page');
+            const page = param ? parseInt(param) - 1 : null;
             if(_state.mirador)
-                refreshMirador(_state.mirador,viewer.dataset.manifest,viewer.dataset.start);
+                refreshMirador(_state.mirador,viewer.dataset.manifest, page || viewer.dataset.start);
             else
-                _state.mirador = newMirador('viewer',viewer.dataset.manifest,viewer.dataset.start);
+                _state.mirador = newMirador('viewer',viewer.dataset.manifest,page || viewer.dataset.start);
         }        
         
+
         // initialize events for the record text
         const recordcontainer = document.getElementById('recordcontainer');
 
