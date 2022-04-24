@@ -116,20 +116,22 @@
         <tst:entry key="#tamilMacron">disambiguating macron (-a vocalisation)</tst:entry>
         <tst:entry key="#tamilOE">long <x:foreign xml:lang="ta">ō/ē</x:foreign> (double-curled <x:foreign xml:lang="ta">kompu</x:foreign>)</tst:entry>
     </tst:group>
-    <tst:group label="Devanāgarī">
-        <tst:entry key="#prsthamatra"><x:foreign xml:lang="sa">pṛṣṭhamātrā</x:foreign></tst:entry>
-        <tst:entry key="#vaba"><x:foreign xml:lang="sa">ba</x:foreign> not distinguished</tst:entry>
-        <tst:entry key="#sthascha"><x:foreign xml:lang="sa">stha</x:foreign> written as <x:foreign xml:lang="sa">scha</x:foreign></tst:entry>
-    </tst:group>
     <tst:group label="Bengali">
         <tst:entry key="#bengaliRaBarBelow"><x:foreign xml:lang="sa">ra</x:foreign> with bar below</tst:entry>
         <tst:entry key="#bengaliRaCrossbar"><x:foreign xml:lang="sa">ra</x:foreign> with cross-bar</tst:entry>
         <tst:entry key="#bengaliRa"><x:foreign xml:lang="sa">ra</x:foreign> with dot below</tst:entry>
         <tst:entry key="#bengaliYa"><x:foreign xml:lang="sa">ya</x:foreign> with dot below</tst:entry>
     </tst:group>
+    <tst:group label="Devanāgarī">
+        <tst:entry key="#prsthamatra"><x:foreign xml:lang="sa">pṛṣṭhamātrā</x:foreign></tst:entry>
+        <tst:entry key="#vaba"><x:foreign xml:lang="sa">ba</x:foreign> not distinguished</tst:entry>
+        <tst:entry key="#sthascha"><x:foreign xml:lang="sa">stha</x:foreign> written as <x:foreign xml:lang="sa">scha</x:foreign></tst:entry>
+    </tst:group>
+    <tst:group label="Malayalam">
+        <tst:entry key="#dotReph">dot reph</tst:entry>
+    </tst:group>
     <tst:group label="Telugu">
         <tst:entry key="#valapalagilaka">valapalagilaka</tst:entry>
-        <tst:entry key="#dotreph">dot reph</tst:entry>
     </tst:group>
 </tst:scriptRef>
 
