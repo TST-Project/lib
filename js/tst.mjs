@@ -47,8 +47,8 @@ const TSTViewer = (function() {
         recordcontainer.addEventListener('mouseover',events.docMouseover);
     };
 
-    const newMirador = function(id,manifest,start = 0,annoMap = _state.annoMap) {
-        const plugins = annoMap ?
+    const newMirador = function(id,manifest,start = 0,annoMap = _state.annoMap, annotate = false) {
+        const plugins = annotate ?
           [...miradorImageTools,...miradorAnnotations] :
           [...miradorImageTools];
         const opts = {
@@ -75,7 +75,7 @@ const TSTViewer = (function() {
                 enabled: false,
             },
         };
-        if(annoMap) 
+        if(annotate) 
             opts.annotation = {
                 adapter: (canvasId) => new TSTStorageAdapter(canvasId,annoMap),
                 exportLocalStorageAnnotations: false,
