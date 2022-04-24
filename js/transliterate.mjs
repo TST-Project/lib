@@ -10,7 +10,7 @@ const Transliterate = (function() {
     const _state = {
         curlang: 'en',
         availlangs: ['en'],
-        availsanscripts: ['bengali','grantha','telugu','newa','sarada','devanagari'],
+        availsanscripts: ['bengali','devanagari','grantha','malayalam','newa','sarada','telugu'],
         features: new Set(),
         langselector: '',
         otherlangs: ['ta','sa'],
@@ -237,6 +237,11 @@ const Transliterate = (function() {
             if(txtnode.parentNode.lang === 'sa')
                 return to.grantha(cached);
         },
+        'sa-malayalam': function(txtnode) {
+            const cached = getCached(txtnode);
+            if(txtnode.parentNode.lang === 'sa')
+                return to.malayalam(cached);
+        },
         'sa-telugu': function(txtnode) {
             const cached = getCached(txtnode);
             if(txtnode.parentNode.lang === 'sa')
@@ -345,6 +350,34 @@ const Transliterate = (function() {
                 .replace(/(\S)·/g,'$1\u200C');
                 //.replace(/ḷ/g,'l̥');
             return Sanscript.t(smushed,'iast','grantha');
+        },
+        malayalam: function(txt) {
+            const chillu = {
+                'ക':'ൿ',
+                'ത':'ൽ',
+                'ന':'ൻ',
+                'മ':'ൔ',
+                'ര':'ർ',
+            };
+
+            const smushed = to.smush(txt,'',true)
+                .replace(/(^|\s)_ā/,'$1\u0D3D\u200D\u0D3E')
+                //.replace(/(^|\s)_r/,"$1\u0D3D\u200D\u0D30\u0D4D");
+                //FIXME (replaced by chillu r right now)
+                .replace(/(\S)·/g,'$1\u200C');
+            
+            const newtxt = Sanscript.t(smushed,'iast','malayalam')
+                // use chillu final consonants	
+                .replace(/([കതനമര])്(?![^\s\u200C,—’―])/g, function(match,p1) {
+                    return chillu[p1];
+                });
+	
+            const replacedtxt = _state.features.has('dotReph') ?
+                // use dot reph
+                newtxt.replace(/(^|[^്])ര്(?=\S)/g,'$1ൎ') :
+                newtxt;
+            
+            return replacedtxt;
         },
         
         devanagari: function(txt,placeholder) {

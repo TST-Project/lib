@@ -13,19 +13,18 @@
     font-weight: bold;
 }
 
-/*
 @font-face {
     font-family: 'PedanticMalayalam';
-    src: url('fonts/PedanticMalayalam.woff');
+    src: url('../fonts/PedanticMalayalam.woff');
     unicode-range: ~"U+0D00-0D7F, U+25CC";
 }
 
 @font-face {
     font-family: 'PedanticMalayalam';
-    src: url('fonts/PedanticMalayalamBold.woff');
+    src: url('../fonts/PedanticMalayalamBold.woff');
     unicode-range: ~"U+0D00-0D7F, U+25CC";
     font-weight: bold;
-} */
+}
 
 @font-face {
     font-family: 'PedanticTelugu';
@@ -151,6 +150,6 @@
 }
 
 body {
-    font-family: Brill, et-book, "Noto Serif Tamil", "TST Grantha", "Bangla", "PedanticDevanagari", "PedanticTelugu", "Noto Sans Newa", "Satisar Sharada", Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+    font-family: Brill, et-book, "Noto Serif Tamil", "TST Grantha", "Bangla", "PedanticDevanagari", "PedanticMalayalam", "PedanticTelugu", "Noto Sans Newa", "Satisar Sharada", Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
     hyphens: auto;
 }
