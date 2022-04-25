@@ -355,17 +355,22 @@
                 </xsl:choose>
             </xsl:attribute>
             <xsl:variable name="txt" select="$TST//tst:entities/tst:entry[@key=$ref]"/>
-            <xsl:if test="$txt">
-                <xsl:choose>
-                    <xsl:when test="not(node())">
-                        <xsl:value-of select="$txt"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:attribute name="data-glyph"><xsl:value-of select="$txt"/></xsl:attribute>
-                    </xsl:otherwise>
-                </xsl:choose>
-            </xsl:if>
-            <xsl:apply-templates/>
+            <xsl:choose>
+                <xsl:when test="$txt">
+                    <xsl:choose>
+                        <xsl:when test="not(node())">
+                            <xsl:value-of select="$txt"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:attribute name="data-glyph"><xsl:value-of select="$txt"/></xsl:attribute>
+                            <xsl:text>[</xsl:text><xsl:apply-templates/><xsl:text>]</xsl:text>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:apply-templates/>
+                </xsl:otherwise>
+            </xsl:choose>
         </xsl:element>
 </xsl:template>
 <xsl:template match="x:milestone">

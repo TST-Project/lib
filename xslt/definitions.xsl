@@ -193,7 +193,7 @@
     <tst:entry key="#ya=m">&#xBAF;&#xBAE;&#xBCD;</tst:entry>
     <tst:entry key="#teti">&#x0BF3;</tst:entry>
     <tst:entry key="#maatham">௴</tst:entry>
-    <tst:entry key="#varudam">௵</tst:entry>
+    <tst:entry key="#varuṣam">௵</tst:entry>
     <tst:entry key="#patru">௶</tst:entry>
     <tst:entry key="#eduppu">௷</tst:entry>
     <tst:entry key="#merpadi">௸</tst:entry>
@@ -284,7 +284,7 @@
     <tst:entry key="#ya=m">yam ligature</tst:entry>
     <tst:entry key="#teti">tēti</tst:entry>
     <tst:entry key="#maatham">mācam</tst:entry>
-    <tst:entry key="#varudam">varuṣam</tst:entry>
+    <tst:entry key="#varuṣam">varuṣam</tst:entry>
     <tst:entry key="#patru">debit</tst:entry>
     <tst:entry key="#eduppu">credit</tst:entry>
     <tst:entry key="#merpadi">as above</tst:entry>
