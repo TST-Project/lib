@@ -207,7 +207,8 @@ const Transliterate = (function() {
         while(curnode) {
             const code = curnode.parentNode.lang.replace(/-\w+$/,'');
             if(_state.otherlangs.includes(code)) {
-                const result = curnode.parentElement.dataset.hasOwnProperty('glyph') ? 
+                const result = ( func !== walkers.roman && 
+                    curnode.parentElement.dataset.hasOwnProperty('glyph') ) ? 
                     curnode.parentElement.dataset.glyph : func(curnode);
                 if(result !== undefined) curnode.data = result;
             }
@@ -265,7 +266,8 @@ const Transliterate = (function() {
 
         roman: function(txtnode) {
             if(_state.otherlangs.includes(txtnode.parentNode.lang))
-                return _state.savedtext.get(txtnode);
+                //return _state.savedtext.get(txtnode);
+                return getCached(txtnode);
             else if(txtnode.parentNode.lang === 'ta-Taml')
                 return to.iast(txtnode.data);
         },
