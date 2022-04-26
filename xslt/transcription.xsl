@@ -55,6 +55,10 @@
     <xsl:apply-templates/>
 </xsl:template>
 
+<xsl:template match="x:body/x:ab">
+    <xsl:apply-templates/>
+</xsl:template>
+
 <!-- transcription styling -->
 
 <xsl:template match="x:del">
