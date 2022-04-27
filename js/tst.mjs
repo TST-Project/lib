@@ -64,6 +64,7 @@ const TSTViewer = (function() {
                 allowFullscreen: false,
                 allowMaximize: false,
                 defaultSideBarPanel: 'annotations',
+                hightlightAllAnnotations: true,
                 sideBarOpenByDefault: false,
                 imageToolsEnabled: true,
                 imageToolsOpen: false,
@@ -85,11 +86,11 @@ const TSTViewer = (function() {
         viewer.store.dispatch(act);
             
         if(annoMap) annotateMirador(viewer,annoMap);
-        if(!annotate) {
+        /*if(!annotate) {
             const el = document.createElement('style');
             el.innerHTML = '[aria-label="Create new annotation"] { display: none !important;}';
             document.head.appendChild(el);
-        }
+        }*/
         return viewer;
     };
         
