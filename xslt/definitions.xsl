@@ -253,6 +253,8 @@
 
     <tst:entry key="#newa-gap-filler">&#x1144E;</tst:entry>
     <tst:entry key="#newa-old-gap-filler">&#x1144E;</tst:entry>
+
+    <tst:entry key="#latin_cross">✝</tst:entry>
 </tst:entities>
 
 <tst:entityclasses>
