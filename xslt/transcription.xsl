@@ -366,7 +366,7 @@
                 <xsl:when test="$txt">
                     <xsl:choose>
                         <xsl:when test="not(node())">
-                            <xsl:value-of select="$txt"/>
+                            <xsl:apply-templates select="$txt"/>
                         </xsl:when>
                         <xsl:otherwise>
                             <xsl:attribute name="data-glyph"><xsl:value-of select="$txt"/></xsl:attribute>

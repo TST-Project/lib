@@ -251,9 +251,9 @@
     <tst:entry key="#vakaiyaraa">𑿱</tst:entry>
     <tst:entry key="#end_of_text">𑿿</tst:entry>
     
-    <tst:entry key="#pattu">௰</tst:entry>
-    <tst:entry key="#nūṟu">௱</tst:entry>
-    <tst:entry key="#āyiram">௲</tst:entry>
+    <tst:entry key="#pattu"><x:term xml:lang="ta-Taml">௰</x:term></tst:entry>
+    <tst:entry key="#nūṟu"><x:term xml:lang="ta-Taml">௱</x:term></tst:entry>
+    <tst:entry key="#āyiram"><x:term xml:lang="ta-Taml">௲</x:term></tst:entry>
 
     <tst:entry key="#newa-gap-filler">&#x1144E;</tst:entry>
     <tst:entry key="#newa-old-gap-filler">&#x1144E;</tst:entry>
