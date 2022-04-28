@@ -191,12 +191,12 @@
     <tst:entry key="#kompu">&#x0B8E;</tst:entry>
     <tst:entry key="#nna=m">&#xBA3;&#xBAE;&#xBCD;</tst:entry>
     <tst:entry key="#ya=m">&#xBAF;&#xBAE;&#xBCD;</tst:entry>
-    <tst:entry key="#teti">&#x0BF3;</tst:entry>
-    <tst:entry key="#maatham">௴</tst:entry>
+    <tst:entry key="#tēti">&#x0BF3;</tst:entry>
+    <tst:entry key="#mācam">௴</tst:entry>
     <tst:entry key="#varuṣam">௵</tst:entry>
     <tst:entry key="#patru">௶</tst:entry>
     <tst:entry key="#eduppu">௷</tst:entry>
-    <tst:entry key="#merpadi">௸</tst:entry>
+    <tst:entry key="#mēṟpaṭi">௸</tst:entry>
     <tst:entry key="#rupai">௹</tst:entry>
     <tst:entry key="#niluvai">௺</tst:entry>
     <tst:entry key="#munthiri">𑿀</tst:entry>
@@ -250,6 +250,10 @@
     <tst:entry key="#muthaliya">𑿰</tst:entry>
     <tst:entry key="#vakaiyaraa">𑿱</tst:entry>
     <tst:entry key="#end_of_text">𑿿</tst:entry>
+    
+    <tst:entry key="#pattu">௰</tst:entry>
+    <tst:entry key="#nūṟu">௱</tst:entry>
+    <tst:entry key="#āyiram">௲</tst:entry>
 
     <tst:entry key="#newa-gap-filler">&#x1144E;</tst:entry>
     <tst:entry key="#newa-old-gap-filler">&#x1144E;</tst:entry>
@@ -284,12 +288,12 @@
     <tst:entry key="#kompu">kompu</tst:entry>
     <tst:entry key="#nna=m">ṇam ligature</tst:entry>
     <tst:entry key="#ya=m">yam ligature</tst:entry>
-    <tst:entry key="#teti">tēti</tst:entry>
-    <tst:entry key="#maatham">mācam</tst:entry>
+    <tst:entry key="#tēti">tēti</tst:entry>
+    <tst:entry key="#mācam">mācam</tst:entry>
     <tst:entry key="#varuṣam">varuṣam</tst:entry>
     <tst:entry key="#patru">debit</tst:entry>
     <tst:entry key="#eduppu">credit</tst:entry>
-    <tst:entry key="#merpadi">as above</tst:entry>
+    <tst:entry key="#mēṟpaṭi">as above</tst:entry>
     <tst:entry key="#rupai">rupee</tst:entry>
     <tst:entry key="#niluvai">balance</tst:entry>
     <tst:entry key="#munthiri">1/320</tst:entry>
@@ -343,8 +347,14 @@
     <tst:entry key="#vakaiyaraa">et cetera (of a kind)</tst:entry>
     <tst:entry key="#end_of_text">end of text</tst:entry>
 
+    <tst:entry key="#pattu">pattu</tst:entry>
+    <tst:entry key="#nūṟu">nūṟu</tst:entry>
+    <tst:entry key="#āyiram">āyiram</tst:entry>
+
     <tst:entry key="#newa-gap-filler">Newa gap filler</tst:entry>
     <tst:entry key="#newa-old-gap-filler">Newa old-style gap filler</tst:entry>
+
+    <tst:entry key="#latin_cross">latin cross</tst:entry>
 </tst:entitynames>
 
 <tst:additiontype>
