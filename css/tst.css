@@ -304,3 +304,7 @@ span.type {
     height: 1px;
     background-image: linear-gradient(to right, rgba(255,255,255,0),rgba(255,255,255,0.75),rgba(255,255,255,0));
 }
+
+blockquote {
+    margin-top: 0;
+}
