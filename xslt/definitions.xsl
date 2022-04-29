@@ -406,17 +406,18 @@
 </tst:additiontype>
 
 <tst:genres>
-    <tst:entry key="#cankam">Caṅkam</tst:entry>
-    <tst:entry key="#kilkkanakku">Kīḻkkaṇakku</tst:entry>
+    <tst:entry key="#ammanai">Ammāṉai</tst:entry>
     <tst:entry key="#illakkanam">Ilakkaṇam</tst:entry>
+    <tst:entry key="#katai">Katai</tst:entry>
     <tst:entry key="#kappiyam">Kāppiyam/epics</tst:entry>
+    <tst:entry key="#kilkkanakku">Kīḻkkaṇakku</tst:entry>
+    <tst:entry key="#cankam">Caṅkam</tst:entry>
+    <tst:entry key="#talapuranam">Talapurāṇam</tst:entry>
     <tst:entry key="#tirumurai">Tirumuṟai</tst:entry>
+    <tst:entry key="#nikantu">Nikaṇṭu</tst:entry>
+    <tst:entry key="#natakam">Nāṭakam</tst:entry>
     <tst:entry key="#pirapantam">Pirapantam</tst:entry>
     <tst:entry key="#puranam">Purāṇam</tst:entry>
-    <tst:entry key="#natakam">Nāṭakam</tst:entry>
-    <tst:entry key="#nikantu">Nikaṇṭu</tst:entry>
-    <tst:entry key="#talapuranam">Talapurāṇam</tst:entry>
-    <tst:entry key="#katai">Katai</tst:entry>
 </tst:genres>
 
 <tst:milestones>
