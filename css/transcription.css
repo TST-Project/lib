@@ -134,6 +134,7 @@ span.lb, span.cb {
     line-height: 1.5rem;
     letter-spacing: 0;
 }   
+
 .lb.diplo::after, .cb.diplo::after {
     content: "\a(" attr(data-n) ")";
 }
@@ -141,6 +142,7 @@ span.lb, span.cb {
 .lb.diplo.unnumbered::after {
     content: "\a␤";
 }
+
 
 .pb.diplo::after {
     content: "\a\a(" attr(data-n) ")";
@@ -157,6 +159,17 @@ span.lb, span.cb {
     line-height: inherit;
     vertical-align: 0;
 }
+
+/*
+.excerpt > .lb.diplo:first-child::after,
+.excerpt > .pb.diplo:first-child::after,
+.excerpt > .cb.diplo:first-child::after,
+blockquote > .lb.diplo:first-child::after,
+blockquote > .pb.diplo:first-child::after,
+blockquote > .cb.diplo:first-child::after {
+    content: "(" attr(data-n) ")";
+}
+*/
 
 .devanagari span.lb {
         font-size: 100%;
@@ -471,6 +484,11 @@ span.milestone.diplo[data-nobreak]::before {
 
 span.milestone.diplo.biggap::before {
     content: "\a\a"; 
+}
+
+.excerpt > span.milestone.diplo:first-child::before,
+blockquote > span.milestone.diplo:first-child::before {
+    content: "";
 }
 
 br.caesura.diplo {
