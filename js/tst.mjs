@@ -12,7 +12,7 @@ const TSTViewer = (function() {
     const _state = {
         manifest: null,
         winname: 'win1',
-        annoMap: null
+        annoMap: new Map()
     };
     
     //const Mirador = window.Mirador || null;
@@ -48,6 +48,7 @@ const TSTViewer = (function() {
     };
 
     const newMirador = function(id,manifest,start = 0,annoMap = _state.annoMap, annotate = false) {
+        _state.annoMap = annoMap;
         //const plugins = annotate ?
         //  [...miradorImageTools,...miradorAnnotations] :
         //  [...miradorImageTools];
@@ -64,7 +65,7 @@ const TSTViewer = (function() {
                 allowFullscreen: false,
                 allowMaximize: false,
                 defaultSideBarPanel: 'annotations',
-                hightlightAllAnnotations: true,
+                //highlightAllAnnotations: true,
                 sideBarOpenByDefault: false,
                 imageToolsEnabled: true,
                 imageToolsOpen: false,
@@ -80,7 +81,7 @@ const TSTViewer = (function() {
         opts.annotation = {
             adapter: (canvasId) => new TSTStorageAdapter(canvasId,annoMap),
             exportLocalStorageAnnotations: false,
-        };
+            };
         const viewer = Mirador.viewer(opts,plugins);
         const act = Mirador.actions.setWindowViewType(_state.winname,'single');
         viewer.store.dispatch(act);
@@ -101,8 +102,10 @@ const TSTViewer = (function() {
                 win.store.dispatch(act);
             }
         }
+        /*
         const act4 = Mirador.actions.toggleAnnotationDisplay(_state.winname);
         win.store.dispatch(act4);
+        */
     };
 
     const refreshMirador = function(win = _state.mirador,manifest,start,annoMap = null) {
@@ -220,10 +223,21 @@ const TSTViewer = (function() {
     };
 
     const jumpTo = function(n) {
+        const split = n.split(':');
+        const page = split[0];
         const manif = _state.mirador.store.getState().manifests[_state.manifest].json;
         // n-1 because f1 is image 0
-        const act = Mirador.actions.setCanvas(_state.winname,manif.sequences[0].canvases[n-1]['@id']);
+        const canvasid = manif.sequences[0].canvases[page-1]['@id'];
+        const act = Mirador.actions.setCanvas(_state.winname,canvasid);
         _state.mirador.store.dispatch(act);
+
+        if(split[1]) {
+            const annos = _state.annoMap.get(canvasid);
+            // n-1 because annotation 1 is indexed 0
+            const annoid = annos.items[split[1] - 1].id;
+            const act2 = Mirador.actions.selectAnnotation(_state.winname,annoid);
+            _state.mirador.store.dispatch(act2);
+        }
     };
     
     const jumpToId = function(win = _state.mirador,id) {

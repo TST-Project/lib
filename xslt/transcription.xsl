@@ -430,9 +430,18 @@
     <xsl:attribute name="data-loc">
         <xsl:value-of select="."/>
     </xsl:attribute>
+    <xsl:variable name="imgno" select="substring-before(.,':')"/>
     <xsl:attribute name="data-anno">
         <xsl:text>image </xsl:text>
-        <xsl:value-of select="."/>
+        <xsl:choose>
+            <xsl:when test="$imgno">
+                <xsl:value-of select="$imgno"/>
+                <xsl:text> annotation</xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="."/>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:attribute>
 </xsl:template>
 
