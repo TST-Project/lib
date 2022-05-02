@@ -2,7 +2,7 @@
                 xmlns:exsl="http://exslt.org/common"
                 xmlns:x="http://www.tei-c.org/ns/1.0"
                 xmlns:tst="https://github.com/tst-project"
-                exclude-result-prefixes="x tst">
+                exclude-result-prefixes="x tst exsl">
 
 <xsl:output method="html" encoding="UTF-8" omit-xml-declaration="yes"/>
 
@@ -951,7 +951,7 @@
     </xsl:element>
 </xsl:template>
 
-<xsl:template match="x:additions">
+<!--xsl:template match="x:additions">
   <xsl:if test="node()[not(self::text())]">
       <tr>
         <th>Paratexts</th>
@@ -962,7 +962,7 @@
         </td>
       </tr>
   </xsl:if>
-</xsl:template>
+</xsl:template-->
 
 <xsl:template match="x:msDesc/x:physDesc/x:additions">
   <xsl:variable name="ps" select="/x:TEI/x:text//x:seg[@function != 'rubric' and 

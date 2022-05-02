@@ -578,7 +578,8 @@
 </xsl:template>
 
 <xsl:template match="x:quote[@rend='block'] | x:q[@rend='block']">
-    <xsl:element name="blockquote">
+    <xsl:element name="span">
+        <xsl:attribute name="class">blockquote</xsl:attribute>
         <xsl:call-template name="lang"/>
         <xsl:apply-templates />
     </xsl:element>
