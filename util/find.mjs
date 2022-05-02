@@ -102,6 +102,7 @@ const find = {
             ['Bodleian Library, University of Oxford','Oxford'],
             ['Cambridge University Library','Cambridge'],
             ['Bibliothèque universitaire des langues et civilisations','BULAC'],
+            ['Shri Lal Bahadur Shastri National Sanskrit University','SLBSNS'],
             ['Private collection','private']
         ]);
         const repo = xmlDoc.querySelector('repository > orgName').textContent.replace(/\s+/g,' ');
