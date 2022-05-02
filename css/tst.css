@@ -308,3 +308,7 @@ span.type {
 blockquote {
     margin-top: 0;
 }
+
+p blockquote {
+    margin-top: 0.5em;
+}
