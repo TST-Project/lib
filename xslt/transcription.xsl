@@ -431,12 +431,14 @@
         <xsl:value-of select="."/>
     </xsl:attribute>
     <xsl:variable name="imgno" select="substring-before(.,':')"/>
+    <xsl:variable name="annono" select="substring-after(.,':')"/>
     <xsl:attribute name="data-anno">
         <xsl:text>image </xsl:text>
         <xsl:choose>
-            <xsl:when test="$imgno">
+            <xsl:when test="$annono">
                 <xsl:value-of select="$imgno"/>
-                <xsl:text> annotation</xsl:text>
+                <xsl:text>, annotation </xsl:text>
+                <xsl:value-of select="$annono"/>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:value-of select="."/>
