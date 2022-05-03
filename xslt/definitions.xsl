@@ -273,12 +273,13 @@
 
 <tst:entityrend>
     <tst:entry key="prereform">hlig</tst:entry>
-    <tst:entry key="m_ligature">hlig</tst:entry>
+    <tst:entry key="below-base">hlig</tst:entry>
     <tst:entry key="post-base">hlig</tst:entry>
 </tst:entityrend>
 <tst:rendnames>
     <tst:entry key="prereform">prereform</tst:entry>
-    <tst:entry key="m_ligature">final -m ligature</tst:entry>
+    <tst:entry key="below-base">below-base ligature</tst:entry>
+    <tst:entry key="post-base">post-base ligature</tst:entry>
 </tst:rendnames>
 
 <tst:entitynames>
