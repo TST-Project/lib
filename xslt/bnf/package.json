@@ -1,0 +1,19 @@
+{
+  "name": "tei-to-bnf",
+  "version": "1.0.0",
+  "description": "convert TST TEI to BNF EAD",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "js": "^0.1.0",
+    "saxon-js": "^2.3.0",
+    "xslt3": "^2.3.0",
+    "yargs": "^17.4.1"
+  },
+  "scripts": {
+    "xslt": "nodejs ./node_modules/xslt3/xslt3.js -t -xsl:tei-to-ead.xsl",
+    "compile": "nodejs ./node_modules/xslt3/xslt3.js -t -nogo -xsl:tei-to-ead.xsl -export:tei-to-ead.sef.json",
+    "convert": "nodejs convert.mjs",
+    "lint": "xmllint --encode utf-8 --dtdvalid ead.dtd --pretty 1"
+  }
+}
