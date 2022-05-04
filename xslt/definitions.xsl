@@ -430,6 +430,7 @@
 <tst:persroles>
     <tst:entry key="annotator">annotator</tst:entry>
     <tst:entry key="author">author</tst:entry>
+    <tst:entry key="binder">binder</tst:entry>
     <tst:entry key="collector">collector</tst:entry>
     <tst:entry key="commentator">commentator</tst:entry>
     <tst:entry key="commissioner">commissioner</tst:entry>
