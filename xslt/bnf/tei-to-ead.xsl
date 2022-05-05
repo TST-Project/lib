@@ -921,6 +921,7 @@
     <unitdate calendar="gregorian" era="ce">
         <xsl:if test="$date">
             <xsl:attribute name="normal"><xsl:value-of select="$date"/></xsl:attribute>
+            <xsl:value-of select="$date"/><xsl:text>. </xsl:text>
         </xsl:if>
         <xsl:apply-templates/>
     </unitdate>
