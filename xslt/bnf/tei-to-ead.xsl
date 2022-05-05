@@ -11,7 +11,7 @@
 <xsl:import href="ead-common.xsl"/>
 <xsl:import href="bnf.xsl"/>
 
-<xsl:output method="xml" encoding="UTF-8" omit-xml-declaration="yes" indent="yes"/>
+<xsl:output method="xml" encoding="UTF-8" omit-xml-declaration="no" indent="yes"/>
 
 <xsl:variable name="gallica">
     <xsl:variable name="url" select="//x:facsimile/x:graphic/@url"/>
@@ -43,7 +43,12 @@
             <filedesc>
                 <titlestmt>
                     <xsl:element name="titleproper">
-                        <xsl:value-of select="//x:idno[@type='shelfmark']"/>
+                        <xsl:variable name="sf" select="//x:idno[@type='shelfmark']"/>
+                        <xsl:value-of select="substring-before($sf,' ')"/>
+                        <xsl:text> </xsl:text>
+                        <num>
+                            <xsl:value-of select="substring-after($sf,' ')"/>
+                        </num>
                         <xsl:text>. </xsl:text>
                         <xsl:apply-templates select="//x:titleStmt/x:title"/>
                     </xsl:element>
@@ -63,9 +68,8 @@
             <did>
                 <unitid type="cote"><xsl:value-of select="//x:idno[@type='shelfmark']"/></unitid>
                 <xsl:apply-templates select="//x:idno[@type='alternate']/x:idno"/>
-                <unittitle>
-                        <title><xsl:apply-templates select="//x:titleStmt/x:title"/></title>
-                </unittitle>
+                <unittitle><xsl:apply-templates select="//x:titleStmt/x:title"/></unittitle>
+                <unittitle type="non-latin originel"/>
                 <langmaterial>Manuscript in <xsl:apply-templates select="//x:msItem[1]/x:textLang"/>.</langmaterial>
                 <xsl:apply-templates select="//x:origDate[1]"/>
                 <physdesc>
@@ -191,16 +195,16 @@
             <emph render="bold"><xsl:text>()</xsl:text></emph><xsl:text> indicates unclear text. </xsl:text>
         </xsl:if>
         <xsl:if test="//x:del">
-            <emph render="underline"><xsl:text>underlined text</xsl:text></emph><xsl:text> indicates deletions. </xsl:text>
+            <emph render="bold"><xsl:text>〚〛</xsl:text></emph><xsl:text> indicates deletions. </xsl:text>
         </xsl:if>
         <xsl:if test="//x:add">
-            <emph render="bold"><xsl:text>bold text</xsl:text></emph><xsl:text> indicates additions. </xsl:text>
+            <emph render="bold"><xsl:text>\/</xsl:text></emph><xsl:text> indicates additions. </xsl:text>
         </xsl:if>
         <xsl:if test="//x:sic">
             <emph render="bold">¿?</emph><xsl:text> indicates </xsl:text><emph render="italic"><xsl:text>sic erat scriptum</xsl:text></emph><xsl:text>. </xsl:text>
         </xsl:if>
         <xsl:if test="//x:supplied">
-            <emph render="bold"><xsl:text>[]</xsl:text></emph><xsl:text> indicates supplied text. </xsl:text>
+            <emph render="bold"><xsl:text>[]</xsl:text></emph><xsl:text> indicates text supplied or corrected by the cataloguer. </xsl:text>
         </xsl:if>
         <xsl:if test="//x:note">
             <emph render="bold"><xsl:text>{}</xsl:text></emph><xsl:text> indicates a note. </xsl:text>
@@ -446,7 +450,7 @@
     <emph render="bold">(</emph><xsl:apply-templates/><emph render="bold">)</emph>
 </xsl:template>
 <xsl:template match="x:add">
-    <emph render="bold"><xsl:apply-templates/></emph>
+    <emph render="bold"><xsl:text>\</xsl:text></emph><xsl:apply-templates/><emph render="bold"><xsl:text>/</xsl:text></emph>
 </xsl:template>
 
 <xsl:template match="x:gap">
@@ -517,7 +521,7 @@
     <xsl:apply-templates/>
     <emph render="bold"><xsl:text>?</xsl:text></emph>
 </xsl:template>
-<xsl:template match="x:supplied">
+<xsl:template match="x:supplied | x:corr">
     <emph render="bold"><xsl:text>[</xsl:text></emph>
     <xsl:apply-templates/>
     <emph render="bold"><xsl:text>]</xsl:text></emph>
@@ -764,7 +768,7 @@
 <xsl:template match="x:q | x:quote | x:title[@type='article']">
     <xsl:choose>
         <xsl:when test="@rend='block'">
-            <blockquote><xsl:apply-templates/></blockquote>
+            <blockquote><p><xsl:apply-templates/></p></blockquote>
         </xsl:when>
         <xsl:otherwise>
             <xsl:text>“</xsl:text><xsl:apply-templates/><xsl:text>”</xsl:text>
@@ -921,6 +925,11 @@
         <xsl:apply-templates/>
     </unitdate>
 </xsl:template>
+
+<xsl:template match="x:origDate//x:persName">
+    <xsl:apply-templates/>
+</xsl:template>
+
 <xsl:template match="x:textLang">
         <xsl:variable name="mainLang" select="@mainLang"/>
         <language>
@@ -987,14 +996,17 @@
     </xsl:element>
 </xsl:template>
 
-<xsl:template match="x:del">
-    <xsl:element name="emph">
-        <xsl:attribute name="render">underline</xsl:attribute>
-        <xsl:apply-templates/>
-    </xsl:element>
+<xsl:template match="x:subst | x:choice">
+    <xsl:apply-templates/>
 </xsl:template>
 
-<xsl:template match="x:placeName">
+<xsl:template match="x:del">
+    <emph render="bold"><xsl:text>〚</xsl:text></emph>
+    <xsl:apply-templates/>
+    <emph render="bold"><xsl:text>〛</xsl:text></emph>
+</xsl:template>
+
+<xsl:template match="x:placeName | x:geogName">
     <xsl:apply-templates/>
 </xsl:template>
 </xsl:stylesheet>
