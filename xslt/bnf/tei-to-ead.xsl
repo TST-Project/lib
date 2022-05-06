@@ -532,7 +532,25 @@
 </xsl:template>
 
 <xsl:template match="x:author">
-    <persname role="0070"><xsl:apply-templates/></persname>
+    <xsl:element name="persname">
+        <xsl:attribute name="role">0070</xsl:attribute>
+        <xsl:variable name="txt" select="text()"/>
+        <xsl:variable name="found" select="$personnames//x:person/x:persName[text() = $txt]"/>
+        <xsl:if test="$found">
+            <xsl:attribute name="source">BnF</xsl:attribute>
+            <xsl:variable name="parent" select="$found/parent::*"/>
+            <xsl:attribute name="normal">
+                <xsl:value-of select="$parent/x:persName[@type='standard']"/>
+            </xsl:attribute>
+            <xsl:variable name="key" select="$parent/x:idno[@type='BnF']"/>
+            <xsl:if test="$key">
+                <xsl:attribute name="authfilenumber">
+                    <xsl:value-of select="$key"/>
+                </xsl:attribute>
+            </xsl:if>
+        </xsl:if>
+        <xsl:apply-templates/>
+    </xsl:element>
 </xsl:template>
 
 <xsl:template match="x:msItem/x:title">
@@ -722,6 +740,7 @@
                     <xsl:attribute name="role"><xsl:value-of select="$role"/></xsl:attribute>
                 </xsl:if>
                 <xsl:if test="$found">
+                    <xsl:attribute name="source">BnF</xsl:attribute>
                     <xsl:variable name="parent" select="$found/parent::*"/>
                     <xsl:attribute name="normal">
                         <xsl:value-of select="$parent/x:persName[@type='standard']"/>
