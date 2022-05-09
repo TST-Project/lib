@@ -17,7 +17,7 @@ body {
     height: 100vh;
     }
 
-@media (width < 600px) {
+@media (max-width: 600px) {
     body {
         flex-direction: column;
     }
@@ -90,7 +90,7 @@ body {
     cursor: pointer;
 }
 
-@media (width < 800px) {
+@media (max-width: 800px) {
     #transbutton {
         left: -12.5%;
     }
