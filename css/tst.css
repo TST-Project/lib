@@ -317,3 +317,7 @@ p blockquote {
     display: block;
     margin: 0.5em;
 }
+
+a.uri {
+    word-break: break-word;
+}

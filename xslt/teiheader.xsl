@@ -165,6 +165,7 @@
 <xsl:template match="x:idno[@type='URI']">
     <tr><td colspan="2">
         <xsl:element name="a">
+            <xsl:attribute name="class">uri</xsl:attribute>
             <xsl:attribute name="href"><xsl:value-of select="."/></xsl:attribute>
             <xsl:apply-templates/>
         </xsl:element>
