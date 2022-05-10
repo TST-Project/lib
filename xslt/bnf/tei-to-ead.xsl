@@ -43,14 +43,14 @@
             <filedesc>
                 <titlestmt>
                     <xsl:element name="titleproper">
-                        <xsl:variable name="sf" select="//x:idno[@type='shelfmark']"/>
+                        <xsl:variable name="sf" select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msIdentifier/x:idno[@type='shelfmark']"/>
                         <xsl:value-of select="substring-before($sf,' ')"/>
                         <xsl:text> </xsl:text>
                         <num>
                             <xsl:value-of select="substring-after($sf,' ')"/>
                         </num>
                         <xsl:text>. </xsl:text>
-                        <xsl:apply-templates select="//x:titleStmt/x:title"/>
+                        <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:titleStmt/x:title"/>
                     </xsl:element>
                     <subtitle>Notice descriptive</subtitle>
                 </titlestmt>
@@ -72,7 +72,7 @@
 
 <xsl:template name="archdesc">
     <xsl:choose>
-        <xsl:when test=".//x:msItem/@source">
+        <xsl:when test="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msContents/x:msItem/@source">
             <xsl:attribute name="level">otherlevel</xsl:attribute>
             <xsl:attribute name="otherlevel">recueil</xsl:attribute>
         </xsl:when>
@@ -85,23 +85,22 @@
 
 <xsl:template name="didetc">
     <did>
-        <unitid type="cote"><xsl:value-of select=".//x:idno[@type='shelfmark']"/></unitid>
-        <xsl:apply-templates select=".//x:idno[@type='alternate']/x:idno"/>
-        <unittitle><xsl:apply-templates select=".//x:titleStmt/x:title"/></unittitle>
+        <unitid type="cote"><xsl:value-of select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msIdentifier/x:idno[@type='shelfmark']"/></unitid>
+        <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msIdentifier/x:idno[@type='alternate']/x:idno"/>
+        <unittitle><xsl:apply-templates select="x:teiHeader/x:fileDesc/x:titleStmt/x:title"/></unittitle>
         <unittitle type="non-latin originel"/>
-        <langmaterial>Manuscript in <xsl:apply-templates select=".//x:msItem[1]/x:textLang"/>.</langmaterial>
-        <xsl:apply-templates select=".//x:origDate[1]"/>
+        <langmaterial>Manuscript in <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msContents/x:msItem[1]/x:textLang"/>.</langmaterial>
+        <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:history/x:origin/x:origDate[1]"/>
         <physdesc>
-            <xsl:apply-templates select=".//x:origPlace"/>
-            <xsl:apply-templates select=".//x:handDesc"/>
-            <xsl:apply-templates select=".//x:typeDesc"/>
-            <xsl:apply-templates select=".//x:decoDesc"/>
-            <xsl:apply-templates select=".//x:typeDesc"/>
-            <xsl:apply-templates select=".//x:collation"/>
-            <xsl:apply-templates select=".//x:support"/>
-            <xsl:apply-templates select=".//x:extent"/>
-            <xsl:apply-templates select=".//x:layout"/>
-            <xsl:apply-templates select=".//x:binding"/>
+            <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:history/x:origin/x:origPlace"/>
+            <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:physDesc/x:handDesc"/>
+            <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:physDesc/x:typeDesc"/>
+            <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:physDesc/x:decoDesc"/>
+            <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:physDesc/x:objectDesc/x:supportDesc/x:collation"/>
+            <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:physDesc/x:objectDesc/x:supportDesc/x:support"/>
+            <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:physDesc/x:objectDesc/x:supportDesc/x:extent"/>
+            <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:physDesc/x:objectDesc/x:layoutDesc/x:layout"/>
+            <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:physDesc/x:objectDesc/x:bindingDesc/x:binding"/>
             <xsl:call-template name="stamps"/>
         </physdesc>
         <repository>
@@ -109,29 +108,29 @@
         </repository>
     </did>
     <scopecontent>
-        <xsl:apply-templates select=".//x:msContents/x:summary"/>                
+        <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msContents/x:summary"/>                
         <p>
             <emph render="bold">Contents</emph>
-            <xsl:variable name="class" select=".//x:msContents/@class"/>
+            <xsl:variable name="class" select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msContents/@class"/>
             <xsl:text> (</xsl:text>
             <xsl:value-of select="$TST/tst:mstypes/tst:entry[@key=$class]"/>
             <xsl:text>)</xsl:text>
         </p>
-        <xsl:apply-templates select=".//x:msItem[not(@source)]"/>
+        <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msContents/x:msItem[not(@source)]"/>
         <p>
             <emph render="bold">Paratexts</emph>
-            <xsl:apply-templates select=".//x:additions"/>
+            <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:physDesc/x:additions"/>
         </p>
         <xsl:call-template name="conventions"/>
     </scopecontent>
-    <xsl:if test=".//x:msItem/@source">
+    <xsl:if test="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msContents/x:msItem/@source">
         <dsc>
-            <xsl:apply-templates select=".//x:msItem[@source]"/>
+            <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msContents/x:msItem[@source]"/>
         </dsc>
     </xsl:if>
-    <xsl:apply-templates select=".//x:listBibl"/>
-    <xsl:apply-templates select=".//x:provenance"/>
-    <xsl:apply-templates select=".//x:acquisition"/>
+    <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:additional/x:listBibl"/>
+    <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:history/x:provenance"/>
+    <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:history/x:acquisition"/>
     <xsl:call-template name="citation"/>
 </xsl:template>
 
@@ -274,12 +273,12 @@
 </xsl:template>
 
 <xsl:template name="citation">
-    <xsl:variable name="shelfmark" select="//x:idno[@type='shelfmark']"/>
+    <xsl:variable name="shelfmark" select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msIdentifier/x:idno[@type='shelfmark']"/>
     <processinfo>
         <p><xsl:text>This catalogue entry has been adapted from:</xsl:text></p>
         <p>
             <bibref>
-                <xsl:variable name="name" select="//x:titleStmt/x:editor/x:persName"/>
+                <xsl:variable name="name" select="x:teiHeader/x:fileDesc/x:titleStmt/x:editor/x:persName"/>
                 <xsl:variable name="surname" select="$name/x:surname"/>
                 <xsl:variable name="forename" select="$name/x:forename"/>
                 <xsl:choose>
@@ -297,28 +296,32 @@
                     </xsl:otherwise>
                 </xsl:choose>
                 <xsl:text>. </xsl:text>
-                <xsl:value-of select="//x:publicationStmt/x:date"/>
+                <xsl:value-of select="x:teiHeader/x:fileDesc/x:publicationStmt/x:date"/>
                 <xsl:text>. </xsl:text>
                 <xsl:text>“</xsl:text>
                 <xsl:element name="extref">
                     <xsl:variable name="shelf1" select="substring-before($shelfmark,' ')"/>
-                    <xsl:variable name="shelf2" select="format-number(substring-after($shelfmark,' '),'0000')"/>
+                    <xsl:variable name="shelf2" select="substring-after($shelfmark,' ')"/>
+                    <xsl:variable name="shelf2letters" select="translate($shelf2,'0123456789','')"/>
+                    <xsl:variable name="shelf2numbers" select="format-number(translate($shelf2,$shelf2letters,''),'0000')"/>
                     <xsl:attribute name="href">
                         <xsl:text>https://tst-project.github.io/mss/</xsl:text>
                         <xsl:value-of select="$shelf1"/>
                         <xsl:text>_</xsl:text>
-                        <xsl:value-of select="$shelf2"/>
+                        <xsl:value-of select="$shelf2numbers"/>
+                        <xsl:value-of select="$shelf2letters"/>
                         <xsl:text>.xml</xsl:text>
                     </xsl:attribute>
                     <xsl:value-of select="$shelfmark"/>
                     <xsl:text>. </xsl:text>
-                    <xsl:apply-templates select="//x:titleStmt/x:title"/>
+                    <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:titleStmt/x:title"/>
+                    <xsl:text>.</xsl:text>
                 </xsl:element>
-                <xsl:text>.” </xsl:text>
+                <xsl:text>” </xsl:text>
                 <emph render="italic">
-                    <xsl:text>Descriptive Catalogue of the Texts Surrounding Texts Project</xsl:text>
+                    <xsl:text>Descriptive Catalogue of the Texts Surrounding Texts Project.</xsl:text>
                 </emph>
-                <xsl:text>. Paris: TST Project. </xsl:text>
+                <xsl:text> Paris: TST Project. </xsl:text>
                 <extref href="https://doi.org/10.5281/zenodo.6475589">
                     <xsl:text>doi:10.5281/zenodo.6475589</xsl:text>
                 </extref>
@@ -328,13 +331,14 @@
 </xsl:template>
 
 <xsl:template name="stamps">
-    <xsl:if test="//x:additions/x:desc[@type='stamp']">
+    <xsl:if test="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:physDesc/x:additions/x:desc[@type='stamp']">
         <physfacet type="estampille">
-            <xsl:apply-templates select="//x:additions/x:desc[@type='stamp']"/>
+            <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:physDesc/x:additions/x:desc[@type='stamp']"/>
         </physfacet>
     </xsl:if>
 </xsl:template>
-<xsl:template match="//x:additions/x:desc[@type='stamp']">
+
+<xsl:template match="x:additions/x:desc[@type='stamp']">
     <xsl:if test="@subtype">
         <xsl:text> (</xsl:text>
         <xsl:variable name="subtype" select="@subtype"/>
@@ -380,27 +384,27 @@
             <xsl:text> (incomplete)</xsl:text>
         </xsl:if>
     <list>
-        <xsl:for-each select="x:rubric | //x:text[@corresp=concat('#',$thisid)]//x:seg[@function='rubric']">
+        <xsl:for-each select="x:rubric | ./ancestor::x:TEI/x:text[@corresp=concat('#',$thisid)]//x:seg[@function='rubric']">
              <xsl:call-template name="excerpt">
                 <xsl:with-param name="header">Rubric</xsl:with-param>
             </xsl:call-template>
         </xsl:for-each>
-        <xsl:for-each select="x:incipit | //x:text[@corresp=concat('#',$thisid)]//x:seg[@function='incipit']">
+        <xsl:for-each select="x:incipit | ./ancestor::x:TEI/x:text[@corresp=concat('#',$thisid)]//x:seg[@function='incipit']">
              <xsl:call-template name="excerpt">
                 <xsl:with-param name="header">Incipit</xsl:with-param>
             </xsl:call-template>
         </xsl:for-each>
-        <xsl:for-each select="x:explicit | //x:text[@corresp=concat('#',$thisid)]//x:seg[@function='explicit']">
+        <xsl:for-each select="x:explicit | ./ancestor::x:TEI/x:text[@corresp=concat('#',$thisid)]//x:seg[@function='explicit']">
              <xsl:call-template name="excerpt">
                 <xsl:with-param name="header">Explicit</xsl:with-param>
             </xsl:call-template>
         </xsl:for-each>
-        <xsl:for-each select="x:finalRubric | //x:text[@corresp=concat('#',$thisid)]//x:seg[@function='completion-statement']">
+        <xsl:for-each select="x:finalRubric | ./ancestor::x:TEI/x:text[@corresp=concat('#',$thisid)]//x:seg[@function='completion-statement']">
              <xsl:call-template name="excerpt">
                 <xsl:with-param name="header">Completion statement</xsl:with-param>
              </xsl:call-template>
         </xsl:for-each>
-        <xsl:for-each select="x:colophon | //x:text[@corresp=concat('#',$thisid)]//x:seg[@function='colophon']">
+        <xsl:for-each select="x:colophon | ./ancestor::x:TEI/x:text[@corresp=concat('#',$thisid)]//x:seg[@function='colophon']">
              <xsl:call-template name="excerpt">
                 <xsl:with-param name="header">Colophon</xsl:with-param>
              </xsl:call-template>
@@ -411,8 +415,11 @@
 
 <xsl:template match="x:msItem[@source]">
     <c level="otherlevel" otherlevel="partie_composante">
-        <xsl:call-template name="didetc"/>
+        <xsl:apply-templates/>
     </c>
+</xsl:template>
+<xsl:template match="x:msItem[@source]/x:TEI">
+    <xsl:call-template name="didetc"/>
 </xsl:template>
 
 <xsl:template name="excerpt">

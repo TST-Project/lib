@@ -26,12 +26,17 @@ const parseXML = function(str) {
     return parser.parseFromString(str,'text/xml');
 };
 
-const replaceEl = function(olddoc,newdoc,parname,kidname) {
+const replaceEl = function(olddoc,newdoc,parname,kidname,inplace = false) {
     const par = olddoc.querySelector(parname);
     const oldel = par.querySelector(kidname);
     const newel = newdoc.querySelector(`${parname} > ${kidname}`);
-    if(oldel)
-        oldel.parentNode.replaceChild(newel,oldel);
+    if(oldel) {
+        if(inplace) par.replaceChild(newel,oldel);
+        else {
+            par.removeChild(oldel);
+            par.appendChild(newel);
+        }
+    }
     else
         par.appendChild(newel);
 };
@@ -58,7 +63,8 @@ const main = function() {
         const subfile = fs.readFileSync(subfilename,{encoding: 'utf-8'});
         const subXML = parseXML(subfile);
         subunit.innerHTML = '';
-        subunit.appendChild(subXML.querySelector('TEI'));
+        const tei = subXML.querySelector('TEI');
+        subunit.appendChild(tei);
     };
 
     const processed = SaxonJS.transform({
@@ -74,8 +80,8 @@ const main = function() {
         fs.writeFile(outfile,header+serializer(indoc),{encoding: 'utf-8'},function(){return;});
     else {
         const outdoc = parseXML(outtext);
-        replaceEl(outdoc, indoc, 'eadheader','filedesc');
-        replaceEl(outdoc, indoc, 'eadheader','profiledesc');
+        replaceEl(outdoc, indoc, 'eadheader','filedesc',true);
+        replaceEl(outdoc, indoc, 'eadheader','profiledesc',true);
         const level = indoc.querySelector('archdesc[level="otherlevel"]') ? 'otherlevel' : 'item';
         replaceEl(outdoc, indoc, `archdesc[level="${level}"]`,'did');
         replaceEl(outdoc, indoc, `archdesc[level="${level}"]`,'scopecontent');
