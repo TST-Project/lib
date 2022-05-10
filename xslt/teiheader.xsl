@@ -300,11 +300,20 @@
 
 <xsl:template name="itemrow">
     <xsl:param name="header"/>
+    <xsl:param name="link"/>
     <tr>
       <th><xsl:value-of select="$header"/></th>
         <xsl:element name="td">
             <xsl:call-template name="lang"/>
-            <xsl:apply-templates/>
+            <xsl:choose>
+                <xsl:when test="$link != ''">
+                    <xsl:element name="a">
+                        <xsl:attribute name="href"><xsl:value-of select="$link"/></xsl:attribute>
+                        <xsl:apply-templates/>
+                    </xsl:element>
+                </xsl:when>
+                <xsl:otherwise><xsl:apply-templates/></xsl:otherwise>
+            </xsl:choose>
         </xsl:element>
     </tr>
 </xsl:template>
@@ -342,12 +351,14 @@
 <xsl:template match="x:msItem">
   <table class="msItem">
     <xsl:variable name="thisid" select="@xml:id"/>
+    <xsl:variable name="source" select="@source"/>
     <xsl:call-template name="msItemHeader"/>
     <!--xsl:apply-templates/-->
     <xsl:for-each select="x:title">
         <xsl:call-template name="itemrow">
             <xsl:with-param name="header">Title</xsl:with-param>
-        </xsl:call-template>
+            <xsl:with-param name="link"><xsl:value-of select="$source"/></xsl:with-param>
+    	</xsl:call-template>
     </xsl:for-each>
     <xsl:apply-templates select="@class"/>
     <xsl:for-each select="x:author">
