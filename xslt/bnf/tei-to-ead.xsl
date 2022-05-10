@@ -64,53 +64,75 @@
               <langusage>Notice rédigée en <language langcode="eng">anglais</language>.</langusage>
             </profiledesc>
         </eadheader>
-        <archdesc level="item">
-            <did>
-                <unitid type="cote"><xsl:value-of select="//x:idno[@type='shelfmark']"/></unitid>
-                <xsl:apply-templates select="//x:idno[@type='alternate']/x:idno"/>
-                <unittitle><xsl:apply-templates select="//x:titleStmt/x:title"/></unittitle>
-                <unittitle type="non-latin originel"/>
-                <langmaterial>Manuscript in <xsl:apply-templates select="//x:msItem[1]/x:textLang"/>.</langmaterial>
-                <xsl:apply-templates select="//x:origDate[1]"/>
-                <physdesc>
-                    <xsl:apply-templates select="//x:origPlace"/>
-                    <xsl:apply-templates select="//x:handDesc"/>
-                    <xsl:apply-templates select="//x:typeDesc"/>
-                    <xsl:apply-templates select="//x:decoDesc"/>
-                    <xsl:apply-templates select="//x:typeDesc"/>
-                    <xsl:apply-templates select="//x:collation"/>
-                    <xsl:apply-templates select="//x:support"/>
-                    <xsl:apply-templates select="//x:extent"/>
-                    <xsl:apply-templates select="//x:layout"/>
-                    <xsl:apply-templates select="//x:binding"/>
-                    <xsl:call-template name="stamps"/>
-                </physdesc>
-                <repository>
-                    <corpname authfilenumber="751041006" normal="Bibliothèque nationale de France. Département des Manuscrits" source="Repertoire_des_Centres_de_Ressources">Bibliothèque nationale de France. Département des Manuscrits</corpname>
-                </repository>
-            </did>
-            <scopecontent>
-                <xsl:apply-templates select="//x:msContents/x:summary"/>                
-                <p>
-                    <emph render="bold">Contents</emph>
-                    <xsl:variable name="class" select="//x:msContents/@class"/>
-                    <xsl:text> (</xsl:text>
-                    <xsl:value-of select="$TST/tst:mstypes/tst:entry[@key=$class]"/>
-                    <xsl:text>)</xsl:text>
-                </p>
-                <xsl:apply-templates select="//x:msItem"/>
-                <p>
-                    <emph render="bold">Paratexts</emph>
-                    <xsl:apply-templates select="//x:additions"/>
-                </p>
-                <xsl:call-template name="conventions"/>
-            </scopecontent>
-            <xsl:apply-templates select="//x:listBibl"/>
-            <xsl:apply-templates select="//x:provenance"/>
-            <xsl:apply-templates select="//x:acquisition"/>
-            <xsl:call-template name="citation"/>
+        <archdesc>
+            <xsl:call-template name="archdesc"/>
         </archdesc>
     </ead>
+</xsl:template>
+
+<xsl:template name="archdesc">
+    <xsl:choose>
+        <xsl:when test=".//x:msItem/@source">
+            <xsl:attribute name="level">otherlevel</xsl:attribute>
+            <xsl:attribute name="otherlevel">recueil</xsl:attribute>
+        </xsl:when>
+        <xsl:otherwise>
+            <xsl:attribute name="level">item</xsl:attribute>
+        </xsl:otherwise>
+    </xsl:choose>
+    <xsl:call-template name="didetc"/>
+</xsl:template>
+
+<xsl:template name="didetc">
+    <did>
+        <unitid type="cote"><xsl:value-of select=".//x:idno[@type='shelfmark']"/></unitid>
+        <xsl:apply-templates select=".//x:idno[@type='alternate']/x:idno"/>
+        <unittitle><xsl:apply-templates select=".//x:titleStmt/x:title"/></unittitle>
+        <unittitle type="non-latin originel"/>
+        <langmaterial>Manuscript in <xsl:apply-templates select=".//x:msItem[1]/x:textLang"/>.</langmaterial>
+        <xsl:apply-templates select=".//x:origDate[1]"/>
+        <physdesc>
+            <xsl:apply-templates select=".//x:origPlace"/>
+            <xsl:apply-templates select=".//x:handDesc"/>
+            <xsl:apply-templates select=".//x:typeDesc"/>
+            <xsl:apply-templates select=".//x:decoDesc"/>
+            <xsl:apply-templates select=".//x:typeDesc"/>
+            <xsl:apply-templates select=".//x:collation"/>
+            <xsl:apply-templates select=".//x:support"/>
+            <xsl:apply-templates select=".//x:extent"/>
+            <xsl:apply-templates select=".//x:layout"/>
+            <xsl:apply-templates select=".//x:binding"/>
+            <xsl:call-template name="stamps"/>
+        </physdesc>
+        <repository>
+            <corpname authfilenumber="751041006" normal="Bibliothèque nationale de France. Département des Manuscrits" source="Repertoire_des_Centres_de_Ressources">Bibliothèque nationale de France. Département des Manuscrits</corpname>
+        </repository>
+    </did>
+    <scopecontent>
+        <xsl:apply-templates select=".//x:msContents/x:summary"/>                
+        <p>
+            <emph render="bold">Contents</emph>
+            <xsl:variable name="class" select=".//x:msContents/@class"/>
+            <xsl:text> (</xsl:text>
+            <xsl:value-of select="$TST/tst:mstypes/tst:entry[@key=$class]"/>
+            <xsl:text>)</xsl:text>
+        </p>
+        <xsl:apply-templates select=".//x:msItem[not(@source)]"/>
+        <p>
+            <emph render="bold">Paratexts</emph>
+            <xsl:apply-templates select=".//x:additions"/>
+        </p>
+        <xsl:call-template name="conventions"/>
+    </scopecontent>
+    <xsl:if test=".//x:msItem/@source">
+        <dsc>
+            <xsl:apply-templates select=".//x:msItem[@source]"/>
+        </dsc>
+    </xsl:if>
+    <xsl:apply-templates select=".//x:listBibl"/>
+    <xsl:apply-templates select=".//x:provenance"/>
+    <xsl:apply-templates select=".//x:acquisition"/>
+    <xsl:call-template name="citation"/>
 </xsl:template>
 
 <xsl:template match="x:additions">
@@ -385,6 +407,12 @@
         </xsl:for-each>
     </list>
     </p>
+</xsl:template>
+
+<xsl:template match="x:msItem[@source]">
+    <c level="otherlevel" otherlevel="partie_composante">
+        <xsl:call-template name="didetc"/>
+    </c>
 </xsl:template>
 
 <xsl:template name="excerpt">

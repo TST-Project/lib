@@ -3,7 +3,7 @@
                 xmlns:tst="https://github.com/tst-project"
                 exclude-result-prefixes="x tst">
 
-<xsl:output method="xml" encoding="UTF-8" omit-xml-declaration="yes"/>
+<xsl:output method="xml" encoding="UTF-8"/>
 
 <xsl:template match="x:div1|x:div2|x:div3">
     <xsl:element name="p">

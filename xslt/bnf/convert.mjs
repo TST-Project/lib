@@ -1,5 +1,6 @@
 import yargs from 'yargs';
 import fs from 'fs';
+import path from 'path';
 import SaxonJS from 'saxon-js';
 import jsdom from 'jsdom';
 import serializer from 'w3c-xmlserializer';
@@ -49,27 +50,41 @@ const main = function() {
     
     const xsltSheet = fs.readFileSync('tei-to-ead.sef.json',{encoding: 'utf-8'});
 
+    const inxml = parseXML(intext);
+    const subunits = inxml.querySelectorAll('msItem[source]');
+    for(const subunit of subunits) {
+        const dir = path.dirname(infile);
+        const subfilename = dir + '/' + subunit.getAttribute('source');
+        const subfile = fs.readFileSync(subfilename,{encoding: 'utf-8'});
+        const subXML = parseXML(subfile);
+        subunit.innerHTML = '';
+        subunit.appendChild(subXML.querySelector('TEI'));
+    };
+
     const processed = SaxonJS.transform({
         stylesheetText: xsltSheet,
-        sourceText: intext,
+        sourceText: serializer(inxml),
         destination: 'serialized'},
         'sync');
     const indoc = parseXML(processed.principalResult);
-    
+
+    const header = '<?xml version="1.0" encoding="UTF-8"?>';
+
     if(!outtext)
-        fs.writeFile(outfile,serializer(indoc),{encoding: 'utf-8'},function(){return;});
+        fs.writeFile(outfile,header+serializer(indoc),{encoding: 'utf-8'},function(){return;});
     else {
         const outdoc = parseXML(outtext);
         replaceEl(outdoc, indoc, 'eadheader','filedesc');
         replaceEl(outdoc, indoc, 'eadheader','profiledesc');
-        replaceEl(outdoc, indoc, 'archdesc[level="item"]','did');
-        replaceEl(outdoc, indoc, 'archdesc[level="item"]','scopecontent');
-        replaceEl(outdoc, indoc, 'archdesc[level="item"]','bibliography');
-        replaceEl(outdoc, indoc, 'archdesc[level="item"]','custodhist');
-        replaceEl(outdoc, indoc, 'archdesc[level="item"]','acqinfo');
-        replaceEl(outdoc, indoc, 'archdesc[level="item"]','processinfo');
-        const writeout = '<?xml version="1.0" encoding="UTF-8"?>' + serializer(outdoc);
-        fs.writeFile(outfile,writeout,{encoding: 'utf-8'},function(){return;});
+        const level = indoc.querySelector('archdesc[level="otherlevel"]') ? 'otherlevel' : 'item';
+        replaceEl(outdoc, indoc, `archdesc[level="${level}"]`,'did');
+        replaceEl(outdoc, indoc, `archdesc[level="${level}"]`,'scopecontent');
+        replaceEl(outdoc, indoc, `archdesc[level="${level}"]`,'dsc');
+        replaceEl(outdoc, indoc, `archdesc[level="${level}"]`,'bibliography');
+        replaceEl(outdoc, indoc, `archdesc[level="${level}"]`,'custodhist');
+        replaceEl(outdoc, indoc, `archdesc[level="${level}"]`,'acqinfo');
+        replaceEl(outdoc, indoc, `archdesc[level="${level}"]`,'processinfo');
+        fs.writeFile(outfile,header+serializer(outdoc),{encoding: 'utf-8'},function(){return;});
     }
 };
 

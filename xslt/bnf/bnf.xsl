@@ -4,7 +4,7 @@
                 xmlns:tst="https://github.com/tst-project"
                 exclude-result-prefixes="x tst exsl">
 
-<xsl:output method="xml" encoding="UTF-8" omit-xml-declaration="yes" indent="yes"/>
+<xsl:output method="xml" encoding="UTF-8" indent="yes"/>
 
 <xsl:variable name="bnfDefs">
 
