@@ -63,8 +63,9 @@ ul:first-child {
     content: ')';
 }
 
-#msidentifier th {
+th {
     text-align: left;
+    width: 5rem;
 }
 
 em.title.ta, em.title.sa, .teitext em.title, .excerpt em.title {
