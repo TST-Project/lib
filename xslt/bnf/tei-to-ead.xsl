@@ -84,6 +84,7 @@
 </xsl:template>
 
 <xsl:template name="didetc">
+    <xsl:param name="repo">true</xsl:param>
     <did>
         <unitid type="cote"><xsl:value-of select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msIdentifier/x:idno[@type='shelfmark']"/></unitid>
         <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msIdentifier/x:idno[@type='alternate']/x:idno"/>
@@ -103,9 +104,11 @@
             <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:physDesc/x:objectDesc/x:bindingDesc/x:binding"/>
             <xsl:call-template name="stamps"/>
         </physdesc>
-        <repository>
-            <corpname authfilenumber="751041006" normal="Bibliothèque nationale de France. Département des Manuscrits" source="Repertoire_des_Centres_de_Ressources">Bibliothèque nationale de France. Département des Manuscrits</corpname>
-        </repository>
+        <xsl:if test="$repo = 'true'">
+            <repository>
+                <corpname authfilenumber="751041006" normal="Bibliothèque nationale de France. Département des Manuscrits" source="Repertoire_des_Centres_de_Ressources">Bibliothèque nationale de France. Département des Manuscrits</corpname>
+            </repository>
+        </xsl:if>
     </did>
     <scopecontent>
         <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msContents/x:summary"/>                
@@ -304,6 +307,7 @@
                     <xsl:variable name="shelf2" select="substring-after($shelfmark,' ')"/>
                     <xsl:variable name="shelf2letters" select="translate($shelf2,'0123456789','')"/>
                     <xsl:variable name="shelf2numbers" select="format-number(translate($shelf2,$shelf2letters,''),'0000')"/>
+                    <xsl:attribute name="actuate">onrequest</xsl:attribute>
                     <xsl:attribute name="href">
                         <xsl:text>https://tst-project.github.io/mss/</xsl:text>
                         <xsl:value-of select="$shelf1"/>
@@ -322,7 +326,7 @@
                     <xsl:text>Descriptive Catalogue of the Texts Surrounding Texts Project.</xsl:text>
                 </emph>
                 <xsl:text> Paris: TST Project. </xsl:text>
-                <extref href="https://doi.org/10.5281/zenodo.6475589">
+                <extref actuate="onrequest" href="https://doi.org/10.5281/zenodo.6475589">
                     <xsl:text>doi:10.5281/zenodo.6475589</xsl:text>
                 </extref>
             </bibref>
@@ -419,7 +423,9 @@
     </c>
 </xsl:template>
 <xsl:template match="x:msItem[@source]/x:TEI">
-    <xsl:call-template name="didetc"/>
+    <xsl:call-template name="didetc">
+        <xsl:with-param name="repo">false</xsl:with-param>
+    </xsl:call-template>
 </xsl:template>
 
 <xsl:template name="excerpt">
@@ -442,6 +448,7 @@
     <xsl:choose>
         <xsl:when test="@facs">
             <xsl:element name="extref">
+                <xsl:attribute name="actuate">onrequest</xsl:attribute>
                 <xsl:attribute name="href"><xsl:value-of select="$gallica"/><xsl:value-of select="@facs"/></xsl:attribute>
                 <xsl:call-template name="milestone"/>
             </xsl:element>
@@ -802,6 +809,7 @@
     <xsl:choose>
         <xsl:when test="@facs">
             <xsl:element name="extref">
+                <xsl:attribute name="actuate">onrequest</xsl:attribute>
                 <xsl:attribute name="href"><xsl:value-of select="$gallica"/><xsl:value-of select="@facs"/></xsl:attribute>
                 <xsl:apply-templates/>
             </xsl:element>
@@ -814,6 +822,7 @@
 
 <xsl:template match="x:ref">
     <xsl:element name="extref">
+        <xsl:attribute name="actuate">onrequest</xsl:attribute>
         <xsl:attribute name="href"><xsl:value-of select="@target"/></xsl:attribute>
         <xsl:apply-templates/>
     </xsl:element>
