@@ -28,7 +28,7 @@ const parseXML = function(str) {
 
 const replaceEl = function(olddoc,newdoc,parname,kidname,inplace = false) {
     const par = olddoc.querySelector(parname);
-    const oldel = par.querySelector(kidname);
+    const oldel = par.querySelector(`:scope > ${kidname}`);
     const newel = newdoc.querySelector(`${parname} > ${kidname}`);
     if(oldel) {
         if(inplace) par.replaceChild(newel,oldel);
@@ -83,7 +83,7 @@ const main = function() {
         replaceEl(outdoc, indoc, 'eadheader','filedesc',true);
         replaceEl(outdoc, indoc, 'eadheader','profiledesc',true);
         const level = indoc.querySelector('archdesc[level="otherlevel"]') ? 'otherlevel' : 'item';
-        replaceEl(outdoc, indoc, `archdesc[level="${level}"]`,'did');
+        replaceEl(outdoc, indoc, `archdesc[level="${level}"]`,'did',true);
         replaceEl(outdoc, indoc, `archdesc[level="${level}"]`,'scopecontent');
         replaceEl(outdoc, indoc, `archdesc[level="${level}"]`,'dsc');
         replaceEl(outdoc, indoc, `archdesc[level="${level}"]`,'bibliography');
