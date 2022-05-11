@@ -381,10 +381,12 @@
         </xsl:element>
 </xsl:template>
 <xsl:template match="x:milestone">
+    <xsl:param name="break">yes</xsl:param>
     <xsl:variable name="unit" select="@unit"/>
     <xsl:element name="span">
         <xsl:attribute name="class">
             <xsl:text>milestone diplo</xsl:text>
+            <xsl:if test="$break = 'no'"><xsl:text> nobreak</xsl:text></xsl:if>
             <xsl:if test="$unit = 'folio' or $unit = 'page'">
                 <xsl:text> biggap</xsl:text>
             </xsl:if>
@@ -507,8 +509,12 @@
 </xsl:template>
 
 <xsl:template match="x:pb">
+<xsl:param name="break">yes</xsl:param>
 <xsl:element name="span">
-    <xsl:attribute name="class">pb diplo</xsl:attribute>
+    <xsl:attribute name="class">
+        <xsl:text>pb diplo</xsl:text>
+        <xsl:if test="$break = 'no'"><xsl:text> nobreak</xsl:text></xsl:if>
+    </xsl:attribute>
     <xsl:attribute name="lang">en</xsl:attribute>
     <xsl:variable name="facs" select="@facs"/>
     <xsl:variable name="unit" select="//x:extent/x:measure/@unit"/>

@@ -1035,7 +1035,9 @@
                             <xsl:if test="not(.//*[@facs])">
                                 <xsl:variable name="milestone" select="(preceding-sibling::*[@facs][1] | ancestor::*/*[@facs][1])[last()]"/>
                                 <xsl:if test="$milestone">
-                                    <xsl:apply-templates select="$milestone"/>
+                                    <xsl:apply-templates select="$milestone">
+                                        <xsl:with-param name="break">no</xsl:with-param>
+                                    </xsl:apply-templates>
                                 </xsl:if>
                             </xsl:if>
                             <xsl:apply-templates/>

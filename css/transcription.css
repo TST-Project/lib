@@ -148,6 +148,10 @@ span.lb, span.cb {
     content: "\a\a(" attr(data-n) ")";
 }
 
+.pb.diplo.nobreak::after {
+    content: "(" attr(data-n) ")";
+}
+
 .lb.diplo[data-nobreak]::before, .pb.diplo[data-nobreak]::before, .cb.diplo[data-nobreak]::before {
     content: "-";
     opacity: 0.5;
@@ -484,6 +488,10 @@ span.milestone.diplo[data-nobreak]::before {
 
 span.milestone.diplo.biggap::before {
     content: "\a\a"; 
+}
+
+span.milestone.diplo.nobreak::before {
+    content: ""; 
 }
 
 .excerpt > span.milestone.diplo:first-child::before,
