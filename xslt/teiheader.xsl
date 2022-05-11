@@ -1032,6 +1032,12 @@
                             <xsl:attribute name="lang">
                                 <xsl:value-of select="ancestor::*[@xml:lang]/@xml:lang"/>
                             </xsl:attribute>
+                            <xsl:if test="not(.//*[@facs])">
+                                <xsl:variable name="milestone" select="(preceding-sibling::*[@facs][1] | ancestor::*/*[@facs][1])[last()]"/>
+                                <xsl:if test="$milestone">
+                                    <xsl:apply-templates select="$milestone"/>
+                                </xsl:if>
+                            </xsl:if>
                             <xsl:apply-templates/>
                         </li>
                     </ul>
