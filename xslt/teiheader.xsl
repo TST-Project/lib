@@ -977,7 +977,7 @@
 </xsl:template-->
 
 <xsl:template match="x:msDesc/x:physDesc/x:additions">
-  <xsl:variable name="ps" select="/x:TEI/x:text//x:seg[@function != 'rubric' and 
+  <xsl:variable name="ps" select="ancestor::x:TEI/x:text//x:seg[@function != 'rubric' and 
                                 @function != 'incipit' and
                                 @function != 'explicit' and
                                 @function != 'completion-statement' and
@@ -1033,7 +1033,7 @@
                                 <xsl:value-of select="ancestor::*[@xml:lang]/@xml:lang"/>
                             </xsl:attribute>
                             <xsl:if test="not(.//*[@facs])">
-                                <xsl:variable name="milestone" select="(preceding-sibling::*[@facs][last()] | preceding-sibling::*//*[@facs])[last()]"/>
+                                <xsl:variable name="milestone" select="(preceding-sibling::*[@facs][1] | preceding-sibling::*//*[@facs][last()])[last()]"/>
                                 <xsl:if test="$milestone">
                                     <xsl:apply-templates select="$milestone">
                                         <xsl:with-param name="break">no</xsl:with-param>
