@@ -174,7 +174,7 @@
     </item>
 </xsl:template>
 <xsl:template name="more-additions">
-    <xsl:variable name="ps" select="/x:TEI/x:text//x:seg[@function != 'rubric' and 
+    <xsl:variable name="ps" select="ancestor::x:TEI/x:text//x:seg[@function != 'rubric' and 
                                     @function != 'incipit' and
                                     @function != 'explicit' and
                                     @function != 'completion-statement' and
@@ -248,7 +248,7 @@
         <xsl:if test="//x:gap[@reason != 'lost' and @reason !='ellipsis']">
             <xsl:text>[?] indicates a gap in the reading. </xsl:text>
         </xsl:if>
-        <xsl:apply-templates select="//x:encodingDesc/x:p"/>
+        <xsl:apply-templates select="x:teiHeader/x:encodingDesc/x:p"/>
     </p>
 </xsl:template>
 <xsl:template match="x:encodingDesc/x:p">
