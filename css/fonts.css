@@ -2,14 +2,14 @@
     font-family: 'PedanticDevanagari';
     src: local('PedanticDevanagariLight'),
          url('../fonts/PedanticDevanagariLight.woff');
-    unicode-range: U+0900-097F, U+A8E0-A8FB, U+1CD0-1CF6, U+2E24;
+    unicode-range: U+0900-097F, U+A8E0-A8FB, U+1CD0-1CF6, U+2E24, U+11B00-11B09;
 }
 
 @font-face {
     font-family: 'PedanticDevanagari';
     src: local('PedanticDevanagariBold'),
          url('../fonts/PedanticDevanagariBold.woff');
-    unicode-range: U+0900-097F, U+A8E0-A8FB, U+1CD0-1CF6, U+2E24;
+    unicode-range: U+0900-097F, U+A8E0-A8FB, U+1CD0-1CF6, U+2E24, U+11B00-11B09;
     font-weight: bold;
 }
 

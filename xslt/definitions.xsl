@@ -258,6 +258,9 @@
     <tst:entry key="#newa-gap-filler">&#x1144E;</tst:entry>
     <tst:entry key="#newa-old-gap-filler">&#x1144E;</tst:entry>
 
+    <tst:entry key="#bhale_hook">&#x11B03;</tst:entry>
+    <tst:entry key="#mindu">&#x11B09;</tst:entry>
+
     <tst:entry key="#latin_cross">✝</tst:entry>
 </tst:entities>
 
@@ -354,6 +357,9 @@
 
     <tst:entry key="#newa-gap-filler">Newa gap filler</tst:entry>
     <tst:entry key="#newa-old-gap-filler">Newa old-style gap filler</tst:entry>
+
+    <tst:entry key="#bhale_hook">bhale with hook</tst:entry>
+    <tst:entry key="#mindu">mīṇḍu</tst:entry>
 
     <tst:entry key="#latin_cross">latin cross</tst:entry>
 </tst:entitynames>
