@@ -4,7 +4,7 @@ import path from 'path';
 import SaxonJS from 'saxon-js';
 import jsdom from 'jsdom';
 import serializer from 'w3c-xmlserializer';
-
+import { Transliterate } from '../../js/transliterate.mjs';
 import { hideBin } from 'yargs/helpers';
 
 const argv = yargs(hideBin(process.argv))
@@ -39,6 +39,23 @@ const replaceEl = function(olddoc,newdoc,parname,kidname,inplace = false) {
     }
     else
         par.appendChild(newel);
+};
+
+const transliterate = function(doc) {
+    const els = doc.querySelectorAll('unittitle[type="non-latin originel"]');
+    for(const el of els) {
+        const toconverts = el.querySelectorAll('[xml:lang="ta"]');
+        //const langs = el.querySelectorAll('[lang="sa"],[lang="ta"]');
+        if(toconverts.length === 0) {
+            el.remove();
+        }
+        else {
+            for(const toconvert of toconverts) {
+                toconvert.textContent = Transliterate.to.tamil(toconvert.textContent);
+            }
+            el.innerHTML = el.textContent.trim();
+        }
+    }
 };
 
 const main = function() {
@@ -90,6 +107,9 @@ const main = function() {
         replaceEl(outdoc, indoc, `archdesc[level="${level}"]`,'custodhist');
         replaceEl(outdoc, indoc, `archdesc[level="${level}"]`,'acqinfo');
         replaceEl(outdoc, indoc, `archdesc[level="${level}"]`,'processinfo');
+        
+        transliterate(outdoc);
+
         fs.writeFile(outfile,header+serializer(outdoc),{encoding: 'utf-8'},function(){return;});
     }
 };

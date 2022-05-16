@@ -662,6 +662,7 @@ const Transliterate = (function() {
     
     return {
         init: init,
+        to: to
     };
 }());
 

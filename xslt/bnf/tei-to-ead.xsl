@@ -89,7 +89,7 @@
         <unitid type="cote"><xsl:value-of select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msIdentifier/x:idno[@type='shelfmark']"/></unitid>
         <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msIdentifier/x:idno[@type='alternate']/x:idno"/>
         <unittitle><xsl:apply-templates select="x:teiHeader/x:fileDesc/x:titleStmt/x:title"/></unittitle>
-        <unittitle type="non-latin originel"/>
+        <unittitle type="non-latin originel"><xsl:copy-of select="x:teiHeader/x:fileDesc/x:titleStmt/x:title"/></unittitle>
         <langmaterial>Manuscript in <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msContents/x:msItem[1]/x:textLang"/>.</langmaterial>
         <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:history/x:origin/x:origDate[1]"/>
         <physdesc>
@@ -470,10 +470,10 @@
             </xsl:choose>
             <xsl:text> </xsl:text>
         </xsl:when>
-        <xsl:when test="/x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:physDesc/x:objectDesc[@form = 'pothi']">
+        <xsl:when test="ancestor::x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:physDesc/x:objectDesc[@form = 'pothi']">
             <xsl:text>folio </xsl:text>
         </xsl:when>
-    <xsl:when test="/x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:physDesc/x:objectDesc[@form = 'book']">
+    <xsl:when test="ancestor::x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:physDesc/x:objectDesc[@form = 'book']">
             <xsl:text>page </xsl:text>
         </xsl:when>
     </xsl:choose>
