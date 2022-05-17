@@ -523,10 +523,10 @@
     <xsl:if test="@break = 'no'">
         <xsl:attribute name="data-nobreak"/>
     </xsl:if>
-    <xsl:if test="$facs">
-    <xsl:attribute name="data-loc">
-        <xsl:value-of select="$facs"/>
-    </xsl:attribute>
+    <xsl:if test="$facs and $facs != ''">
+        <xsl:attribute name="data-loc">
+            <xsl:value-of select="$facs"/>
+        </xsl:attribute>
     </xsl:if>
     <xsl:if test="@n">
         <xsl:attribute name="data-n">
@@ -554,7 +554,7 @@
             </xsl:choose>
             <xsl:value-of select="@n"/>
         </xsl:if>
-        <xsl:if test="$facs">
+        <xsl:if test="$facs and $facs != ''">
             <xsl:text> image </xsl:text>
             <xsl:value-of select="$facs"/>
         </xsl:if>
