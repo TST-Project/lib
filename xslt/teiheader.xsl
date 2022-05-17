@@ -1007,7 +1007,7 @@
                                     <xsl:with-param name="map">tst:additiontype</xsl:with-param>
                                 </xsl:call-template>
                             </xsl:if>
-                            <xsl:if test="$moretypes">
+                            <xsl:if test="$moretypes/@function">
                                 <xsl:text>: </xsl:text>
                                 <xsl:for-each select="$moretypes[not(@function=preceding-sibling::x:seg/@function)]">
                                     <xsl:variable name="func" select="@function"/>
