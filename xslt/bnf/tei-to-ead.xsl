@@ -183,7 +183,6 @@
         <xsl:for-each select="$ps">
             <item>
                 <xsl:variable name="type" select="@function"/>
-                <xsl:variable name="moretypes" select=".//x:seg"/>
                 <xsl:variable name="cu" select="substring-after(ancestor::x:text/@synch,'#')"/>
                 <xsl:variable name="tu" select="substring-after(ancestor::x:text/@corresp,'#')"/>
                 <xsl:if test="$cu or $tu">
@@ -204,17 +203,27 @@
                                 <xsl:with-param name="nocapitalize">true</xsl:with-param>
                                 <xsl:with-param name="map">tst:additiontype</xsl:with-param>
                         </xsl:call-template>
-                        <xsl:if test="$moretypes">
+                        <xsl:variable name="moretypes" select=".//x:seg"/>
+                        <xsl:if test="$moretypes/@function">
                             <xsl:text>, </xsl:text>
-                            <xsl:for-each select="$moretypes[not(@function=preceding-sibling::x:seg/@function)]">
-                                <xsl:variable name="func" select="@function"/>
-                                <xsl:variable name="addname" select="$TST/tst:additiontype//tst:entry[@key=$func]"/>
-                                <xsl:choose>
-                                    <xsl:when test="$addname"><xsl:value-of select="$addname"/></xsl:when>
-                                    <xsl:otherwise><xsl:value-of select="$func"/></xsl:otherwise>
-                                </xsl:choose>
-                                <xsl:if test="not(position() = last())">
-                                    <xsl:text>, </xsl:text>
+                            <xsl:variable name="uniquetypes">
+                                <xsl:for-each select="$moretypes">
+                                    <xsl:sort select="@function"/>
+                                    <xsl:copy-of select="."/>
+                                </xsl:for-each>
+                            </xsl:variable>
+                            <xsl:for-each select="exsl:node-set($uniquetypes)/x:seg">
+                                <xsl:variable name="pos" select="position()"/>
+                                <xsl:if test="$pos = 1 or not(@function=preceding-sibling::x:seg/@function)">
+                                    <xsl:variable name="func" select="@function"/>
+                                    <xsl:variable name="addname" select="$TST/tst:additiontype//tst:entry[@key=$func]"/>
+                                    <xsl:choose>
+                                        <xsl:when test="$addname"><xsl:value-of select="$addname"/></xsl:when>
+                                        <xsl:otherwise><xsl:value-of select="$func"/></xsl:otherwise>
+                                    </xsl:choose>
+                                    <xsl:if test="not($pos = last())">
+                                        <xsl:text>, </xsl:text>
+                                    </xsl:if>
                                 </xsl:if>
                             </xsl:for-each>
                         </xsl:if>
