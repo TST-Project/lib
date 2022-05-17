@@ -1050,7 +1050,7 @@
                             <xsl:text>)</xsl:text>
                         </xsl:if>
                     </span>
-                    <ul>
+                    <ul class="imported-paratext">
                         <li>
                             <xsl:attribute name="lang">
                                 <xsl:value-of select="ancestor::*[@xml:lang]/@xml:lang"/>

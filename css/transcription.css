@@ -64,7 +64,7 @@ div.lg:first-child {
     padding: 0 0 0.5em 1.5em;
 }
 
-div.lg.diplo, .excerpt div.lg, .excerpt div.l {
+div.lg.diplo, .excerpt div.lg, .excerpt div.l, .imported-paratext div.lg, .imported-paratext div.l {
     padding-left: 0;
     margin-left: 0;
     display: inline;
