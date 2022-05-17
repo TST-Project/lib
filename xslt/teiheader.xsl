@@ -253,7 +253,7 @@
                             <xsl:text>, </xsl:text>
                         </xsl:if>
                         <xsl:choose>
-                            <xsl:when test="//x:TEI/x:text[@corresp=concat('#',$thisid)]">
+                            <xsl:when test="ancestor::x:TEI/x:text[@corresp=concat('#',$thisid)]">
                                 <xsl:element name="a">
                                     <xsl:attribute name="class">local</xsl:attribute>
                                     <xsl:attribute name="href">
@@ -981,7 +981,7 @@
                                 @function != 'incipit' and
                                 @function != 'explicit' and
                                 @function != 'completion-statement' and
-                                @function != 'colophon']"/>
+                                @function != 'colophon' and not(ancestor::x:seg)]"/>
   <xsl:if test="node()[not(self::text())] or $ps">
       <tr>
         <th>Paratexts</th>
@@ -993,6 +993,7 @@
                     <span>
                         <xsl:attribute name="class">type</xsl:attribute>
                         <xsl:variable name="type" select="@function"/>
+                        <xsl:variable name="moretypes" select=".//x:seg/@function"/>
                         <xsl:variable name="cu" select="substring-after(ancestor::x:text/@synch,'#')"/>
                         <xsl:variable name="tu" select="substring-after(ancestor::x:text/@corresp,'#')"/>
                         <span>
@@ -1005,6 +1006,15 @@
                                     <xsl:with-param name="nocapitalize">true</xsl:with-param>
                                     <xsl:with-param name="map">tst:additiontype</xsl:with-param>
                                 </xsl:call-template>
+                            </xsl:if>
+                            <xsl:if test="$moretypes">
+                                <xsl:text>, </xsl:text>
+                                <xsl:for-each select="$moretypes[not(.=preceding::*)]">
+                                    <xsl:value-of select="."/>
+                                    <xsl:if test="not(position() = last())">
+                                        <xsl:text>, </xsl:text>
+                                    </xsl:if>
+                                </xsl:for-each>
                             </xsl:if>
                         </span>
                         <xsl:if test="$cu or $tu">
