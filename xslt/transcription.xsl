@@ -403,7 +403,7 @@
                 <xsl:when test="$unitname"><xsl:value-of select="$unitname"/></xsl:when>
                 <xsl:otherwise><xsl:value-of select="$unit"/></xsl:otherwise>
             </xsl:choose>
-            <xsl:text> </xsl:text>
+            <xsl:if test="@n"><xsl:text> </xsl:text></xsl:if>
         </xsl:when>
         <xsl:when test="/x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:physDesc/x:objectDesc[@form = 'pothi']">
             <xsl:text>folio </xsl:text>
@@ -429,24 +429,26 @@
 </xsl:template>
 
 <xsl:template match="@facs">
-    <xsl:attribute name="data-loc">
-        <xsl:value-of select="."/>
-    </xsl:attribute>
-    <xsl:variable name="imgno" select="substring-before(.,':')"/>
-    <xsl:variable name="annono" select="substring-after(.,':')"/>
-    <xsl:attribute name="data-anno">
-        <xsl:text>image </xsl:text>
-        <xsl:choose>
-            <xsl:when test="$annono">
-                <xsl:value-of select="$imgno"/>
-                <xsl:text>, annotation </xsl:text>
-                <xsl:value-of select="$annono"/>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:value-of select="."/>
-            </xsl:otherwise>
-        </xsl:choose>
-    </xsl:attribute>
+    <xsl:if test=". != ''">
+        <xsl:attribute name="data-loc">
+            <xsl:value-of select="."/>
+        </xsl:attribute>
+        <xsl:variable name="imgno" select="substring-before(.,':')"/>
+        <xsl:variable name="annono" select="substring-after(.,':')"/>
+        <xsl:attribute name="data-anno">
+            <xsl:text>image </xsl:text>
+            <xsl:choose>
+                <xsl:when test="$annono">
+                    <xsl:value-of select="$imgno"/>
+                    <xsl:text>, annotation </xsl:text>
+                    <xsl:value-of select="$annono"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="."/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:attribute>
+    </xsl:if>
 </xsl:template>
 
 <xsl:template match="x:lb">
