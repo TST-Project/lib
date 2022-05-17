@@ -993,7 +993,7 @@
                     <span>
                         <xsl:attribute name="class">type</xsl:attribute>
                         <xsl:variable name="type" select="@function"/>
-                        <xsl:variable name="moretypes" select=".//x:seg/@function"/>
+                        <xsl:variable name="moretypes" select=".//x:seg"/>
                         <xsl:variable name="cu" select="substring-after(ancestor::x:text/@synch,'#')"/>
                         <xsl:variable name="tu" select="substring-after(ancestor::x:text/@corresp,'#')"/>
                         <span>
@@ -1008,9 +1008,14 @@
                                 </xsl:call-template>
                             </xsl:if>
                             <xsl:if test="$moretypes">
-                                <xsl:text>, </xsl:text>
-                                <xsl:for-each select="$moretypes[not(.=preceding::*)]">
-                                    <xsl:value-of select="."/>
+                                <xsl:text>: </xsl:text>
+                                <xsl:for-each select="$moretypes[not(@function=preceding-sibling::x:seg/@function)]">
+                                    <xsl:variable name="func" select="@function"/>
+                                    <xsl:variable name="addname" select="$TST/tst:additiontype//tst:entry[@key=$func]"/>
+                                    <xsl:choose>
+                                        <xsl:when test="$addname"><xsl:value-of select="$addname"/></xsl:when>
+                                        <xsl:otherwise><xsl:value-of select="$func"/></xsl:otherwise>
+                                    </xsl:choose>
                                     <xsl:if test="not(position() = last())">
                                         <xsl:text>, </xsl:text>
                                     </xsl:if>
