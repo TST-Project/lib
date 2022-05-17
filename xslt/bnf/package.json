@@ -16,6 +16,6 @@
     "xslt": "nodejs ./node_modules/xslt3/xslt3.js -t -xsl:tei-to-ead.xsl",
     "compile": "nodejs ./node_modules/xslt3/xslt3.js -t -nogo -xsl:tei-to-ead.xsl -export:tei-to-ead.sef.json",
     "convert": "nodejs convert.mjs",
-    "lint": "xmllint --encode utf-8 --dtdvalid ead.dtd --pretty 1"
+    "check": "xmllint --encode utf-8 --noout --dtdvalid ead.dtd"
   }
 }

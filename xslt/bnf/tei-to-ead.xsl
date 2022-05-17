@@ -151,11 +151,11 @@
         </xsl:if>
         <xsl:if test="$type">
             <emph render="bold">
-            <xsl:call-template name="splitlist">
-                    <xsl:with-param name="list" select="$type"/>
-                    <xsl:with-param name="nocapitalize">true</xsl:with-param>
-                    <xsl:with-param name="map">tst:additiontype</xsl:with-param>
-            </xsl:call-template>
+                <xsl:call-template name="splitlist">
+                        <xsl:with-param name="list" select="$type"/>
+                        <xsl:with-param name="nocapitalize">true</xsl:with-param>
+                        <xsl:with-param name="map">tst:additiontype</xsl:with-param>
+                </xsl:call-template>
             </emph>
         </xsl:if>
         <xsl:if test="@subtype">
@@ -178,11 +178,12 @@
                                     @function != 'incipit' and
                                     @function != 'explicit' and
                                     @function != 'completion-statement' and
-                                    @function != 'colophon']"/>
+                                    @function != 'colophon' and not(ancestor::x:seg)]"/>
     <xsl:if test="node()[not(self::text())] or $ps">
         <xsl:for-each select="$ps">
             <item>
                 <xsl:variable name="type" select="@function"/>
+                <xsl:variable name="moretypes" select=".//x:seg"/>
                 <xsl:variable name="cu" select="substring-after(ancestor::x:text/@synch,'#')"/>
                 <xsl:variable name="tu" select="substring-after(ancestor::x:text/@corresp,'#')"/>
                 <xsl:if test="$cu or $tu">
@@ -198,15 +199,35 @@
                 </xsl:if>
                 <xsl:if test="$type">
                     <emph render="bold">
-                    <xsl:call-template name="splitlist">
-                            <xsl:with-param name="list" select="$type"/>
-                            <xsl:with-param name="nocapitalize">true</xsl:with-param>
-                            <xsl:with-param name="map">tst:additiontype</xsl:with-param>
-                    </xsl:call-template>
+                        <xsl:call-template name="splitlist">
+                                <xsl:with-param name="list" select="$type"/>
+                                <xsl:with-param name="nocapitalize">true</xsl:with-param>
+                                <xsl:with-param name="map">tst:additiontype</xsl:with-param>
+                        </xsl:call-template>
+                        <xsl:if test="$moretypes">
+                            <xsl:text>, </xsl:text>
+                            <xsl:for-each select="$moretypes[not(@function=preceding-sibling::x:seg/@function)]">
+                                <xsl:variable name="func" select="@function"/>
+                                <xsl:variable name="addname" select="$TST/tst:additiontype//tst:entry[@key=$func]"/>
+                                <xsl:choose>
+                                    <xsl:when test="$addname"><xsl:value-of select="$addname"/></xsl:when>
+                                    <xsl:otherwise><xsl:value-of select="$func"/></xsl:otherwise>
+                                </xsl:choose>
+                                <xsl:if test="not(position() = last())">
+                                    <xsl:text>, </xsl:text>
+                                </xsl:if>
+                            </xsl:for-each>
+                        </xsl:if>
                     </emph>
                 </xsl:if>
                 <xsl:if test="./node()">
                     <xsl:text>: </xsl:text>
+                </xsl:if>
+                <xsl:if test="not(./*[1]/@facs)">
+                    <xsl:variable name="milestone" select="preceding::*[@facs][1]"/>
+                    <xsl:if test="$milestone">
+                        <xsl:apply-templates select="$milestone"/>
+                    </xsl:if>
                 </xsl:if>
                 <xsl:apply-templates/>
             </item>
@@ -227,7 +248,7 @@
         <xsl:if test="//x:sic">
             <emph render="bold">¿?</emph><xsl:text> indicates </xsl:text><emph render="italic"><xsl:text>sic erat scriptum</xsl:text></emph><xsl:text>. </xsl:text>
         </xsl:if>
-        <xsl:if test="//x:supplied">
+        <xsl:if test="//x:supplied | //x:reg | //x:corr">
             <emph render="bold"><xsl:text>[]</xsl:text></emph><xsl:text> indicates text supplied or corrected by the cataloguer. </xsl:text>
         </xsl:if>
         <xsl:if test="//x:note">
@@ -308,6 +329,7 @@
                     <xsl:variable name="shelf2letters" select="translate($shelf2,'0123456789','')"/>
                     <xsl:variable name="shelf2numbers" select="format-number(translate($shelf2,$shelf2letters,''),'0000')"/>
                     <xsl:attribute name="actuate">onrequest</xsl:attribute>
+                    <xsl:attribute name="show">new</xsl:attribute>
                     <xsl:attribute name="href">
                         <xsl:text>https://tst-project.github.io/mss/</xsl:text>
                         <xsl:value-of select="$shelf1"/>
@@ -326,7 +348,7 @@
                     <xsl:text>Descriptive Catalogue of the Texts Surrounding Texts Project.</xsl:text>
                 </emph>
                 <xsl:text> Paris: TST Project. </xsl:text>
-                <extref actuate="onrequest" href="https://doi.org/10.5281/zenodo.6475589">
+                <extref actuate="onrequest" show="new" href="https://doi.org/10.5281/zenodo.6475589">
                     <xsl:text>doi:10.5281/zenodo.6475589</xsl:text>
                 </extref>
             </bibref>
@@ -387,33 +409,36 @@
         <xsl:if test="@defective = 'true'">
             <xsl:text> (incomplete)</xsl:text>
         </xsl:if>
-    <list>
-        <xsl:for-each select="x:rubric | ./ancestor::x:TEI/x:text[@corresp=concat('#',$thisid)]//x:seg[@function='rubric']">
-             <xsl:call-template name="excerpt">
-                <xsl:with-param name="header">Rubric</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>
-        <xsl:for-each select="x:incipit | ./ancestor::x:TEI/x:text[@corresp=concat('#',$thisid)]//x:seg[@function='incipit']">
-             <xsl:call-template name="excerpt">
-                <xsl:with-param name="header">Incipit</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>
-        <xsl:for-each select="x:explicit | ./ancestor::x:TEI/x:text[@corresp=concat('#',$thisid)]//x:seg[@function='explicit']">
-             <xsl:call-template name="excerpt">
-                <xsl:with-param name="header">Explicit</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>
-        <xsl:for-each select="x:finalRubric | ./ancestor::x:TEI/x:text[@corresp=concat('#',$thisid)]//x:seg[@function='completion-statement']">
-             <xsl:call-template name="excerpt">
-                <xsl:with-param name="header">Completion statement</xsl:with-param>
-             </xsl:call-template>
-        </xsl:for-each>
-        <xsl:for-each select="x:colophon | ./ancestor::x:TEI/x:text[@corresp=concat('#',$thisid)]//x:seg[@function='colophon']">
-             <xsl:call-template name="excerpt">
-                <xsl:with-param name="header">Colophon</xsl:with-param>
-             </xsl:call-template>
-        </xsl:for-each>
-    </list>
+        <xsl:variable name="items" select="x:rubric or x:incipit or x:explicit or x:finalRubric or x:colophon or ancestor::x:TEI/x:text[@corresp=concat('#',$thisid)]//x:seg[@function='rubric' or @function='incipit' or @function='explicit' or @function='finalRubric' or @function='colophon']"/>
+        <xsl:if test="$items">
+            <list>
+                <xsl:for-each select="x:rubric | ancestor::x:TEI/x:text[@corresp=concat('#',$thisid)]//x:seg[@function='rubric']">
+                     <xsl:call-template name="excerpt">
+                        <xsl:with-param name="header">Rubric</xsl:with-param>
+                    </xsl:call-template>
+                </xsl:for-each>
+                <xsl:for-each select="x:incipit | ancestor::x:TEI/x:text[@corresp=concat('#',$thisid)]//x:seg[@function='incipit']">
+                     <xsl:call-template name="excerpt">
+                        <xsl:with-param name="header">Incipit</xsl:with-param>
+                    </xsl:call-template>
+                </xsl:for-each>
+                <xsl:for-each select="x:explicit | ancestor::x:TEI/x:text[@corresp=concat('#',$thisid)]//x:seg[@function='explicit']">
+                     <xsl:call-template name="excerpt">
+                        <xsl:with-param name="header">Explicit</xsl:with-param>
+                    </xsl:call-template>
+                </xsl:for-each>
+                <xsl:for-each select="x:finalRubric | ancestor::x:TEI/x:text[@corresp=concat('#',$thisid)]//x:seg[@function='completion-statement']">
+                     <xsl:call-template name="excerpt">
+                        <xsl:with-param name="header">Completion statement</xsl:with-param>
+                     </xsl:call-template>
+                </xsl:for-each>
+                <xsl:for-each select="x:colophon | ancestor::x:TEI/x:text[@corresp=concat('#',$thisid)]//x:seg[@function='colophon']">
+                     <xsl:call-template name="excerpt">
+                        <xsl:with-param name="header">Colophon</xsl:with-param>
+                     </xsl:call-template>
+                </xsl:for-each>
+            </list>
+        </xsl:if>
     </p>
 </xsl:template>
 
@@ -443,11 +468,17 @@
          </p></blockquote>
      </item>
 </xsl:template>
+
+<xsl:template match="x:seg//x:lg | x:seg//x:l">
+    <xsl:apply-templates/>
+</xsl:template>
+
 <xsl:template match="x:milestone">
     <xsl:if test="position() != 1"><lb/></xsl:if>
     <xsl:choose>
         <xsl:when test="@facs">
             <xsl:element name="extref">
+                <xsl:attribute name="show">new</xsl:attribute>
                 <xsl:attribute name="actuate">onrequest</xsl:attribute>
                 <xsl:attribute name="href"><xsl:value-of select="$gallica"/><xsl:value-of select="@facs"/></xsl:attribute>
                 <xsl:call-template name="milestone"/>
@@ -468,7 +499,7 @@
                 <xsl:when test="$unitname"><xsl:value-of select="$unitname"/></xsl:when>
                 <xsl:otherwise><xsl:value-of select="$unit"/></xsl:otherwise>
             </xsl:choose>
-            <xsl:text> </xsl:text>
+            <xsl:if test="@n"><xsl:text> </xsl:text></xsl:if>
         </xsl:when>
         <xsl:when test="ancestor::x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:physDesc/x:objectDesc[@form = 'pothi']">
             <xsl:text>folio </xsl:text>
@@ -483,9 +514,22 @@
 
 <xsl:template match="x:lb | x:pb">
     <xsl:if test="position() != 1"><lb/></xsl:if>
-    <xsl:if test="@n">
-        <xsl:text>[</xsl:text><xsl:value-of select="@n"/><xsl:text>] </xsl:text>
-    </xsl:if>
+    <xsl:choose>
+        <xsl:when test="@facs and @n">
+            <xsl:element name="extref">
+                <xsl:attribute name="show">new</xsl:attribute>
+                <xsl:attribute name="actuate">onrequest</xsl:attribute>
+                <xsl:attribute name="href"><xsl:value-of select="$gallica"/><xsl:value-of select="@facs"/></xsl:attribute>
+                <xsl:text>[</xsl:text><xsl:value-of select="@n"/><xsl:text>]</xsl:text>
+            </xsl:element>
+            <xsl:text> </xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+            <xsl:if test="@n">
+                <xsl:text>[</xsl:text><xsl:value-of select="@n"/><xsl:text>] </xsl:text>
+            </xsl:if>
+        </xsl:otherwise>
+    </xsl:choose>
 </xsl:template>
 
 <xsl:template match="x:unclear">
@@ -563,10 +607,14 @@
     <xsl:apply-templates/>
     <emph render="bold"><xsl:text>?</xsl:text></emph>
 </xsl:template>
-<xsl:template match="x:supplied | x:corr">
+<xsl:template match="x:supplied | x:corr | x:reg">
     <emph render="bold"><xsl:text>[</xsl:text></emph>
     <xsl:apply-templates/>
     <emph render="bold"><xsl:text>]</xsl:text></emph>
+</xsl:template>
+
+<xsl:template match="x:orig">
+    <xsl:apply-templates/>
 </xsl:template>
 
 <xsl:template match="x:note">
@@ -579,17 +627,21 @@
         <xsl:variable name="txt" select="text()"/>
         <xsl:variable name="found" select="$personnames//x:person/x:persName[text() = $txt]"/>
         <xsl:if test="$found">
-            <xsl:attribute name="source">BnF</xsl:attribute>
             <xsl:variable name="parent" select="$found/parent::*"/>
-            <xsl:attribute name="normal">
-                <xsl:value-of select="$parent/x:persName[@type='standard']"/>
-            </xsl:attribute>
             <xsl:variable name="key" select="$parent/x:idno[@type='BnF']"/>
-            <xsl:if test="$key">
-                <xsl:attribute name="authfilenumber">
-                    <xsl:value-of select="$key"/>
-                </xsl:attribute>
-            </xsl:if>
+            <xsl:choose>
+                <xsl:when test="$key">
+                    <xsl:attribute name="source">BnF</xsl:attribute>
+                    <xsl:attribute name="authfilenumber">
+                        <xsl:value-of select="$key"/>
+                    </xsl:attribute>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:attribute name="normal">
+                        <xsl:value-of select="$parent/x:persName[@type='standard']"/>
+                    </xsl:attribute>
+                </xsl:otherwise>
+            </xsl:choose>
         </xsl:if>
         <xsl:apply-templates/>
     </xsl:element>
@@ -782,17 +834,21 @@
                     <xsl:attribute name="role"><xsl:value-of select="$role"/></xsl:attribute>
                 </xsl:if>
                 <xsl:if test="$found">
-                    <xsl:attribute name="source">BnF</xsl:attribute>
                     <xsl:variable name="parent" select="$found/parent::*"/>
-                    <xsl:attribute name="normal">
-                        <xsl:value-of select="$parent/x:persName[@type='standard']"/>
-                    </xsl:attribute>
                     <xsl:variable name="key" select="$parent/x:idno[@type='BnF']"/>
-                    <xsl:if test="$key">
-                        <xsl:attribute name="authfilenumber">
-                            <xsl:value-of select="$key"/>
-                        </xsl:attribute>
-                    </xsl:if>
+                    <xsl:choose>
+                        <xsl:when test="$key">
+                            <xsl:attribute name="source">BnF</xsl:attribute>
+                            <xsl:attribute name="authfilenumber">
+                                <xsl:value-of select="$key"/>
+                            </xsl:attribute>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:attribute name="normal">
+                                <xsl:value-of select="$parent/x:persName[@type='standard']"/>
+                            </xsl:attribute>
+                        </xsl:otherwise>
+                    </xsl:choose>
                 </xsl:if>
                 <xsl:apply-templates/>
             </xsl:element>
@@ -809,6 +865,7 @@
     <xsl:choose>
         <xsl:when test="@facs">
             <xsl:element name="extref">
+                <xsl:attribute name="show">new</xsl:attribute>
                 <xsl:attribute name="actuate">onrequest</xsl:attribute>
                 <xsl:attribute name="href"><xsl:value-of select="$gallica"/><xsl:value-of select="@facs"/></xsl:attribute>
                 <xsl:apply-templates/>
@@ -822,6 +879,7 @@
 
 <xsl:template match="x:ref">
     <xsl:element name="extref">
+        <xsl:attribute name="show">new</xsl:attribute>
         <xsl:attribute name="actuate">onrequest</xsl:attribute>
         <xsl:attribute name="href"><xsl:value-of select="@target"/></xsl:attribute>
         <xsl:apply-templates/>
@@ -1052,7 +1110,7 @@
                 <xsl:attribute name="render">sub</xsl:attribute>
             </xsl:when>
             <xsl:when test="@rend='superscript'">
-                <xsl:attribute name="render">sup</xsl:attribute>
+                <xsl:attribute name="render">super</xsl:attribute>
             </xsl:when>
             <xsl:otherwise/>
         </xsl:choose>
