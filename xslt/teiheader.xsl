@@ -1003,6 +1003,26 @@
                         <xsl:variable name="type" select="@function"/>
                         <xsl:variable name="cu" select="substring-after(ancestor::x:text/@synch,'#')"/>
                         <xsl:variable name="tu" select="substring-after(ancestor::x:text/@corresp,'#')"/>
+                        <xsl:if test="$cu or $tu">
+                            <span class="lihead">
+                                <xsl:value-of select="$cu"/>
+                                <xsl:if test="$cu and $tu">
+                                    <xsl:text>, </xsl:text>
+                                </xsl:if>
+                                <xsl:if test="$tu">
+                                    <xsl:element name="a">
+                                        <xsl:attribute name="class">local</xsl:attribute>
+                                        <xsl:attribute name="href">
+                                            <xsl:text>#text-</xsl:text>
+                                            <xsl:value-of select="$tu"/>
+                                        </xsl:attribute>
+                                        <xsl:attribute name="data-scroll"/>
+                                        <xsl:value-of select="$tu"/>
+                                    </xsl:element>
+                                </xsl:if>
+                                <xsl:text> </xsl:text>
+                            </span>
+                        </xsl:if>
                         <span>
                             <xsl:if test="@cert">
                                 <xsl:attribute name="class"><xsl:call-template name="certainty"/></xsl:attribute>
@@ -1039,25 +1059,6 @@
                                 </xsl:for-each>
                             </xsl:if>
                         </span>
-                        <xsl:if test="$cu or $tu">
-                            <xsl:text> (</xsl:text>
-                            <xsl:value-of select="$cu"/>
-                            <xsl:if test="$cu and $tu">
-                                <xsl:text>, </xsl:text>
-                            </xsl:if>
-                            <xsl:if test="$tu">
-                                <xsl:element name="a">
-                                    <xsl:attribute name="class">local</xsl:attribute>
-                                    <xsl:attribute name="href">
-                                        <xsl:text>#text-</xsl:text>
-                                        <xsl:value-of select="$tu"/>
-                                    </xsl:attribute>
-                                    <xsl:attribute name="data-scroll"/>
-                                    <xsl:value-of select="$tu"/>
-                                </xsl:element>
-                            </xsl:if>
-                            <xsl:text>)</xsl:text>
-                        </xsl:if>
                     </span>
                     <ul class="imported-paratext">
                         <li>
