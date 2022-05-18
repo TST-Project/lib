@@ -473,7 +473,13 @@
          </xsl:choose>
          <xsl:text> </xsl:text>
          <blockquote><p>
-         <xsl:apply-templates/>
+            <xsl:if test="local-name() = 'seg' and not(./*[1]/@facs)">
+                <xsl:variable name="milestone" select="preceding::*[@facs][1]"/>
+                <xsl:if test="$milestone">
+                    <xsl:apply-templates select="$milestone"/>
+                </xsl:if>
+            </xsl:if>
+            <xsl:apply-templates/>
          </p></blockquote>
      </item>
 </xsl:template>
