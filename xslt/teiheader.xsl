@@ -1045,7 +1045,7 @@
                                 </xsl:variable>
                                 <xsl:for-each select="exsl:node-set($uniquetypes)/x:seg">
                                     <xsl:variable name="pos" select="position()"/>
-                                    <xsl:if test="$pos = 1 or not(@function=preceding-sibling::x:seg/@function)">
+                                    <xsl:if test="$pos = last() or not(@function=following-sibling::x:seg/@function)">
                                         <xsl:variable name="func" select="@function"/>
                                         <xsl:variable name="addname" select="$TST/tst:additiontype//tst:entry[@key=$func]"/>
                                         <xsl:choose>
