@@ -255,6 +255,7 @@
     <tst:entry key="#nūṟu"><x:term xml:lang="ta-Taml">௱</x:term></tst:entry>
     <tst:entry key="#āyiram"><x:term xml:lang="ta-Taml">௲</x:term></tst:entry>
 
+    <tst:entry key="#newa-siddhi">&#x1144A;</tst:entry>
     <tst:entry key="#newa-gap-filler">&#x1144E;</tst:entry>
     <tst:entry key="#newa-old-gap-filler">&#x1144E;</tst:entry>
 
@@ -354,7 +355,8 @@
     <tst:entry key="#pattu">pattu</tst:entry>
     <tst:entry key="#nūṟu">nūṟu</tst:entry>
     <tst:entry key="#āyiram">āyiram</tst:entry>
-
+    
+    <tst:entry key="#newa-siddhi">Newa siddhi</tst:entry>
     <tst:entry key="#newa-gap-filler">Newa gap filler</tst:entry>
     <tst:entry key="#newa-old-gap-filler">Newa old-style gap filler</tst:entry>
 
