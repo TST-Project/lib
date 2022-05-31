@@ -384,19 +384,19 @@
         </xsl:element>
 </xsl:template>
 <xsl:template match="x:milestone">
-    <xsl:param name="break">yes</xsl:param>
+    <xsl:param name="excerpt">no</xsl:param>
     <xsl:variable name="unit" select="@unit"/>
     <xsl:element name="span">
         <xsl:attribute name="class">
             <xsl:text>milestone diplo</xsl:text>
-            <xsl:if test="$break = 'no'"><xsl:text> nobreak</xsl:text></xsl:if>
+            <xsl:if test="$excerpt = 'yes'"><xsl:text> nobreak</xsl:text></xsl:if>
             <xsl:if test="$unit = 'folio' or $unit = 'page'">
                 <xsl:text> biggap</xsl:text>
             </xsl:if>
         </xsl:attribute>
         <xsl:attribute name="lang">en</xsl:attribute>
         <xsl:apply-templates select="@facs"/>
-        <xsl:if test="@break = 'no'">
+        <xsl:if test="$excerpt = 'no' and @break = 'no'">
             <xsl:attribute name="data-nobreak"/>
         </xsl:if>
         <xsl:choose>
@@ -514,16 +514,16 @@
 </xsl:template>
 
 <xsl:template match="x:pb">
-<xsl:param name="break">yes</xsl:param>
+<xsl:param name="excerpt">no</xsl:param>
 <xsl:element name="span">
     <xsl:attribute name="class">
         <xsl:text>pb diplo</xsl:text>
-        <xsl:if test="$break = 'no'"><xsl:text> nobreak</xsl:text></xsl:if>
+        <xsl:if test="$excerpt = 'yes'"><xsl:text> nobreak</xsl:text></xsl:if>
     </xsl:attribute>
     <xsl:attribute name="lang">en</xsl:attribute>
     <xsl:variable name="facs" select="@facs"/>
     <xsl:variable name="unit" select="//x:extent/x:measure/@unit"/>
-    <xsl:if test="@break = 'no'">
+    <xsl:if test="$excerpt = 'no' and @break = 'no'">
         <xsl:attribute name="data-nobreak"/>
     </xsl:if>
     <xsl:if test="$facs and $facs != ''">

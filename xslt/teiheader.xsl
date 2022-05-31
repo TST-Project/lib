@@ -345,7 +345,7 @@
                 <xsl:variable name="milestone" select="preceding::*[@facs][1]"/>
                 <xsl:if test="$milestone">
                     <xsl:apply-templates select="$milestone">
-                        <xsl:with-param name="break">no</xsl:with-param>
+                        <xsl:with-param name="excerpt">yes</xsl:with-param>
                     </xsl:apply-templates>
                 </xsl:if>
             </xsl:if>
@@ -1061,7 +1061,7 @@
                                 <xsl:variable name="milestone" select="preceding::*[@facs][1]"/>
                                 <xsl:if test="$milestone">
                                     <xsl:apply-templates select="$milestone">
-                                        <xsl:with-param name="break">no</xsl:with-param>
+                                        <xsl:with-param name="excerpt">yes</xsl:with-param>
                                     </xsl:apply-templates>
                                 </xsl:if>
                             </xsl:if>
