@@ -319,7 +319,6 @@
 </xsl:template>
 
 <xsl:template name="excerpt">
-     <xsl:param name="mainlang"/>
      <xsl:param name="xmllang"/>
      <xsl:param name="header"/>    
      <tr>
@@ -337,10 +336,9 @@
                     <xsl:when test="$xmllang">
                         <xsl:value-of select="$xmllang"/>
                     </xsl:when>
-                    <xsl:when test="$mainlang">
-                        <xsl:value-of select="$mainlang"/>
-                    </xsl:when>
-                    <xsl:otherwise/>
+                    <xsl:otherwise>
+                        <xsl:value-of select="ancestor-or-self::*[@xml:lang][1]/@xml:lang"/>
+                    </xsl:otherwise>
                 </xsl:choose>
             </xsl:attribute>
             <xsl:if test="local-name() = 'seg' and not(./*[1]/@facs)">
@@ -376,40 +374,34 @@
     </xsl:for-each>
     <xsl:apply-templates select="x:textLang"/>
     <xsl:apply-templates select="x:filiation"/>
-    <xsl:variable name="mainlang" select="substring(x:textLang/@mainLang,1,2)"/>
     <xsl:for-each select="x:rubric | //x:text[@corresp=concat('#',$thisid)]//x:seg[@function='rubric']">
          <xsl:call-template name="excerpt">
             <xsl:with-param name="header">Rubric / Namaskāra</xsl:with-param>
             <xsl:with-param name="xmllang" select="@xml:lang"/>
-            <xsl:with-param name="mainlang" select="$mainlang"/>
         </xsl:call-template>
     </xsl:for-each>
     <xsl:for-each select="x:incipit | //x:text[@corresp=concat('#',$thisid)]//x:seg[@function='incipit']">
          <xsl:call-template name="excerpt">
             <xsl:with-param name="header">Incipit</xsl:with-param>
             <xsl:with-param name="xmllang" select="@xml:lang"/>
-            <xsl:with-param name="mainlang" select="$mainlang"/>
         </xsl:call-template>
     </xsl:for-each>
     <xsl:for-each select="x:explicit | //x:text[@corresp=concat('#',$thisid)]//x:seg[@function='explicit']">
          <xsl:call-template name="excerpt">
             <xsl:with-param name="header">Explicit</xsl:with-param>
             <xsl:with-param name="xmllang" select="@xml:lang"/>
-            <xsl:with-param name="mainlang" select="$mainlang"/>
         </xsl:call-template>
     </xsl:for-each>
     <xsl:for-each select="x:finalRubric | //x:text[@corresp=concat('#',$thisid)]//x:seg[@function='completion-statement']">
          <xsl:call-template name="excerpt">
             <xsl:with-param name="header">Completion statement</xsl:with-param>
             <xsl:with-param name="xmllang" select="@xml:lang"/>
-            <xsl:with-param name="mainlang" select="$mainlang"/>
          </xsl:call-template>
     </xsl:for-each>
     <xsl:for-each select="x:colophon | //x:text[@corresp=concat('#',$thisid)]//x:seg[@function='colophon']">
          <xsl:call-template name="excerpt">
             <xsl:with-param name="header">Colophon</xsl:with-param>
             <xsl:with-param name="xmllang" select="@xml:lang"/>
-            <xsl:with-param name="mainlang" select="$mainlang"/>
          </xsl:call-template>
     </xsl:for-each>
   </table>
@@ -1063,7 +1055,7 @@
                     <ul class="imported-paratext">
                         <li>
                             <xsl:attribute name="lang">
-                                <xsl:value-of select="ancestor::*[@xml:lang]/@xml:lang"/>
+                                <xsl:value-of select="ancestor-or-self::*[@xml:lang][1]/@xml:lang"/>
                             </xsl:attribute>
                             <xsl:if test="not(./*[1]/@facs)">
                                 <xsl:variable name="milestone" select="preceding::*[@facs][1]"/>
