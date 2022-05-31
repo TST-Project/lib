@@ -56,7 +56,10 @@
 </xsl:template>
 
 <xsl:template match="x:body/x:ab">
-    <xsl:apply-templates/>
+    <xsl:element name="section">
+        <xsl:call-template name="lang"/>
+        <xsl:apply-templates/>
+    </xsl:element>
 </xsl:template>
 
 <!-- transcription styling -->
