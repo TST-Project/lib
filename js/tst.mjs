@@ -23,7 +23,7 @@ const TSTViewer = (function() {
         const viewer = document.getElementById('viewer');
         if(viewer) {
             _state.manifest = viewer.dataset.manifest;
-            const param = (new URLSearchParams(window.location.search)).get('page');
+            const param = (new URLSearchParams(window.location.search)).get('facs');
             const page = param ? parseInt(param) - 1 : null;
             if(_state.mirador)
                 refreshMirador(_state.mirador,viewer.dataset.manifest, page || viewer.dataset.start);
@@ -45,6 +45,8 @@ const TSTViewer = (function() {
 
         recordcontainer.addEventListener('click',events.docClick);
         recordcontainer.addEventListener('mouseover',events.docMouseover);
+        recordcontainer.addEventListener('copy',events.removeHyphens);
+
     };
 
     const newMirador = function(id,manifest,start = 0,annoMap = _state.annoMap, annotate = false) {
@@ -164,6 +166,15 @@ const TSTViewer = (function() {
                 targ = targ.parentNode;
             }
 
+        },
+
+        removeHyphens: function(ev) {
+
+            if(ev.target.closest('textarea')) return;
+            ev.preventDefault();
+            var sel = window.getSelection().toString();
+            sel = sel.replace(consts.hyphenRegex,'');
+            (ev.clipboardData || window.clipboardData).setData('Text',sel);
         },
     };
 
