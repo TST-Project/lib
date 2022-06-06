@@ -244,7 +244,7 @@
     <tst:entry key="#naalathu">𑿪</tst:entry>
     <tst:entry key="#silvaanam">𑿫</tst:entry>
     <tst:entry key="#poga">𑿬</tst:entry>
-    <tst:entry key="#aaga">𑿭</tst:entry>
+    <tst:entry key="#āka">𑿭</tst:entry>
     <tst:entry key="#vasam">𑿮</tst:entry>
     <tst:entry key="#muthal">𑿯</tst:entry>
     <tst:entry key="#muthaliya">𑿰</tst:entry>
@@ -348,7 +348,7 @@
     <tst:entry key="#naalathu">current</tst:entry>
     <tst:entry key="#silvaanam">and odd</tst:entry>
     <tst:entry key="#poga">spent</tst:entry>
-    <tst:entry key="#aaga">total</tst:entry>
+    <tst:entry key="#āka">total</tst:entry>
     <tst:entry key="#vasam">in possession</tst:entry>
     <tst:entry key="#muthal">starting from</tst:entry>
     <tst:entry key="#muthaliya">et cetera (in a series)</tst:entry>
