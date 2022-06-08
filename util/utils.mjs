@@ -65,6 +65,13 @@ const util = {
     },
 
     placement: (el) => {
+        const pp = el.firstChild;
+        if(pp.nodeName === 'milestone') {
+            const attr = pp.getAttribute('unit');
+            if(!check.isFolio(attr))
+                return attr + ' ' + (p.getAttribute('n') || '');
+        }
+
         var p = util.prev(el);
         while(p) {
             if(!p) return '';
