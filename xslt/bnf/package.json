@@ -13,9 +13,10 @@
     "yargs": "^17.4.1"
   },
   "scripts": {
-    "xslt": "nodejs ./node_modules/xslt3/xslt3.js -t -xsl:tei-to-ead.xsl",
-    "compile": "nodejs ./node_modules/xslt3/xslt3.js -t -nogo -xsl:tei-to-ead.xsl -export:tei-to-ead.sef.json",
-    "convert": "nodejs convert.mjs",
-    "check": "xmllint --encode utf-8 --noout --dtdvalid ead.dtd"
+    "xslt": "node ./node_modules/xslt3/xslt3.js -t -xsl:tei-to-ead.xsl",
+    "compile": "node ./node_modules/xslt3/xslt3.js -t -nogo -xsl:tei-to-ead.xsl -export:tei-to-ead.sef.json",
+    "convert": "node convert.mjs",
+    "check": "xmllint --encode utf-8 --noout --dtdvalid ./ead.dtd",
+    "teicheck": "xmllint --encode utf-8 --noout --dtdvalid ../../tei_all.dtd"
   }
 }
