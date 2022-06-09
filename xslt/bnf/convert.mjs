@@ -26,10 +26,10 @@ const parseXML = function(str) {
     return parser.parseFromString(str,'text/xml');
 };
 
-const replaceEl = function(olddoc,newdoc,parname,kidname,inplace = false) {
-    const par = olddoc.querySelector(parname);
+const replaceEl = function(newdoc,par,parname,kidname,inplace = false) {
     const oldel = par.querySelector(`:scope > ${kidname}`);
     const newel = newdoc.querySelector(`${parname} > ${kidname}`);
+    if(!newel) return;
     if(oldel) {
         if(inplace) par.replaceChild(newel,oldel);
         else {
@@ -53,7 +53,9 @@ const transliterate = function(doc) {
             for(const toconvert of toconverts) {
                 toconvert.textContent = Transliterate.to.tamil(toconvert.textContent);
             }
-            el.innerHTML = el.textContent.trim();
+            const newtxt = el.textContent.trim();
+            el.innerHTML = '';
+            el.appendChild(doc.createTextNode(newtxt));
         }
     }
 };
@@ -91,25 +93,34 @@ const main = function() {
         'sync');
     const indoc = parseXML(processed.principalResult);
 
+    transliterate(indoc);
+
     const header = '<?xml version="1.0" encoding="UTF-8"?>';
 
     if(!outtext)
         fs.writeFile(outfile,header+serializer(indoc),{encoding: 'utf-8'},function(){return;});
     else {
         const outdoc = parseXML(outtext);
-        replaceEl(outdoc, indoc, 'eadheader','filedesc',true);
-        replaceEl(outdoc, indoc, 'eadheader','profiledesc',true);
+        const eadheader = outdoc.querySelector('eadheader');
+        if(eadheader) {
+            replaceEl(indoc, eadheader,'eadheader','filedesc',true);
+            replaceEl(indoc, eadheader,'eadheader','profiledesc',true);
+        }
         const level = indoc.querySelector('archdesc[level="otherlevel"]') ? 'otherlevel' : 'item';
-        replaceEl(outdoc, indoc, `archdesc[level="${level}"]`,'did',true);
-        replaceEl(outdoc, indoc, `archdesc[level="${level}"]`,'scopecontent');
-        replaceEl(outdoc, indoc, `archdesc[level="${level}"]`,'dsc');
-        replaceEl(outdoc, indoc, `archdesc[level="${level}"]`,'bibliography');
-        replaceEl(outdoc, indoc, `archdesc[level="${level}"]`,'custodhist');
-        replaceEl(outdoc, indoc, `archdesc[level="${level}"]`,'acqinfo');
-        replaceEl(outdoc, indoc, `archdesc[level="${level}"]`,'processinfo');
+        const archname = `archdesc[level="${level}"]`;
+        var archdesc = outdoc.querySelector(archname) || outdoc.querySelector('c');
+        if(!archdesc && level === 'otherlevel') { // wasn't a collection before, change to collection
+            archdesc = outdoc.querySelector('archdesc');
+            archdesc.setAttribute('level','otherlevel');
+        }
+        replaceEl(indoc, archdesc,archname,'did',true);
+        replaceEl(indoc, archdesc,archname,'scopecontent');
+        replaceEl(indoc, archdesc,archname,'dsc');
+        replaceEl(indoc, archdesc,archname,'bibliography');
+        replaceEl(indoc, archdesc,archname,'custodhist');
+        replaceEl(indoc, archdesc,archname,'acqinfo');
+        replaceEl(indoc, archdesc,archname,'processinfo');
         
-        transliterate(outdoc);
-
         fs.writeFile(outfile,header+serializer(outdoc),{encoding: 'utf-8'},function(){return;});
     }
 };
