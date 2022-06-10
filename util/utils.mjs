@@ -66,7 +66,7 @@ const util = {
 
     placement: (el) => {
         const pp = el.firstChild;
-        if(pp.nodeName === 'milestone') {
+        if(pp && pp.nodeType === 1 && pp.nodeName === 'milestone') {
             const attr = pp.getAttribute('unit');
             if(!check.isFolio(attr))
                 return attr + ' ' + (pp.getAttribute('n') || '');
