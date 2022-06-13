@@ -111,7 +111,7 @@ const find = {
 
     tbcs: (xmlDoc) => xmlDoc.querySelectorAll('seg[function="TBC"]'),
 
-    title: (xmlDoc) => xmlDoc.querySelector('titleStmt > title').textContent.replace(/&/g,'&#38;'),
+    title: (xmlDoc) => xmlDoc.querySelector('titleStmt > title').textContent.replace(/&/g,'&#38;').trim(),
 
     persnames: (xmlDoc) => {
         return [...xmlDoc.querySelectorAll('persName')]
