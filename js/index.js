@@ -97,6 +97,11 @@ const toolTip = {
 };
 
 window.addEventListener('load', () => {
+      const dataTable = new simpleDatatables.DataTable('#index', {
+          searchable: true,
+          paging: false,
+          sortable: true,
+      });
       const table = document.querySelector('table');
       if(table) table.addEventListener('mouseover',docMouseover);
 });
