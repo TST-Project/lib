@@ -1,11 +1,22 @@
 body {
     padding-left: 0;
+    max-width: 100vw;
+    width: 100vw;
+    overflow-x: scroll;
+}
+
+.dataTable-wrapper {
+    max-width: 1400px;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    margin: 0 auto;
 }
 
 table, #index {
     font-size: 1.4rem;
     /*width: 85%;*/
 }
+
 #head {
     background-color: #eee;
     color: #666666;
@@ -43,7 +54,6 @@ tbody tr:nth-child(even) {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
     display: flex;
     /*min-width: 1000px;*/
     background-color: #eee;
@@ -51,6 +61,7 @@ tbody tr:nth-child(even) {
     flex-direction: row;
     font-size: 1.2rem;
     word-break: keep-all;
+    hyphens: none;
 }
 
 #menu a[href] {
