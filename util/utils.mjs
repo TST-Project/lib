@@ -13,7 +13,7 @@ const make = {
     },
     header: (arr) => {
         const cells = arr.map(str => `<th>${str}</th>`).join('');
-        return `<tr id="head">${cells}</tr>`;
+        return `<thead><tr id="head">${cells}</tr></thead>`;
     },
 };
 
