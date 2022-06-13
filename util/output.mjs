@@ -20,7 +20,7 @@ const output = {
         const title = template.querySelector('title');
         const ptitle = opts && opts.name ? opts.name[0].toUpperCase() + opts.name.slice(1) : 'Manuscripts';
         title.textContent = `${title.textContent}: ${ptitle}`;
-        const table = template.querySelector('#index').firstElementChild;
+        const table = template.getElementById('index');
         const thead = opts && opts.prefix ? 
             make.header(['Old Shelfmark','New Shelfmark','Repository','Title','Material','Extent','Width (mm)','Height (mm)','Date','Images']) :
             make.header(['Shelfmark','Repository','Title','Material','Extent','Width (mm)','Height (mm)','Date','Images']);
@@ -137,7 +137,7 @@ const output = {
         const title = template.querySelector('title');
         title.textContent = `${title.textContent}: ${ptitle}`;
 
-        const table = template.querySelector('#index').firstElementChild;
+        const table = template.getElementById('index');
         const tstr = data.reduce((acc, cur) => {
             if(cur[pprop].length > 0) {
                 const lines = [...cur[pprop]].reduce((acc2,cur2) => predux(acc2,cur2,cur),'');
@@ -242,7 +242,7 @@ const output = {
             else return acc;
         },'');
 
-        const table = template.querySelector('#index').firstElementChild;
+        const table = template.getElementById('index');
         table.innerHTML = `${thead}<tbody>${tstr}</tbody>`;
         table.querySelectorAll('th')[1].classList.add('sorttable_alphanum');
 
@@ -301,7 +301,7 @@ const output = {
         const title = template.querySelector('title');
         title.textContent = `${title.textContent}: Invocations`;
 
-        const table = template.querySelector('#index').firstElementChild;
+        const table = template.getElementById('index');
         const tstr = data.reduce((acc, cur) => {
             const props = [...cur.invocations,...cur.satellites];
             if(props.length > 0) {
@@ -339,7 +339,7 @@ const output = {
         </tr>\n`;
         };
         const template = make.html(templatestr);
-        const table = template.querySelector('#index').firstElementChild;
+        const table = template.getElementById('index');
 
         const title = template.querySelector('title');
         title.textContent = `${title.textContent}: Persons`;
