@@ -31,17 +31,17 @@ const output = {
 `  <td>${cur.repo}</td>
   <td>${cur.title}</td>
   <td>${cur.material}</td>
-  <td sorttable_customkey="${cur.extent[0]}">${cur.extent[1]}</td>
-  <td sorttable_customkey="${cur.width.replace(/^-|-$/,'')}">${cur.width}</td>
-  <td sorttable_customkey="${cur.height.replace(/^-|-$/,'')}">${cur.height}</td>
-  <td sorttable_customkey="${cur.date[1]}">${cur.date[0]}</td>
+  <td data-content="${cur.extent[0]}">${cur.extent[1]}</td>
+  <td data-content="${cur.width.replace(/^-|-$/,'')}">${cur.width}</td>
+  <td data-content="${cur.height.replace(/^-|-$/,'')}">${cur.height}</td>
+  <td data-content="${cur.date[1]}">${cur.date[0]}</td>
   <td class="smallcaps">${cur.images}</td>
 </tr>`;
 
             if(!opts || !opts.prefix) {
                 return acc +            
 `<tr>
-  <th sorttable_customkey="${cur.cote.sort}"${isMSPart(cur.cote.text)}><a href="${cur.fname}">${cur.cote.text}</a></th>` + poststr;
+  <th data-content="${cur.cote.sort}"${isMSPart(cur.cote.text)}><a href="${cur.fname}">${cur.cote.text}</a></th>` + poststr;
             }
 
             // with prefix
@@ -69,11 +69,11 @@ const output = {
  
             return acc +
 `<tr>
-  <th sorttable_customkey="${oldsort}"${isMSPart(cur.cote.text)}><a href="${cur.fname}">${oldcote}</th>
-  <td sorttable_customkey="${cur.cote.sort}"${isMSPart(cur.cote.text)}>${cur.cote.text}</td>` + poststr;
+  <th data-content="${oldsort}"${isMSPart(cur.cote.text)}><a href="${cur.fname}">${oldcote}</th>
+  <td data-content="${cur.cote.sort}"${isMSPart(cur.cote.text)}>${cur.cote.text}</td>` + poststr;
         },'');
 
-    table.innerHTML = thead + tstr;
+    table.innerHTML = `${thead}<tbody>${tstr}</tbody>`;
 
     const ths = table.querySelectorAll('th');
     ths[0].classList.add('sorttable_alphanum');
@@ -146,7 +146,7 @@ const output = {
             else return acc;
         },'');
         const thead = make.header([ptitle,'Shelfmark','Repository','Title','Unit','Page/folio','Placement']);
-        table.innerHTML = thead + tstr;
+        table.innerHTML = `${thead}<tbody>${tstr}</tbody>`;
         table.querySelectorAll('th')[1].classList.add('sorttable_alphanum');
         fs.writeFile(`../${pfilename}`,template.documentElement.outerHTML,{encoding: 'utf8'},function(){return;});
     },
@@ -243,7 +243,7 @@ const output = {
         },'');
 
         const table = template.querySelector('#index').firstElementChild;
-        table.innerHTML = thead + tstr;
+        table.innerHTML = `${thead}<tbody>${tstr}</tbody>`;
         table.querySelectorAll('th')[1].classList.add('sorttable_alphanum');
 
         fs.writeFile('../colophons.html',template.documentElement.outerHTML,{encoding: 'utf8'},function(){return;});
@@ -311,7 +311,7 @@ const output = {
             else return acc;
         },'');
         const thead = make.header(['Invocations','Shelfmark','Repository','Title','Unit','Page/folio','Placement','Satellite stanza']);
-        table.innerHTML = thead + tstr;
+        table.innerHTML = `${thead}<tbody>${tstr}</tbody>`;
         table.querySelectorAll('th')[1].classList.add('sorttable_alphanum');
         fs.writeFile('../invocations.html',template.documentElement.outerHTML,{encoding: 'utf8'},function(){return;});
     },
@@ -352,8 +352,8 @@ const output = {
             else return acc;
         },'');
         const thead = make.header(['Person','Role','Shelfmark','Repository','Title']);
-        table.innerHTML = thead + tstr;
-        table.querySelectorAll('th')[2].classList.add('sorttable_alphanum');
+        table.innerHTML = `${thead}<tbody>${tstr}</tbody>`;
+        //table.querySelectorAll('th')[2].classList.add('sorttable_alphanum');
         fs.writeFile('../persons.html',template.documentElement.outerHTML,{encoding: 'utf8'},function(){return;});
     },
     personsnetwork: (data) => {

@@ -12,7 +12,9 @@
       <link rel="stylesheet" href="../lib/css/transcription.css">
       <link rel="stylesheet" href="../lib/css/index.css">
       
-      <script type="text/javascript" src="../lib/js/sorttable.js"></script>
+      <!--script type="text/javascript" src="../lib/js/sorttable.js"></script-->
+      <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" type="text/css">
+      <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" type="text/javascript"></script>   
       <script type="text/javascript" src="../lib/js/index.js"></script>
    </head>
    <body lang="en">
@@ -51,15 +53,8 @@
     </div>
     <article>
         <section>
-            <table id="index" class="sortable">
-                <tbody>
-                </tbody>
-            </table>
+            <table id="index"></table>
         </section>
     </article>
    </body>
-   <script type="text/javascript">
-      const table = document.querySelector('table');
-      if(table) table.addEventListener('mouseover',docMouseover);
-   </script>
 </html>

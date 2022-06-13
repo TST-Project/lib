@@ -1,4 +1,5 @@
 // from https://stackoverflow.com/questions/28711653/sorting-string-function-by-custom-alphabet-javascript
+/*
 function makeComparer(order) {
   var ap = Array.prototype;
 
@@ -31,6 +32,8 @@ sorttable.sort_alpha = function(a,b) {
     const comparer = makeComparer('aāiīuūeēoōkgṅcñṭṇtnpbfmyrlvḻḷṟṉjṣśh');
     return comparer(a[0].toLowerCase(),b[0].toLowerCase());
 }
+*/
+
 const docMouseover = function(e) {
     var targ = e.target.closest('[data-anno]');
     while(targ && targ.hasAttribute('data-anno')) {
@@ -92,3 +95,8 @@ const toolTip = {
         }
     },
 };
+
+window.addEventListener('load', () => {
+      const table = document.querySelector('table');
+      if(table) table.addEventListener('mouseover',docMouseover);
+});

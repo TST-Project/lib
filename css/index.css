@@ -1,6 +1,10 @@
+body {
+    padding-left: 0;
+}
+
 table, #index {
     font-size: 1.4rem;
-    width: 85%;
+    /*width: 85%;*/
 }
 #head {
     background-color: #eee;
@@ -9,6 +13,10 @@ table, #index {
     top: 0;
     position: sticky;
 }
+thead a:link {
+    background: none;
+}
+
 tbody th {
     text-align: left;
 }
