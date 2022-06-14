@@ -96,8 +96,10 @@ const output = {
             const ret = util.innertext(cur);
             const inner = ret.inner;
             const placement = ret.placement;
-            const milestone = ret.milestone;
             const synch = ret.synch;
+            const milestone = ret.facs ?
+                `<a href="${cur1.fname}?facs=${ret.facs}">${ret.milestone}</a>` :
+                ret.milestone;
 
             const unit = synch ? synch.replace(/^#/,'') : '';
             const processed = SaxonJS.transform({

@@ -25,7 +25,7 @@ const util = {
         var synch, inner, milestone, placement;
         if(el.nodeName === 'seg') {
             milestone = util.milestone(el) || 
-                el.closest('desc')?.querySelector('locus')?.textContent || '';
+                el.closest('desc')?.querySelector('locus');
             placement = util.placement(el) || 
                 el.closest('desc')?.getAttribute('subtype') || '';
             const text = el.closest('text');
@@ -37,12 +37,12 @@ const util = {
         }
         else {
             const subtype = el.getAttribute('subtype') || '';
-            milestone = el.querySelector('locus')?.textContent || '';
+            milestone = el.querySelector('locus');
             placement = subtype.replace(/\s/g,', ').replace(/-/g,' ');
             synch = el.getAttribute('synch');
             inner = el.querySelector('q,quote')?.innerHTML || '';
         }
-        return {inner: inner, synch: synch, milestone: milestone, placement: placement};
+        return {inner: inner, synch: synch, milestone: milestone?.textContent || '', facs: milestone?.facs || '', placement: placement};
     },
     milestone: (el) => {
         const getUnit = (el) => {
@@ -57,9 +57,11 @@ const util = {
             if(p.nodeName === 'text') return false;
             if(p.nodeName === 'pb' || 
                 (p.nodeName === 'milestone' && check.isFolio(p.getAttribute('unit')) )
-            ) 
-                return (p.getAttribute('unit') || getUnit(p) || '') + ' ' + 
-                       (p.getAttribute('n') || '');
+            ) {
+                const content = (p.getAttribute('unit') || getUnit(p) || '') + ' ' + 
+                                (p.getAttribute('n') || '');
+                return {textContent: content, facs: p.getAttribute('facs')};
+            }
             p = util.prev(p);
         }
     },
