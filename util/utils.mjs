@@ -42,7 +42,7 @@ const util = {
             synch = el.getAttribute('synch');
             inner = el.querySelector('q,quote')?.innerHTML || '';
         }
-        return {inner: inner, synch: synch, milestone: milestone?.textContent || '', facs: milestone?.facs || '', placement: placement};
+        return {inner: inner, synch: synch, milestone: milestone?.textContent || '', facs: milestone?.getAttribute('facs') || '', placement: placement};
     },
     milestone: (el) => {
         const getUnit = (el) => {
@@ -60,7 +60,7 @@ const util = {
             ) {
                 const content = (p.getAttribute('unit') || getUnit(p) || '') + ' ' + 
                                 (p.getAttribute('n') || '');
-                return {textContent: content, facs: p.getAttribute('facs')};
+                return {textContent: content, getAttribute: () => p.getAttribute('facs')};
             }
             p = util.prev(p);
         }
