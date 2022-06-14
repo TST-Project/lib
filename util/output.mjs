@@ -205,8 +205,14 @@ const output = {
     colophons: (data) => {
         const colophonredux = function(acc,cur,cur1) {
             
-            const inner = cur.innerHTML;
-            const loc = cur.querySelector('locus');
+            const ret = util.innertext(cur);
+            const inner = ret.inner;
+            const placement = ret.placement;
+            const unit = ret.synch ? ret.synch.replace(/^#/,'') : '';
+            const milestone = ret.facs ?
+                `<a href="${cur1.fname}?facs=${ret.facs}">${ret.milestone}</a>` :
+                ret.milestone;
+
             const processed = SaxonJS.transform({
                 stylesheetText: xsltSheet,
                 sourceText: '<TEI xmlns="http://www.tei-c.org/ns/1.0">'+inner+'</TEI>',
@@ -227,6 +233,12 @@ const output = {
         <td>
         ${cur1.title}
         </td>
+        <td>
+        ${unit}
+        </td>
+        <td>
+        ${milestone}
+        </td>
         </tr>\n`;
         };
 
@@ -235,7 +247,7 @@ const output = {
         const title = template.querySelector('title');
         title.textContent = `${title.textContent}: Colophons`;
         
-        const thead = make.header(['Colophon','Shelfmark','Repository','Title']);
+        const thead = make.header(['Colophon','Shelfmark','Repository','Title','Unit','Page/Folio']);
         const tstr = data.reduce((acc, cur) => {
             if(cur.colophons.length > 0) {
                 const lines = [...cur.colophons].reduce((acc2,cur2) => colophonredux(acc2,cur2,cur),'');
@@ -257,7 +269,9 @@ const output = {
             const ret = util.innertext(cur);
             const inner = ret.inner;
             const placement = ret.placement;
-            const milestone = ret.milestone;
+            const milestone = ret.facs ?
+                `<a href="${cur1.fname}?facs=${ret.facs}">${ret.milestone}</a>` :
+                ret.milestone;
             const synch = ret.synch;
             const is_satellite = 
                 'satellite-stanza' === (cur.getAttribute('func') || cur.getAttribute('type')) ?
