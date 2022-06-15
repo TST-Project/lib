@@ -136,7 +136,11 @@ span.lb, span.cb {
     letter-spacing: 0;
 }   
 
-.lb.diplo::after, .cb.diplo::after {
+.lb::after {
+    content: '⸤';
+}
+
+.lb.diplo::after {
     content: "\a(" attr(data-n) ")";
 }
 
@@ -144,6 +148,25 @@ span.lb, span.cb {
     content: "\a␤";
 }
 
+.cb::after {
+    content: 'c';
+    font-size: 75%;
+    top: -0.5em;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+}
+
+.cb.diplo::after {
+    content: "\a(" attr(data-n) ")";
+    top: unset;
+    font-size: 1.3rem;
+    line-height: 1.5rem;
+}
+
+.pb::after {
+    content: "\23A1";
+}
 
 .pb.diplo::after {
     content: "\a\a(" attr(data-n) ")";

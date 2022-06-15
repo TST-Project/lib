@@ -108,7 +108,7 @@ const output = {
                 destination: 'serialized'},'sync');
             const res = processed.principalResult || '';
             const txt = Sanscript.t(
-                res.replace(/[\n\s]+/g,' ').trim(),
+                res.replace(/[\n\s]+/g,' ').replace(/\s%nobreak%/g,'').trim(),
                 'tamil','iast');
             return acc + 
                 `<tr>
