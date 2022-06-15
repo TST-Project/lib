@@ -169,11 +169,11 @@ const TSTViewer = (function() {
         },
 
         removeHyphens: function(ev) {
-
-            if(ev.target.closest('textarea')) return;
             ev.preventDefault();
             var sel = window.getSelection().toString();
-            sel = sel.replace(consts.hyphenRegex,'');
+            sel = ev.target.closest('textarea') ? 
+                sel :
+                sel.replace(consts.hyphenRegex,'');
             (ev.clipboardData || window.clipboardData).setData('Text',sel);
         },
     };
