@@ -274,7 +274,7 @@ const output = {
                 ret.milestone;
             const synch = ret.synch;
             const is_satellite = 
-                'satellite-stanza' === (cur.getAttribute('func') || cur.getAttribute('type')) ?
+                'satellite-stanza' === (cur.getAttribute('function') || cur.getAttribute('type')) ?
                 '✓' : '';
             const unit = synch ? synch.replace(/^#/,'') : '';
             const processed = SaxonJS.transform({
