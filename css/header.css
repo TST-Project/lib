@@ -82,6 +82,10 @@ em.title-article::after {
     content: '”';
 }
 
+h1 {
+    margin-right: 0.5rem;
+}
+
 h1 em.title.tamil, h1 em.title.devanagari, h1 em.title.telugu {
     line-height: 4rem;
 }
