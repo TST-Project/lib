@@ -375,13 +375,10 @@
 <tst:additiontype>
     <tst:group label="structuring">
         <tst:entry key="catchword">catchword</tst:entry>
-        <tst:entry key="chapter-heading">chapter heading</tst:entry>
-        <tst:entry key="end-title">end title</tst:entry>
         <tst:entry key="foliation">foliation</tst:entry>
         <tst:entry key="header">header</tst:entry>
         <tst:entry key="intertitle">intertitle</tst:entry>
         <tst:entry key="register">register</tst:entry>
-        <tst:entry key="stage-directions">stage directions</tst:entry>
         <tst:entry key="table-of-contents">table of contents</tst:entry>
         <tst:entry key="title">title</tst:entry>
         <tst:entry key="verse-beginning">verse beginning</tst:entry>
