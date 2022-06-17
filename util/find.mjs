@@ -6,7 +6,7 @@ const find = {
     colophons: (xmlDoc) => {
         const colophons = [...xmlDoc.querySelectorAll('colophon, seg[function~="colophon"]')];
         const cs1 = [...xmlDoc.querySelectorAll('desc[type~="copy-statement"]')];
-        const cs2 = [...xmlDoc.querySelectorAll('seg[function~="copy-statement"]')].map( 
+        const cs2 = [...xmlDoc.querySelectorAll('seg[function~="copy-statement"]')].filter( 
             el => !el.closest('colophon, seg[function~="colophon"]')
         );
         return colophons.concat(cs1, cs2);
