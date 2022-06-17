@@ -5,7 +5,7 @@ const find = {
     paratexts: (xmlDoc,name) => xmlDoc.querySelectorAll(`seg[function~="${name}"], desc[type~="${name}"]`),
     colophons: (xmlDoc) => {
         const colophons = [...xmlDoc.querySelectorAll('colophon, seg[function~="colophon"]')];
-        const cs1 = [...xmlDoc.querySelectorAll('desc[type~="copy-statement"]');
+        const cs1 = [...xmlDoc.querySelectorAll('desc[type~="copy-statement"]')];
         const cs2 = [...xmlDoc.querySelectorAll('seg[function~="copy-statement"]')].map( 
             el => !el.closest('colophon, seg[function~="colophon"]')
         );
