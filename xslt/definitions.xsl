@@ -413,12 +413,16 @@
         <tst:entry key="total-stanzas">total stanzas</tst:entry>
         <tst:entry key="documenting-note">user-related note</tst:entry>
     </tst:group>
-    <!--tst:entry key="rubric">rubric</tst:entry>
+</tst:additiontype>
+
+<tst:segtype>
+    <tst:entry key="rubric">rubric</tst:entry>
     <tst:entry key="incipit">incipit</tst:entry>
     <tst:entry key="explicit">explicit</tst:entry>
     <tst:entry key="completion-statement">completion statement</tst:entry>
-    <tst:entry key="colophon">colophon</tst:entry-->
-</tst:additiontype>
+    <tst:entry key="colophon">colophon</tst:entry>
+    <tst:entry key="copy-statement">copy statement</tst:entry>
+</tst:segtype>
 
 <tst:genres>
     <tst:entry key="#ammanai">Ammāṉai</tst:entry>

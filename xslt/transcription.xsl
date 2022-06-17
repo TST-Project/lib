@@ -704,7 +704,7 @@
         <xsl:attribute name="data-anno">
             <xsl:if test="$func">
                 <!-- needs to be //tst:entry because of intervening tst:group elements -->
-                <xsl:variable name="funcname" select="$TST//tst:additiontype//tst:entry[@key=$func]"/>
+                <xsl:variable name="funcname" select="$TST/tst:additiontype//tst:entry[@key=$func] | $TST/tst:segtype/tst:entry[@key=$func]"/>
                 <xsl:choose>
                     <xsl:when test="$funcname">
                         <xsl:value-of select="$funcname"/>
