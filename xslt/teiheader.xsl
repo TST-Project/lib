@@ -981,7 +981,9 @@
                                 @function != 'incipit' and
                                 @function != 'explicit' and
                                 @function != 'completion-statement' and
-                                @function != 'colophon' and not(ancestor::x:seg)]"/>
+                                @function != 'colophon' and 
+                                @function != 'copy-statement' and
+                                not(ancestor::x:seg)]"/>
   <xsl:if test="node()[not(self::text())] or $ps">
       <tr>
         <th>Paratexts</th>
