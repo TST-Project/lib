@@ -179,3 +179,8 @@ a[href]:hover::after {
     position: absolute;
     z-index: -1;
 }
+
+.highlit {
+    display: inline-block;
+    background: rgb(239,239,61);
+}

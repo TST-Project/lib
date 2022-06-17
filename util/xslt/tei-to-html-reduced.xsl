@@ -129,6 +129,21 @@
 </xsl:template>
 
 <xsl:template match="x:milestone"/>
+
+<xsl:template match="x:seg[@function='copy-statement']">
+    <xsl:element name="span">
+        <xsl:call-template name="lang"/>
+        <xsl:attribute name="data-anno">
+            <xsl:text>copy statement</xsl:text>
+            <xsl:if test="@cert">
+                <xsl:text> (</xsl:text><xsl:value-of select="@cert"/><xsl:text> certainty)</xsl:text>
+            </xsl:if>
+        </xsl:attribute>
+        <xsl:attribute name="class">highlit</xsl:attribute>
+        <xsl:apply-templates/>
+    </xsl:element>
+</xsl:template>
+
 <!--
 <xsl:template match="node()">
     <xsl:apply-templates select="node()"/>
