@@ -3,7 +3,14 @@ import { util } from './utils.mjs';
 
 const find = {
     paratexts: (xmlDoc,name) => xmlDoc.querySelectorAll(`seg[function~="${name}"], desc[type~="${name}"]`),
-    colophons: (xmlDoc) => xmlDoc.querySelectorAll('colophon, seg[function~="colophon"]'),
+    colophons: (xmlDoc) => {
+        const colophons = [...xmlDoc.querySelectorAll('colophon, seg[function~="colophon"]')];
+        const cs1 = [...xmlDoc.querySelectorAll('desc[type~="copy-statement"]');
+        const cs2 = [...xmlDoc.querySelectorAll('seg[function~="copy-statement"]')].map( 
+            el => !el.closest('colophon, seg[function~="colophon"]')
+        );
+        return colophons.concat(cs1, cs2);
+    },
 
     cote: (xmlDoc) => {
         const txt = xmlDoc.querySelector('idno[type="shelfmark"]').textContent || '';
