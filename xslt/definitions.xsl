@@ -13,10 +13,12 @@
 <!-- definitions -->
 <xsl:variable name="defRoot">
 <tst:mstypes>
-    <tst:entry key="#STM" selected="true">Single-text manuscript</tst:entry>
-    <tst:entry key="#MTM">Multi-text manuscript</tst:entry>
-    <tst:entry key="#CM">Composite manuscript</tst:entry>
-    <tst:entry key="#MVM">Multi-volume manuscript</tst:entry>
+    <tst:entry key="#STM" selected="true">Single-text</tst:entry>
+    <tst:entry key="#MTM">Multi-text</tst:entry>
+    <tst:entry key="#CM">Composite</tst:entry>
+    <tst:entry key="#MVM">Multi-volume</tst:entry>
+    <tst:entry key="#POSTER">Poster</tst:entry>
+    <tst:entry key="#SCRAPBOOK">Scrapbook</tst:entry>
 </tst:mstypes>
 
 <tst:format>
@@ -48,6 +50,7 @@
 </tst:extentunit>
 
 <tst:style>
+    <tst:entry key="inline-commentary">Inline commentary</tst:entry>
     <tst:entry key="tripāṭha">Tripāṭha</tst:entry>
     <tst:entry key="pañcapāṭha">Pañcapāṭha</tst:entry>
 </tst:style>
@@ -387,8 +390,9 @@
     <tst:group label="commenting">
         <tst:entry key="correction">correction</tst:entry>
         <tst:entry key="gloss">gloss/commentary</tst:entry>
+        <tst:entry key="label">label</tst:entry>
         <tst:entry key="metre">metre</tst:entry>
-        <tst:entry key="commenting-note">text-related note</tst:entry>
+        <tst:entry key="commenting-note">commenting note</tst:entry>
     </tst:group>
     <tst:group label="documenting">
         <tst:entry key="benediction">benediction (prose)</tst:entry>
@@ -401,6 +405,7 @@
         <tst:entry key="ownership-statement">ownership statement</tst:entry>
         <tst:entry key="postface">postface</tst:entry>
         <tst:entry key="preface">preface</tst:entry>
+        <tst:entry key="recitation-statement">recitation statement</tst:entry>
         <tst:entry key="satellite-stanza">satellite stanza</tst:entry>
         <tst:entry key="seal">seal</tst:entry>
         <tst:entry key="shelfmark">shelfmark</tst:entry>
@@ -409,7 +414,9 @@
         <tst:entry key="total-chapters">total chapters</tst:entry>
         <tst:entry key="total-leaves">total leaves</tst:entry>
         <tst:entry key="total-stanzas">total stanzas</tst:entry>
-        <tst:entry key="documenting-note">user-related note</tst:entry>
+        <tst:entry key="total-works">total works</tst:entry>
+        <tst:entry key="documenting-note">documenting note</tst:entry>
+        <tst:entry key="user-related-note">user-related note</tst:entry>
     </tst:group>
 </tst:additiontype>
 
