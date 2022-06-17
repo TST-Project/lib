@@ -396,6 +396,7 @@
     <tst:group label="documenting">
         <tst:entry key="benediction">benediction (prose)</tst:entry>
         <tst:entry key="blessing">blessing (formulaic)</tst:entry>
+        <tst:entry key="copy-statement">copy statement</tst:entry>
         <tst:entry key="date">date</tst:entry>
         <tst:entry key="dedication">dedication</tst:entry>
         <tst:entry key="ex-libris">ex-libris</tst:entry>
@@ -421,7 +422,6 @@
     <tst:entry key="explicit">explicit</tst:entry>
     <tst:entry key="completion-statement">completion statement</tst:entry>
     <tst:entry key="colophon">colophon</tst:entry>
-    <tst:entry key="copy-statement">copy statement</tst:entry>
 </tst:segtype>
 
 <tst:genres>

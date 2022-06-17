@@ -982,7 +982,6 @@
                                 @function != 'explicit' and
                                 @function != 'completion-statement' and
                                 @function != 'colophon' and 
-                                @function != 'copy-statement' and
                                 not(ancestor::x:seg)]"/>
   <xsl:if test="node()[not(self::text())] or $ps">
       <tr>
