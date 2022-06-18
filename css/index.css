@@ -182,5 +182,5 @@ a[href]:hover::after {
 
 .highlit {
     display: inline-block;
-    background: rgb(239,239,61);
+    background: rgba(239,239,61,0.5);
 }
