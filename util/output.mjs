@@ -108,7 +108,7 @@ const output = {
                 destination: 'serialized'},'sync');
             const res = processed.principalResult || '';
             const txt = Sanscript.t(
-                res.replace(/[\n\s]+/g,' ').replace(/\s%nobreak%/g,'').trim(),
+                res.replace(/[\n\s]+/g,' ').replace(/\s?%nobreak%/g,'').trim(),
                 'tamil','iast');
             return acc + 
                 `<tr>
@@ -175,9 +175,9 @@ const output = {
                 stylesheetText: xslx_Sheet_clean,
                 sourceText: '<TEI xmlns="http://www.tei-c.org/ns/1.0">'+inner+'</TEI>',
                 destination: 'serialized'},'sync');
-            const txt = processed.principalResult.replace(/[\n\s]+/g,' ').replace(/\s%nobreak%/g,'').trim();
+            const txt = processed.principalResult.replace(/[\n\s]+/g,' ').replace(/\s?%nobreak%/g,'').trim();
             const cleantxt = Sanscript.t(
-                processed2.principalResult.replace(/[\n\s]+/g,' ').replace(/\s%nobreak%/g,'').replace(/[|•-]|=(?=\w)/g,'').trim(),
+                processed2.principalResult.replace(/[\n\s]+/g,' ').replace(/\s?%nobreak%/g,'').replace(/[|•-]|=(?=\w)/g,'').trim(),
                 'tamil','iast');
             const tunai = Array.from(cleantxt.matchAll(/tuṇai/g)).length;
             
@@ -219,7 +219,7 @@ const output = {
                 destination: 'serialized'},'sync');
             const res = processed.principalResult || '';
             const txt = Sanscript.t(
-                res.replace(/[\n\s]+/g,' ').replace(/\s%nobreak%/g,'').trim(),
+                res.replace(/[\n\s]+/g,' ').replace(/\s?%nobreak%/g,'').trim(),
                 'tamil','iast');
             return acc + 
         `<tr>
@@ -283,7 +283,7 @@ const output = {
                 destination: 'serialized'},'sync');
             const res = processed.principalResult || '';
             const txt = Sanscript.t(
-                res.replace(/[\n\s]+/g,' ').replace(/\s%nobreak%/g,'').trim(),
+                res.replace(/[\n\s]+/g,' ').replace(/\s?%nobreak%/g,'').trim(),
                 'tamil','iast');
             return acc + 
                 `<tr>
