@@ -10,8 +10,8 @@ const templatestr = fs.readFileSync('./template.html',{encoding:'utf8'});
 
 const transliterate = (txt,cleaner = false) => {
     const cleaned = txt.replace(/[\n\s]+/g,' ').replace(/\s?%nobreak%/g,'');
-    const cleaner = cleaner ? cleaned.replace(/[|•-]|=(?=\w)/g,'') : cleaned;
-    return Sanscript.t(cleaner.trim(), 'tamil','iast');
+    const cleaned2 = cleaner ? cleaned.replace(/[|•-]|=(?=\w)/g,'') : cleaned;
+    return Sanscript.t(cleaned2.trim(), 'tamil','iast');
 }
 
 const output = {
