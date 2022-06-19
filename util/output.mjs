@@ -6,13 +6,17 @@ import Hypher from '../js/hypher.mjs';
 import { hyphenation_ta_Latn } from '../js/ta-Latn.mjs';
 import { util, make, check } from './utils.mjs';
 
+const hyphenate = new Hypher(hyphenation_ta_Latn);
+
+// filepaths are relative to where the main script is run from
 const xsltSheet = fs.readFileSync('./lib/util/xslt/tei-to-html-reduced.json',{encoding:'utf-8'});
 const templatestr = fs.readFileSync('./lib/util/template.html',{encoding:'utf8'});
 
 const transliterate = (txt,cleaner = false) => {
     const cleaned = txt.replace(/[\n\s]+/g,' ').replace(/\s?%nobreak%/g,'');
     const cleaned2 = cleaner ? cleaned.replace(/[|•-]|=(?=\w)/g,'') : cleaned;
-    return Sanscript.t(cleaned2.trim(), 'tamil','iast');
+    const transliterated = Sanscript.t(cleaned2.trim(), 'tamil','iast');
+    return Hypher.hyphenateText(transliterated);
 }
 
 const output = {
