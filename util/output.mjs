@@ -6,8 +6,8 @@ import Hypher from '../js/hypher.mjs';
 import { hyphenation_ta_Latn } from '../js/ta-Latn.mjs';
 import { util, make, check } from './utils.mjs';
 
-const xsltSheet = fs.readFileSync('./xslt/tei-to-html-reduced.json',{encoding:'utf-8'});
-const templatestr = fs.readFileSync('./template.html',{encoding:'utf8'});
+const xsltSheet = fs.readFileSync('./lib/util/xslt/tei-to-html-reduced.json',{encoding:'utf-8'});
+const templatestr = fs.readFileSync('./lib/util/template.html',{encoding:'utf8'});
 
 const transliterate = (txt,cleaner = false) => {
     const cleaned = txt.replace(/[\n\s]+/g,' ').replace(/\s?%nobreak%/g,'');
