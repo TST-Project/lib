@@ -2,7 +2,8 @@ import fs from 'fs';
 import xlsx from 'xlsx';
 import SaxonJS from 'saxon-js';
 import { Sanscript } from '../js/sanscript.mjs';
-import { Hypher } from '../js/hypher.mjs';
+import Hypher from './hypher.mjs';
+import { hyphenation_ta_Latn } from './ta-Latn.mjs';
 import { util, make, check } from './utils.mjs';
 
 const xsltSheet = fs.readFileSync('./xslt/tei-to-html-reduced.json',{encoding:'utf-8'});
