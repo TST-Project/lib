@@ -41,7 +41,7 @@ var schemes = Sanscript.schemes = {
             vowel_marks: ['ா','ி','ீ','ு','ூ','','','','','ெ','ே','ை','ொ','ோ','ௌ'],
             other_marks: 'ஂ \u{11303} ஃ'.split(' '),
             virama: ['்'],
-            consonants: 'க \u{11316} \u{11317} \u{11318} ங ச \u{1131B} ஜ \u{1131D} ஞ ட \u{11320} \u{11321} \u{11322} ண த \u{11325} \u{11326} \u{11327} ந ப \u{1132B} \u{1132C} \u{1132D} ம ய ர ல வ ஶ ஷ ஸ ஹ ழ ள ற ன க்ஷ ஜ்ஞ'.split(' '),
+            consonants: 'க \u{11316} \u{11317} \u{11318} ங ச \u{1131B} ஜ \u{1131D} ஞ ட \u{11320} \u{11321} \u{11322} ண த \u{11325} \u{11326} \u{11327} ந ப \u{1132B} \u{1132C} \u{1132D} ம ய ர ல வ ஶ ஷ ஸ ஹ ழ ள ற ன'.split(' '),
             symbols: '௦ ௧ ௨ ௩ ௪ ௫ ௬ ௭ ௮ ௯ ௐ  ऽ । ॥ ௰ ௱ ௲'.split(' '),
             //other: '        ற'.split(' ')
         },
@@ -72,7 +72,7 @@ var schemes = Sanscript.schemes = {
                 '\u{1132A}','\u{1132B}','\u{1132C}','\u{1132D}','\u{1132E}',
                 '\u{1132F}','\u{11330}','\u{11332}','\u{11335}',
                 '\u{11336}','\u{11337}','\u{11338}','\u{11339}',
-                '\u{11333}','','','','\u{11315}\u{1134D}\u{11337}','\u{1131C}\u{1134D}\u{1131E}'
+                '\u{11333}','','',''
             ],
             symbols: '௦ ௧ ௨ ௩ ௪ ௫ ௬ ௭ ௮ ௯ \u{11350}  ऽ । ॥ ௰ ௱ ௲'.split(' '),
         },
@@ -105,7 +105,7 @@ var schemes = Sanscript.schemes = {
                 '\u{0D2A}','\u{0D2B}','\u{0D2C}','\u{0D2D}','\u{0D2E}',
                 '\u{0D2F}','\u{0D30}','\u{0D32}','\u{0D35}',
                 '\u{0D36}','\u{0D37}','\u{0D38}','\u{0D39}',
-                '\u{0D33}','','','','\u{0D15}\u{0D4D}\u{0D37}','\u{0D1C}\u{0D4D}\u{0D1E}',''
+                '\u{0D33}','','',''
             ],
             symbols: '\u{0D66} \u{0D67} \u{0D68} \u{0D69} \u{0D6A} \u{0D6B} \u{0D6C} \u{0D6D} \u{0D6E} \u{0D6F} \u{0D12}\u{0D01}  \u{0D3D} । ॥ \u{0D70} \u{0D71} \u{0D72}'.split(' '),
         },
@@ -181,7 +181,7 @@ var schemes = Sanscript.schemes = {
             virama: ['্'],
             consonants: ['ক','খ','গ','ঘ','ঙ','চ','ছ','জ','ঝ','ঞ','ট','ঠ','ড','ঢ','ণ',
                 'ত','থ','দ','ধ','ন','প','ফ','ব','ভ','ম','য','র','ল','ব','শ','ষ','স','হ',
-                'ळ','','','','ক্ষ','জ্ঞ','য়'],
+                'ळ','','','','য়'],
             symbols: '০ ১ ২ ৩ ৪ ৫ ৬ ৭ ৮ ৯ ওঁ  ঽ । ॥'.split(' '),
             //other: '    ড ঢ  য '.split(' ')
         },
@@ -209,7 +209,7 @@ var schemes = Sanscript.schemes = {
 
             // Various Sanskrit consonants and consonant clusters. Every token
             // here has an explicit vowel. Thus "क" is "ka" instead of "k".
-            consonants: ['क','ख','ग','घ','ङ','च','छ','ज','झ','ञ','ट','ठ','ड','ढ','ण','त','थ','द','ध','न','प','फ','ब','भ','म', 'य','र','ल','व','श','ष','स','ह','ळ','ऴ','ऱ','ऩ','क्ष','ज्ञ', 'य़'],
+            consonants: ['क','ख','ग','घ','ङ','च','छ','ज','झ','ञ','ट','ठ','ड','ढ','ण','त','थ','द','ध','न','प','फ','ब','भ','म', 'य','र','ल','व','श','ष','स','ह','ळ','ऴ','ऱ','ऩ','य़'],
 
             // Numbers and punctuation
             symbols: '० १ २ ३ ४ ५ ६ ७ ८ ९ ॐ ꣽ ऽ । ॥'.split(' '),
@@ -240,7 +240,7 @@ var schemes = Sanscript.schemes = {
             vowel_marks: 'ా ి ీ ు ూ ృ ౄ ౢ ౣ ె ే ై ొ ో ౌ'.split(' '),
             other_marks: 'ం ః   ఁ'.split(' '),
             virama: ['్'],
-            consonants: 'క ఖ గ ఘ ఙ చ ఛ జ ఝ ఞ ట ఠ డ ఢ ణ త థ ద ధ న ప ఫ బ భ మ య ర ల వ శ ష స హ ళ ఴ ఱ  క్ష జ్ఞ'.split(' '),
+            consonants: 'క ఖ గ ఘ ఙ చ ఛ జ ఝ ఞ ట ఠ డ ఢ ణ త థ ద ధ న ప ఫ బ భ మ య ర ల వ శ ష స హ ళ ఴ ఱ  '.split(' '),
             symbols: '౦ ౧ ౨ ౩ ౪ ౫ ౬ ౭ ౮ ౯ ఓం ఽ । ॥'.split(' '),
             //other: '        ఱ'.split(' ')
         },
@@ -258,7 +258,7 @@ var schemes = Sanscript.schemes = {
             //skip: ['_'],
             //consonants: 'k kh g gh ṅ c ch j jh ñ ṭ ṭh ḍ ḍh ṇ t th d dh n p ph b bh m y r l v ś ṣ s h ḻ kṣ jñ'.split(' '),
             //symbols: "0 1 2 3 4 5 6 7 8 9 oṁ ' | ||".split(' '),
-            consonants: 'k kh g gh ṅ c ch j jh ñ ṭ ṭh ḍ ḍh ṇ t th d dh n p ph b bh m y r l v ś ṣ s h ḻ l̥ ṟ ṉ kṣ jñ ẏ'.split(' '),
+            consonants: 'k kh g gh ṅ c ch j jh ñ ṭ ṭh ḍ ḍh ṇ t th d dh n p ph b bh m y r l v ś ṣ s h ḻ l̥ ṟ ṉ ẏ'.split(' '),
             symbols: '0 1 2 3 4 5 6 7 8 9 oṁ oḿ \' | || ⁰ ⁰⁰ ⁰⁰⁰'.split(' '),
         }
     },
