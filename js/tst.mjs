@@ -170,10 +170,11 @@ const TSTViewer = (function() {
 
         removeHyphens: function(ev) {
             ev.preventDefault();
+            const hyphenRegex = new RegExp('\u00AD','g');
             var sel = window.getSelection().toString();
             sel = ev.target.closest('textarea') ? 
                 sel :
-                sel.replace(consts.hyphenRegex,'');
+                sel.replace(hyphenRegex,'');
             (ev.clipboardData || window.clipboardData).setData('Text',sel);
         },
     };
