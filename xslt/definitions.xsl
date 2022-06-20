@@ -17,17 +17,25 @@
     <tst:entry key="#MTM">Multi-text</tst:entry>
     <tst:entry key="#CM">Composite</tst:entry>
     <tst:entry key="#MVM">Multi-volume</tst:entry>
-    <tst:entry key="#POSTER">Poster</tst:entry>
-    <tst:entry key="#SCRAPBOOK">Scrapbook</tst:entry>
 </tst:mstypes>
 
 <tst:format>
     <tst:entry key="codex">codex</tst:entry>
     <tst:entry key="loose-leaf">loose leaf</tst:entry>
     <tst:entry key="plate">plate</tst:entry>
+    <tst:entry key="poster">poster</tst:entry>
     <tst:entry key="pothi" selected="true">pothi</tst:entry>
     <tst:entry key="roll">roll</tst:entry>
+    <tst:entry key="scrapbook">scrapbook</tst:entry>
 </tst:format>
+
+<tst:technology>
+    <tst:entry key="manuscript">manuscript</tst:entry>
+    <tst:entry key="movable-type">movable type</tst:entry>
+    <tst:entry key="xylography">xylography</tst:entry>
+    <tst:entry key="lithography">lithography</tst:entry>
+    <tst:entry key="photography">photography</tst:entry>
+</tst:technology>
 
 <tst:materials>
     <tst:entry key="paper">Paper</tst:entry>

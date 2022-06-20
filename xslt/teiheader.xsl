@@ -526,6 +526,7 @@
       <h3>Physical description</h3>
       <table id="physDesc">
       <xsl:apply-templates select="x:objectDesc/@form"/>
+      <xsl:apply-templates select="x:objectDesc/@rend"/>
       <xsl:apply-templates select="x:objectDesc/x:supportDesc/@material"/>
       <xsl:apply-templates select="x:objectDesc/x:supportDesc/x:extent"/>
       <xsl:apply-templates select="x:objectDesc/x:supportDesc/x:collation"/>
@@ -563,13 +564,20 @@
   </tr>
 </xsl:template>
 
+<xsl:template match="x:objectDesc/@rend">
+  <xsl:variable name="tech" select="."/>
+  <tr>
+    <th>Technology</th> <td><xsl:call-template name="capitalize"><xsl:with-param name="str" select="$TST/tst:technology/tst:entry[@key=$tech]"/></xsl:call-template></td>
+  </tr>
+</xsl:template>
+
 <xsl:template match="x:objectDesc/x:supportDesc/@material">
   <xsl:variable name="mat" select="."/>
   <xsl:element name="tr">
     <xsl:element name="th">Material</xsl:element>
     <xsl:element name="td">
         <xsl:value-of select="$TST/tst:materials/tst:entry[@key=$mat]"/>
-        <xsl:if test="../x:support">
+        <xsl:if test="../x:support/node()[not(self::text())]">
             <xsl:text>. </xsl:text>
             <xsl:apply-templates select="../x:support"/>
         </xsl:if>
@@ -1126,9 +1134,16 @@
 </xsl:template>
 
 <xsl:template match="x:binding">
-    <p><xsl:apply-templates/></p>
+    <p>
+        <xsl:apply-templates select="x:p"/>
+        <xsl:apply-templates select="x:decoNote"/>
+    </p>
 </xsl:template>
 <xsl:template match="x:binding/x:p">
+    <xsl:apply-templates/>
+</xsl:template>
+<xsl:template match="x:binding/x:decoNote">
+    <xsl:text> </xsl:text>
     <xsl:apply-templates/>
 </xsl:template>
 
