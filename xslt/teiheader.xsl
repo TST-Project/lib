@@ -565,9 +565,14 @@
 </xsl:template>
 
 <xsl:template match="x:objectDesc/@rend">
-  <xsl:variable name="tech" select="."/>
   <tr>
-    <th>Technology</th> <td><xsl:call-template name="capitalize"><xsl:with-param name="str" select="$TST/tst:technology/tst:entry[@key=$tech]"/></xsl:call-template></td>
+    <th>Technology</th> 
+    <td>
+        <xsl:call-template name="splitlist">
+                <xsl:with-param name="list" select="."/>
+                <xsl:with-param name="map">tst:technology</xsl:with-param>
+            </xsl:call-template>
+    </td>
   </tr>
 </xsl:template>
 
