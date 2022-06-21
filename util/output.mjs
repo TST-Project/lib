@@ -261,7 +261,7 @@ const output = {
         const title = template.querySelector('title');
         title.textContent = `${title.textContent}: Colophons`;
         
-        const pdesc = opts.name ? descriptions.getElementById('colophons') : null;
+        const pdesc = descriptions.getElementById('colophons');
         if(pdesc) template.querySelector('article').prepend(pdesc);
 
         const thead = make.header(['Colophon','Shelfmark','Repository','Title','Unit','Page/Folio']);
@@ -333,7 +333,7 @@ const output = {
         const title = template.querySelector('title');
         title.textContent = `${title.textContent}: Invocations`;
 
-        const pdesc = opts.name ? descriptions.getElementById('invocations') : null;
+        const pdesc = descriptions.getElementById('invocations');
         if(pdesc) template.querySelector('article').prepend(pdesc);
 
         const table = template.getElementById('index');
