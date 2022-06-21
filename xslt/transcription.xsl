@@ -453,12 +453,21 @@
         </xsl:attribute>
     </xsl:if>
 </xsl:template>
-
 <xsl:template match="x:lb">
+    <xsl:call-template name="lb"/>
+</xsl:template>
+<xsl:template match="x:q[@rend='block']//x:lg//x:lb | x:quote[@rend='block']//x:lg//x:lb">
+    <xsl:call-template name="lb">
+        <xsl:with-param name="diplo">false</xsl:with-param>
+    </xsl:call-template>
+</xsl:template>
+
+<xsl:template name="lb">
+    <xsl:param name="diplo">true</xsl:param>
     <xsl:element name="span">
         <xsl:attribute name="class">
             <xsl:text>lb</xsl:text>
-            <xsl:if test="not(ancestor::x:lg/ancestor::*[@rend='block'])">
+            <xsl:if test="$diplo = 'true'">
                 <xsl:text> diplo</xsl:text>
             </xsl:if>
             <xsl:if test="not(@n)"><xsl:text> unnumbered</xsl:text></xsl:if>
@@ -517,9 +526,24 @@
 
 <xsl:template match="x:pb">
     <xsl:param name="excerpt">no</xsl:param>
+    <xsl:call-template name="pb">
+        <xsl:with-param name="excerpt"><xsl:value-of select="$excerpt"/></xsl:with-param>
+    </xsl:call-template>
+</xsl:template>
+<xsl:template match="x:q[@rend='block']//x:lg//x:pb | x:quote[@rend='block']//x:lg//x:pb">
+    <xsl:param name="excerpt">no</xsl:param>
+    <xsl:call-template name="pb">
+        <xsl:with-param name="diplo">false</xsl:with-param>
+        <xsl:with-param name="excerpt"><xsl:value-of select="$excerpt"/></xsl:with-param>
+    </xsl:call-template>
+</xsl:template>
+<xsl:template name="pb">
+    <xsl:param name="excerpt">no</xsl:param>
+    <xsl:param name="diplo">true</xsl:param>
     <xsl:element name="span">
         <xsl:attribute name="class">
-            <xsl:text>pb diplo</xsl:text>
+            <xsl:text>pb</xsl:text>
+            <xsl:if test="$diplo = 'true'"><xsl:text> diplo</xsl:text></xsl:if>
             <xsl:if test="$excerpt = 'yes'"><xsl:text> nobreak</xsl:text></xsl:if>
         </xsl:attribute>
         <xsl:attribute name="lang">en</xsl:attribute>
