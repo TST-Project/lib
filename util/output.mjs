@@ -165,7 +165,8 @@ const output = {
             }
             else return acc;
         },'');
-        const thead = make.header([ptitle,'Shelfmark','Repository','Title','Unit','Page/folio','Placement']);
+        const singular = ptitle.replace(/s$/,'');
+        const thead = make.header([singular,'Shelfmark','Repository','Title','Unit','Page/folio','Placement']);
         table.innerHTML = `${thead}<tbody>${tstr}</tbody>`;
         table.querySelectorAll('th')[1].classList.add('sorttable_alphanum');
         fs.writeFile(`../${pfilename}`,template.documentElement.outerHTML,{encoding: 'utf8'},function(){return;});
@@ -345,7 +346,7 @@ const output = {
             }
             else return acc;
         },'');
-        const thead = make.header(['Invocations','Shelfmark','Repository','Title','Unit','Page/folio','Placement','Satellite stanza']);
+        const thead = make.header(['Invocation','Shelfmark','Repository','Title','Unit','Page/folio','Placement','Satellite stanza']);
         table.innerHTML = `${thead}<tbody>${tstr}</tbody>`;
         table.querySelectorAll('th')[1].classList.add('sorttable_alphanum');
         fs.writeFile('../invocations.html',template.documentElement.outerHTML,{encoding: 'utf8'},function(){return;});
