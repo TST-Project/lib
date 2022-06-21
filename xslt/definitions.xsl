@@ -173,6 +173,7 @@
     </tst:group>
 </tst:typemedia>
 
+<!-- DEPRECATED -->
 <tst:scribes>
     <tst:entry key="#ArielTitleScribe">Ariel's title scribe</tst:entry>
     <tst:entry key="#EdouardAriel">Edouard Ariel</tst:entry>

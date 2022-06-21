@@ -916,6 +916,8 @@
     <xsl:attribute name="data-scriptref"><xsl:value-of select="translate(@scriptRef,'#','')"/></xsl:attribute>
     <xsl:call-template name="synch-format"/>
     <xsl:text>(</xsl:text><xsl:value-of select="@scope"/><xsl:text>) </xsl:text>
+    
+    <!-- DEPRECATED -->
     <xsl:apply-templates select="@scribeRef"/>
     
     <xsl:element name="ul">
