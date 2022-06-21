@@ -11,6 +11,7 @@ import { Sanscript } from '../js/sanscript.mjs';
 // filepaths are relative to where the main script is run from
 const xsltSheet = fs.readFileSync('./lib/util/xslt/tei-to-html-reduced.json',{encoding:'utf-8'});
 const templatestr = fs.readFileSync('./lib/util/template.html',{encoding:'utf8'});
+const descriptions = make.html(fs.readFileSync('./lib/util/descriptions.html',{encoding:'utf8'}));
 
 const transliterate = (txt,cleaner = false) => {
     const cleaned = txt.replace(/[\n\s]+/g,' ').replace(/\s?%nobreak%/g,'');
@@ -104,6 +105,7 @@ const output = {
     paratexts: (data, opts) => {
         
         const ptitle = opts.name ? opts.name[0].toUpperCase() + opts.name.slice(1) : 'Paratexts';
+        const pdesc = opts.name ? descriptions.getElementById(opts.name) : null;
         const pprop = opts.prop;
         const pfilename = opts.name.replace(/\s+/g, '_') + '.html';
     
@@ -152,6 +154,8 @@ const output = {
 
         const title = template.querySelector('title');
         title.textContent = `${title.textContent}: ${ptitle}`;
+
+        if(pdesc) template.querySelector('article').prepend(pdesc);
 
         const table = template.getElementById('index');
         const tstr = data.reduce((acc, cur) => {
@@ -257,6 +261,9 @@ const output = {
         const title = template.querySelector('title');
         title.textContent = `${title.textContent}: Colophons`;
         
+        const pdesc = opts.name ? descriptions.getElementById('colophons') : null;
+        if(pdesc) template.querySelector('article').prepend(pdesc);
+
         const thead = make.header(['Colophon','Shelfmark','Repository','Title','Unit','Page/Folio']);
         const tstr = data.reduce((acc, cur) => {
             if(cur.colophons.length > 0) {
@@ -325,6 +332,9 @@ const output = {
 
         const title = template.querySelector('title');
         title.textContent = `${title.textContent}: Invocations`;
+
+        const pdesc = opts.name ? descriptions.getElementById('invocations') : null;
+        if(pdesc) template.querySelector('article').prepend(pdesc);
 
         const table = template.getElementById('index');
         const tstr = data.reduce((acc, cur) => {

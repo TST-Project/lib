@@ -5,10 +5,8 @@ body {
     overflow-x: scroll;
 }
 
-.dataTable-wrapper {
+article {
     max-width: 1400px;
-    padding-left: 1rem;
-    padding-right: 1rem;
     margin: 0 auto;
 }
 
