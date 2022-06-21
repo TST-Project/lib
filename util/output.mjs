@@ -19,6 +19,7 @@ const transliterate = (txt,cleaner = false) => {
                 .replace(/^⁰|([^\d⁰])⁰/g,'$1¹⁰')
                 .replace(/l̥/g,'ḷ');
     return transliterated;
+    // need to mark language of text, and hyphenate only text nodes
     //return hyphenator.hyphenateText(transliterated);
 }
 
@@ -292,9 +293,10 @@ const output = {
                 destination: 'serialized'},'sync');
             const res = processed.principalResult || '';
             const txt = transliterate(res);
+            const clean = make.html(`<html>${txt}</html>`).textContent.trim();
             return acc + 
                 `<tr>
-                <td>
+                <td data-content="${clean}">
                 ${txt}
                 </td>
                 <td><a href="${cur1.fname}">${cur1.cote.text}</a></td>
