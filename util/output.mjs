@@ -293,7 +293,7 @@ const output = {
                 destination: 'serialized'},'sync');
             const res = processed.principalResult || '';
             const txt = transliterate(res);
-            const clean = make.html(`<html>${txt}</html>`).textContent.trim();
+            const clean = make.html(`<html>${txt}</html>`).documentElement.textContent.trim();
             return acc + 
                 `<tr>
                 <td data-content="${clean}">
