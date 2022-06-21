@@ -457,7 +457,10 @@
 <xsl:template match="x:lb">
     <xsl:element name="span">
         <xsl:attribute name="class">
-            <xsl:text>lb diplo</xsl:text>
+            <xsl:text>lb</xsl:text>
+            <xsl:if test="not(ancestor::x:lg/ancestor::*[@rend='block'])">
+                <xsl:text> diplo</xsl:text>
+            </xsl:if>
             <xsl:if test="not(@n)"><xsl:text> unnumbered</xsl:text></xsl:if>
         </xsl:attribute>
         <xsl:attribute name="lang">en</xsl:attribute>

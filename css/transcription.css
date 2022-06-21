@@ -57,11 +57,15 @@ div.lg {
             /*width: 100%;*/
             font-size: 1.4rem;
             line-height: 2rem;
-            padding: 0.5em 0 0.5em 1.5em;
+            padding-top: 0.5em;
+            padding-right: 0;
+            padding-bottom: 0.5em;
+            padding-left: 1.5em;
 }
 
+
 div.lg:first-child {
-    padding: 0 0 0.5em 1.5em;
+    padding-top: 0;
 }
 
 div.lg.diplo, .excerpt div.lg, .excerpt div.l, .imported-paratext div.lg, .imported-paratext div.l {
@@ -70,7 +74,7 @@ div.lg.diplo, .excerpt div.lg, .excerpt div.l, .imported-paratext div.lg, .impor
     display: inline;
 }
 
-blockquote div.lg, blockquote div.lg:first-child {
+blockquote div.lg, blockquote div.lg:first-child, .blockquote div.lg, .blockquote div.lg:first-child {
     padding: 0;
 }
 
