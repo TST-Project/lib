@@ -20,6 +20,7 @@
 </tst:mstypes>
 
 <tst:format>
+    <tst:entry key="baad">bāḍ</tst:entry>
     <tst:entry key="codex">codex</tst:entry>
     <tst:entry key="loose-leaf">loose leaf</tst:entry>
     <tst:entry key="plate">plate</tst:entry>
