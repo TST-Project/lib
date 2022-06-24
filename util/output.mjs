@@ -46,7 +46,7 @@ const output = {
 
             const poststr = 
 `  <td>${cur.repo}</td>
-  <td data-sort="sortTamil">${cur.title}</td>
+  <td>${cur.title}</td>
   <td>${cur.material}</td>
   <td data-content="${cur.extent[0]}">${cur.extent[1]}</td>
   <td data-content="${cur.width.replace(/^-|-$/,'')}">${cur.width}</td>
@@ -131,7 +131,7 @@ const output = {
             const clean = make.html(`<html>${txt}</html>`).documentElement.textContent.trim();
             return acc + 
                 `<tr>
-                <td data-content="${clean}" data-sort="sortTamil">
+                <td data-content="${clean}">
                 ${txt}
                 </td>
                 <td><a href="${cur1.fname}">${cur1.cote.text}</a></td>
@@ -171,6 +171,7 @@ const output = {
         const singular = ptitle.replace(/s$/,'');
         const thead = make.header([singular,'Shelfmark','Repository','Title','Unit','Page/folio','Placement']);
         table.innerHTML = `${thead}<tbody>${tstr}</tbody>`;
+        table.querySelector('thead th').dataset.sort = 'sortTamil';
         //table.querySelectorAll('th')[1].classList.add('sorttable_alphanum');
         fs.writeFile(`../${pfilename}`,template.documentElement.outerHTML,{encoding: 'utf8'},function(){return;});
     },
@@ -242,7 +243,7 @@ const output = {
             const clean = make.html(`<html>${txt}</html>`).documentElement.textContent.trim();
             return acc + 
         `<tr>
-        <td data-content="${clean}" data-sort="sortTamil">
+        <td data-content="${clean}">
         ${txt}
         </td>
         <td><a href="${cur1.fname}">${cur1.cote.text}</a></td>
@@ -280,6 +281,7 @@ const output = {
 
         const table = template.getElementById('index');
         table.innerHTML = `${thead}<tbody>${tstr}</tbody>`;
+        table.querySelector('thead th').dataset.sort = 'sortTamil';
         //table.querySelectorAll('th')[1].classList.add('sorttable_alphanum');
 
         fs.writeFile('../colophons.html',template.documentElement.outerHTML,{encoding: 'utf8'},function(){return;});
@@ -308,7 +310,7 @@ const output = {
             const clean = make.html(`<html>${txt}</html>`).documentElement.textContent.trim();
             return acc + 
                 `<tr>
-                <td data-content="${clean}" data-sort="sortTamil">
+                <td data-content="${clean}">
                 ${txt}
                 </td>
                 <td><a href="${cur1.fname}">${cur1.cote.text}</a></td>
@@ -352,6 +354,7 @@ const output = {
         },'');
         const thead = make.header(['Invocation','Shelfmark','Repository','Title','Unit','Page/folio','Placement','Satellite stanza']);
         table.innerHTML = `${thead}<tbody>${tstr}</tbody>`;
+        table.querySelector('thead th').dataset.sort = 'sortTamil';
         //table.querySelectorAll('th')[1].classList.add('sorttable_alphanum');
         fs.writeFile('../invocations.html',template.documentElement.outerHTML,{encoding: 'utf8'},function(){return;});
     },
@@ -393,6 +396,7 @@ const output = {
         },'');
         const thead = make.header(['Person','Role','Shelfmark','Repository','Title']);
         table.innerHTML = `${thead}<tbody>${tstr}</tbody>`;
+        table.querySelector('thead th').dataset.sort = 'sortTamil';
         //table.querySelectorAll('th')[2].classList.add('sorttable_alphanum');
         fs.writeFile('../persons.html',template.documentElement.outerHTML,{encoding: 'utf8'},function(){return;});
     },
