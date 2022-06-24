@@ -29,11 +29,47 @@ function makeComparer(order) {
 
   return compareStrings;
 }
-sorttable.sort_alpha = function(a,b) {
-    const comparer = makeComparer('aāiīuūeēoōkgṅcñṭṇtnpbfmyrlvḻḷṟṉjṣśh');
-    return comparer(a[0].toLowerCase(),b[0].toLowerCase());
-}
 */
+DataTable.extend('sortTamil', () => {
+
+    const order = 'aāiīuūeēoōkgṅcjñṭḍṇtdnpbmyrlvḻḷṟṉśṣsh'.split('').reverse();
+    const ordermap = new Map();
+    for(const [i,v] of order.entries()) {
+        ordermap.set(v,i);
+    }
+    
+    const tamilcompare = (a,b) => {
+        const minlen = Math.min(a.length,b.length);
+        let n = 0;
+        while(n < minlen) {
+            const achar = a.charAt(n);
+            const bchar = b.charAt(n);
+            if(achar === bchar) {
+                n++;
+            } else {
+                
+                const aindex = ordermap.get(achar) || -1;
+                const bindex = ordermap.get(bchar) || -1;
+                return aindex < bindex;
+                
+                //return order.indexOf(achar) < order.indexOf(bchar);
+            }
+        }
+        return a.length > b.length;
+    }
+
+    class sortTamil {
+        constructor() {}
+        init() {}
+        destroy() {}
+        compare(a,b) {
+            return tamilcompare(a,b);
+        }
+    }
+
+    return new sortTamil();
+});
+
 
 const docMouseover = function(e) {
     var targ = e.target.closest('[data-anno]');
@@ -102,6 +138,9 @@ window.addEventListener('load', () => {
           searchable: true,
           paging: false,
           sortable: true,
+          plugins: {
+              sortTamil: {}
+          }
       });
       const table = document.querySelector('table');
       if(table) table.addEventListener('mouseover',docMouseover);
