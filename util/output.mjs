@@ -92,9 +92,11 @@ const output = {
 
     table.innerHTML = `${thead}<tbody>${tstr}</tbody>`;
 
+    /*
     const ths = table.querySelectorAll('th');
     ths[0].classList.add('sorttable_alphanum');
     if(opts && opts.prefix) ths[1].classList.add('sorttable_alphanum');
+    */
 
     const fname = opts && opts.prefix ?
         opts.prefix.toLowerCase() + '.html' :
@@ -169,7 +171,7 @@ const output = {
         const singular = ptitle.replace(/s$/,'');
         const thead = make.header([singular,'Shelfmark','Repository','Title','Unit','Page/folio','Placement']);
         table.innerHTML = `${thead}<tbody>${tstr}</tbody>`;
-        table.querySelectorAll('th')[1].classList.add('sorttable_alphanum');
+        //table.querySelectorAll('th')[1].classList.add('sorttable_alphanum');
         fs.writeFile(`../${pfilename}`,template.documentElement.outerHTML,{encoding: 'utf8'},function(){return;});
     },
    
@@ -278,7 +280,7 @@ const output = {
 
         const table = template.getElementById('index');
         table.innerHTML = `${thead}<tbody>${tstr}</tbody>`;
-        table.querySelectorAll('th')[1].classList.add('sorttable_alphanum');
+        //table.querySelectorAll('th')[1].classList.add('sorttable_alphanum');
 
         fs.writeFile('../colophons.html',template.documentElement.outerHTML,{encoding: 'utf8'},function(){return;});
     },
@@ -350,7 +352,7 @@ const output = {
         },'');
         const thead = make.header(['Invocation','Shelfmark','Repository','Title','Unit','Page/folio','Placement','Satellite stanza']);
         table.innerHTML = `${thead}<tbody>${tstr}</tbody>`;
-        table.querySelectorAll('th')[1].classList.add('sorttable_alphanum');
+        //table.querySelectorAll('th')[1].classList.add('sorttable_alphanum');
         fs.writeFile('../invocations.html',template.documentElement.outerHTML,{encoding: 'utf8'},function(){return;});
     },
     persons: (data) => {
