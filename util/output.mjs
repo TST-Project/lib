@@ -46,7 +46,7 @@ const output = {
 
             const poststr = 
 `  <td>${cur.repo}</td>
-  <td>${cur.title}</td>
+  <td data-sort="sortTamil">${cur.title}</td>
   <td>${cur.material}</td>
   <td data-content="${cur.extent[0]}">${cur.extent[1]}</td>
   <td data-content="${cur.width.replace(/^-|-$/,'')}">${cur.width}</td>
@@ -126,9 +126,10 @@ const output = {
                 destination: 'serialized'},'sync');
             const res = processed.principalResult || '';
             const txt = transliterate(res);
+            const clean = make.html(`<html>${txt}</html>`).documentElement.textContent.trim();
             return acc + 
                 `<tr>
-                <td>
+                <td data-content="${clean}" data-sort="sortTamil">
                 ${txt}
                 </td>
                 <td><a href="${cur1.fname}">${cur1.cote.text}</a></td>
@@ -236,9 +237,10 @@ const output = {
                 destination: 'serialized'},'sync');
             const res = processed.principalResult || '';
             const txt = transliterate(res);
+            const clean = make.html(`<html>${txt}</html>`).documentElement.textContent.trim();
             return acc + 
         `<tr>
-        <td>
+        <td data-content="${clean}" data-sort="sortTamil">
         ${txt}
         </td>
         <td><a href="${cur1.fname}">${cur1.cote.text}</a></td>
@@ -304,7 +306,7 @@ const output = {
             const clean = make.html(`<html>${txt}</html>`).documentElement.textContent.trim();
             return acc + 
                 `<tr>
-                <td data-content="${clean}">
+                <td data-content="${clean}" data-sort="sortTamil">
                 ${txt}
                 </td>
                 <td><a href="${cur1.fname}">${cur1.cote.text}</a></td>
