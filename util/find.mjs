@@ -119,7 +119,7 @@ const find = {
     tbcs: (xmlDoc) => xmlDoc.querySelectorAll('seg[function="TBC"]'),
 
     title: (xmlDoc) => {
-        if(!xmlDoc.querySelector('titleStmt > title')) console.log(xmlDoc.querySelector('titleStmt'));
+        if(!xmlDoc.querySelector('titleStmt > title')) console.log(xmlDoc.querySelector('idno').innerHTML);
         return xmlDoc.querySelector('titleStmt > title').textContent.replace(/&/g,'&#38;').trim()
     },
 
