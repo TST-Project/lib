@@ -133,9 +133,9 @@ const toolTip = {
     },
 };
 
-const table = document.querySelector('table');
-if(table) {
-    window.addEventListener('load', () => {
+window.addEventListener('load', () => {
+    const table = document.querySelector('table');
+    if(table) {
           const dataTable = new DataTable('#index', {
               searchable: true,
               paging: false,
@@ -145,7 +145,7 @@ if(table) {
               }
           });
           document.getElementById('spinner').remove();
-          document.querySelector('section').style.visibility = 'visible';
+          document.querySelector('article').style.visibility = 'visible';
           table.addEventListener('mouseover',docMouseover);
-    });
-}
+    }
+});
