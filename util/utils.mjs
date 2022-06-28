@@ -27,7 +27,9 @@ const util = {
             milestone = util.milestone(el) || 
                 el.closest('desc')?.querySelector('locus');
             placement = util.placement(el) || 
-                el.closest('desc')?.getAttribute('subtype') || '';
+                el.closest('desc')?.getAttribute('subtype') ||
+                util.line(el) ||
+                '';
             const text = el.closest('text');
             const desc = el.closest('desc');
             synch = text ? text.getAttribute('synch') :
@@ -54,7 +56,7 @@ const util = {
         var p = util.prev(el);
         while(p) {
             if(!p) return false;
-            if(p.nodeName === 'text') return false;
+            if(p.nodeName === 'text' || p.nodeName === 'desc') return false;
             if(p.nodeName === 'pb' || 
                 (p.nodeName === 'milestone' && check.isFolio(p.getAttribute('unit')) )
             ) {
@@ -62,6 +64,17 @@ const util = {
                                 (p.getAttribute('n') || '');
                 return {textContent: content, getAttribute: () => p.getAttribute('facs')};
             }
+            p = util.prev(p);
+        }
+    },
+
+    line: (el) => {
+        var p = util.prev(el);
+        while(p) {
+            if(!p) return false;
+            if(p.nodeName === 'text' || p.nodeName === 'desc') return false;
+            if(p.nodeName === 'lb')
+                return `line ${p.getAttribute('n')}`;
             p = util.prev(p);
         }
     },
@@ -77,7 +90,7 @@ const util = {
         var p = util.prev(el);
         while(p) {
             if(!p) return '';
-            if(p.nodeName === 'text') return '';
+            if(p.nodeName === 'text' || p.nodeName === 'desc') return '';
             if(p.nodeName === 'milestone') {
                 if(check.isFolio(p.getAttribute('unit')) ) return ''; 
                 const u = (p.getAttribute('unit') || '').replace(/-/g,' ');
