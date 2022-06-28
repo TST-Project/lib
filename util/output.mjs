@@ -500,6 +500,9 @@ const legend = makeLegend(svg.scales.color);
 section.appendChild(legend);
 section.appendChild(svg);
 
+document.getElementById('spinner').remove();
+document.querySelector('section').style.visibility = 'visible';
+
 section.addEventListener('mouseover',chartMouseover);
 `
 template.body.appendChild(script);

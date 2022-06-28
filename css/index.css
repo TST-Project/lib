@@ -8,7 +8,27 @@ body {
 article {
     max-width: 1400px;
     margin: 0 auto;
+    text-align: center;
 }
+
+section {
+    visibility: hidden;
+}
+
+#spinner {
+    display: inline-block;
+    width: 5rem;
+    height: 5rem;
+    border: 10px solid rgba(0,0,0,.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
 
 table, #index {
     font-size: 1.4rem;

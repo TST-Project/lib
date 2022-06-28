@@ -133,15 +133,19 @@ const toolTip = {
     },
 };
 
-window.addEventListener('load', () => {
-      const dataTable = new DataTable('#index', {
-          searchable: true,
-          paging: false,
-          sortable: true,
-          plugins: {
-              sortTamil: {}
-          }
-      });
-      const table = document.querySelector('table');
-      if(table) table.addEventListener('mouseover',docMouseover);
-});
+const table = document.querySelector('table');
+if(table) {
+    window.addEventListener('load', () => {
+          const dataTable = new DataTable('#index', {
+              searchable: true,
+              paging: false,
+              sortable: true,
+              plugins: {
+                  sortTamil: {}
+              }
+          });
+          document.getElementById('spinner').remove();
+          document.querySelector('section').style.visibility = 'visible';
+          table.addEventListener('mouseover',docMouseover);
+    });
+}
