@@ -135,10 +135,9 @@ const find = {
             ['tel','Telugu']
         ]);
         const langs = [...xmlDoc.querySelectorAll('textLang')].reduce((acc,cur) => {
-            const codes = [
-                ...cur.getAttribute('mainLang').split(' '),
-                ...cur.getAttribute('otherLangs').split(' ')
-            ];
+            const main = cur.getAttribute('mainLang') || '';
+            const other = cur.getAttribute('otherLangs') || '';
+            const codes = [ ...main.split(' '), ...other.split(' ') ];
             for(const code of codes) acc.add(code);
             return acc;
         },new Set());
