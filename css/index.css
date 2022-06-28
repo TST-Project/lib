@@ -8,14 +8,20 @@ body {
 article {
     max-width: 1400px;
     margin: 0 auto;
-    text-align: center;
-}
-
-section {
     visibility: hidden;
 }
 
 #spinner {
+    display: flex;
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    margin: 0 auto;
+    align-items: center;
+    justify-content: center;
+}
+
+#spinner > div {
     display: inline-block;
     width: 5rem;
     height: 5rem;
