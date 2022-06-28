@@ -479,7 +479,7 @@
             </xsl:when>
             <xsl:otherwise>
                 <xsl:variable name="pretext" select="preceding::text()[1]"/>
-                <xsl:if test="normalize-space(substring($pretext,string-length($pretext))) != ''">
+                <xsl:if test="position() != 1 and normalize-space(substring($pretext,string-length($pretext))) != ''">
                     <xsl:attribute name="data-nobreak"/>
                 </xsl:if>
             </xsl:otherwise>
