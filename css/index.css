@@ -21,7 +21,7 @@ section {
     height: 5rem;
     border: 10px solid rgba(0,0,0,.3);
     border-radius: 50%;
-    border-top-color: #fff;
+    border-top-color: rgb(0,0,0);
     animation: spin 1s linear infinite;
 }
 
