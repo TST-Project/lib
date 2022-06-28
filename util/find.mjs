@@ -115,7 +115,36 @@ const find = {
         const repo = xmlDoc.querySelector('repository > orgName').textContent.replace(/\s+/g,' ');
         return names.get(repo); 
     },
+    
+    languages: (xmlDoc) => {
+        const isocodes = new Map([
+            ['ara','Arabic'],
+            ['eng','English'],
+            ['fra','French'],
+            ['deu','German'],
+            ['hin','Hindi'],
+            ['lat','Latin'],
+            ['mal','Malayalam'],
+            ['mar','Marathi'],
+            ['pal','Pali'],
+            ['por','Portuguese'],
+            ['pra','Prakrit'],
+            ['san','Sanskrit'],
+            ['sin','Sinhalese'],
+            ['tam','Tamil'],
+            ['tel','Telugu']
+        ]);
+        const langs = [...xmlDoc.querySelectorAll('textLang')].reduce((acc,cur) => {
+            const codes = [
+                ...cur.getAttribute('mainLang').split(' '),
+                ...cur.getAttribute('otherLangs').split(' ')
+            ];
+            for(const code of codes) acc.add(code);
+            return acc;
+        },new Set());
 
+        return [...langs].map(code => isocodes.get(code)).join(' ,');
+    },
     tbcs: (xmlDoc) => xmlDoc.querySelectorAll('seg[function="TBC"]'),
 
     title: (xmlDoc) => {

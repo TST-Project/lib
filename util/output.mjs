@@ -40,17 +40,16 @@ const output = {
         const table = template.getElementById('index');
         const thead = opts && opts.prefix ? 
             make.header(['Old Shelfmark','New Shelfmark','Repository','Title','Material','Extent','Width (mm)','Height (mm)','Date','Images']) :
-            make.header(['Shelfmark','Repository','Title','Material','Extent','Width (mm)','Height (mm)','Date','Images']);
+            make.header(['Shelfmark','Repository','Title','Languages','Material','Extent','Date','Images']);
 
         const tstr = data.reduce((acc, cur) => {
 
             const poststr = 
 `  <td>${cur.repo}</td>
   <td>${cur.title}</td>
+  <td>${cur.languages}</td>
   <td>${cur.material}</td>
   <td data-content="${cur.extent[0]}">${cur.extent[1]}</td>
-  <td data-content="${cur.width.replace(/^-|-$/,'')}">${cur.width}</td>
-  <td data-content="${cur.height.replace(/^-|-$/,'')}">${cur.height}</td>
   <td data-content="${cur.date[1]}">${cur.date[0]}</td>
   <td class="smallcaps">${cur.images}</td>
 </tr>`;
