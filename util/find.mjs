@@ -142,7 +142,7 @@ const find = {
             return acc;
         },new Set());
 
-        return [...langs].map(code => isocodes.get(code)).join(' ,');
+        return [...langs].filter(e=>e).sort().map(code => isocodes.get(code)).join(', ');
     },
     tbcs: (xmlDoc) => xmlDoc.querySelectorAll('seg[function="TBC"]'),
 
