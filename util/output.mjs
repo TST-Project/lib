@@ -39,7 +39,7 @@ const output = {
         title.textContent = `${title.textContent}: ${ptitle}`;
         const table = template.getElementById('index');
         const thead = opts && opts.prefix ? 
-            make.header(['Old Shelfmark','New Shelfmark','Repository','Title','Material','Extent','Width (mm)','Height (mm)','Date','Images']) :
+            make.header(['Old Shelfmark','New Shelfmark','Repository','Title','Languages','Material','Extent','Date','Images']) :
             make.header(['Shelfmark','Repository','Title','Languages','Material','Extent','Date','Images']);
 
         const tstr = data.reduce((acc, cur) => {
