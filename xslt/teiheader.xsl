@@ -924,6 +924,7 @@
         <xsl:element name="li">
             <xsl:call-template name="splitlist">    
                 <xsl:with-param name="list" select="@script"/>
+                <xsl:with-param name="map">tst:script</xsl:with-param>
             </xsl:call-template>
             <xsl:text> script</xsl:text>
             

@@ -106,20 +106,21 @@
 </tst:subtype>
 
 <tst:script>
-    <tst:entry key="arabic">Arabic</tst:entry>
-    <tst:entry key="bengali">Bengali</tst:entry>
-    <tst:entry key="devanagari">Devanagari</tst:entry>
-    <tst:entry key="grantha">Grantha</tst:entry>
-    <tst:entry key="latin">Latin</tst:entry>
-    <tst:entry key="malayalam">Malayalam</tst:entry>
-    <tst:entry key="modi">Modi</tst:entry>
-    <tst:entry key="nandinagari">Nandinagari</tst:entry>
-    <tst:entry key="newa">Newa</tst:entry>
-    <tst:entry key="pala">Pala</tst:entry>
-    <tst:entry key="sarada">Sarada</tst:entry>
-    <tst:entry key="sinhalese">Sinhalese</tst:entry>
-    <tst:entry key="telugu">Telugu</tst:entry>
-    <tst:entry key="tamil">Tamil</tst:entry>
+    <tst:entry key="arabic">arabic</tst:entry>
+    <tst:entry key="bengali">bengali</tst:entry>
+    <tst:entry key="devanagari">devanagari</tst:entry>
+    <tst:entry key="grantha">grantha</tst:entry>
+    <tst:entry key="latin">latin</tst:entry>
+    <tst:entry key="malayalam">malayalam</tst:entry>
+    <tst:entry key="modi">modi</tst:entry>
+    <tst:entry key="nandinagari">nandinagari</tst:entry>
+    <tst:entry key="newa">newa</tst:entry>
+    <tst:entry key="pala">pala</tst:entry>
+    <tst:entry key="sarada">sarada</tst:entry>
+    <tst:entry key="sinhalese">sinhalese</tst:entry>
+    <tst:entry key="telugu">telugu</tst:entry>
+    <tst:entry key="tamil">tamil</tst:entry>
+    <tst:entry key="dbucan">uchen</tst:entry>
 </tst:script>
 
 <tst:scriptRef>
@@ -199,6 +200,7 @@
     <tst:entry key="sin">Sinhalese</tst:entry>
     <tst:entry key="tam">Tamil</tst:entry>
     <tst:entry key="tel">Telugu</tst:entry>
+    <tst:entry key="bod">Tibetan</tst:entry>
 </tst:langs>
 
 <tst:entities>
