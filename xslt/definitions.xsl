@@ -61,9 +61,9 @@
 </tst:extentunit>
 
 <tst:style>
-    <tst:entry key="inline-commentary">Inline commentary</tst:entry>
-    <tst:entry key="tripāṭha">Tripāṭha</tst:entry>
-    <tst:entry key="pañcapāṭha">Pañcapāṭha</tst:entry>
+    <tst:entry key="inline-commentary">inline commentary</tst:entry>
+    <tst:entry key="tripāṭha">tripāṭha</tst:entry>
+    <tst:entry key="pañcapāṭha">pañcapāṭha</tst:entry>
 </tst:style>
 
 <tst:decotype>

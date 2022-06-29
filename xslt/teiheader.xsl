@@ -787,11 +787,13 @@
             <xsl:text>: </xsl:text>
         </xsl:element>
       </xsl:if>
-      <xsl:if test="@style and not(@style='')">
-      <xsl:call-template name="capitalize">
-        <xsl:with-param name="str" select="@style"/>
-      </xsl:call-template>
-      <xsl:text>. </xsl:text>
+      <xsl:variable name="style" select="@style"/>
+      <xsl:if test="$style and not($style='')">
+        <xsl:variable name="stylename" select="$TST/tst:style/tst:entry[@key=$style]"/>
+        <xsl:call-template name="capitalize">
+          <xsl:with-param name="str" select="$stylename"/>
+        </xsl:call-template>
+        <xsl:text>. </xsl:text>
       </xsl:if>
       <xsl:if test="@columns and not(@columns='')">
         <xsl:variable name="q" select="translate(@columns,' ','-')"/>
