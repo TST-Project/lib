@@ -158,6 +158,7 @@
         <tst:entry key="black">black</tst:entry>
         <tst:entry key="brown">brown</tst:entry>
         <tst:entry key="blue">blue</tst:entry>
+        <tst:entry key="gold">gold</tst:entry>
         <tst:entry key="red">red</tst:entry>
     </tst:group>
     <tst:entry key="incised">incised</tst:entry>
