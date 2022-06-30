@@ -204,11 +204,11 @@
 
 <xsl:template match="x:choice/x:reg"/>
 
-<xsl:template match="x:gap">
+<xsl:template match="x:gap | x:damage">
     <xsl:element name="span">
         <xsl:attribute name="lang">en</xsl:attribute>
         <xsl:attribute name="class">
-            <xsl:text>gap</xsl:text>
+            <xsl:value-of select="local-name()"/>
             <xsl:if test="@reason='ellipsis'">
                 <xsl:text> ellipsis</xsl:text>
             </xsl:if>
@@ -234,8 +234,14 @@
                         <xsl:text> of </xsl:text><xsl:value-of select="@extent"/>
                     </xsl:when>
                 </xsl:choose>
-                <xsl:if test="@reason">
-                    <xsl:text> (</xsl:text><xsl:value-of select="@reason"/><xsl:text>)</xsl:text>
+                <xsl:if test="@reason | @agent">
+                    <xsl:text> (</xsl:text>
+                    <xsl:value-of select="@reason"/>
+                    <xsl:if test="@reason and @agent">
+                        <xsl:text>, </xsl:text>
+                    </xsl:if>
+                    <xsl:value-of select="@agent"/>
+                    <xsl:text>)</xsl:text>
                 </xsl:if>
         </xsl:attribute>
         <xsl:variable name="spacechar">
