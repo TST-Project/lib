@@ -317,8 +317,9 @@ const Transliterate = (function() {
                 ['\u0BBE','\u{1133E}'],
                 ['\u0BBF','\u{1133F}'],
                 ['\u0BC0','\u{11340}'],
-                ['\u0BC2','\u{11341}'],
-                ['\u0BC6','\u{11342}'],
+                ['\u0BC1','\u{11341}'],
+                ['\u0BC2','\u{11342}'],
+                ['\u0BC6','\u{11347}'],
                 ['\u0BC7','\u{11347}'],
                 ['\u0BC8','\u{11348}'],
                 ['\u0BCA','\u{1134B}'],
@@ -342,6 +343,22 @@ const Transliterate = (function() {
             });
         },
         grantha: function(txt) {
+            const grv = new Map([
+                ['\u{11300}','\u0B82'],
+                ['\u{1133E}','\u0BBE'],
+                ['\u{1133F}','\u0BBF'],
+                ['\u{11340}','\u0BC0'],
+                ['\u{11341}','\u0BC1'],
+                ['\u{11342}','\u0BC2'],
+                ['\u{11347}','\u0BC6'],
+                ['\u{11348}','\u0BC8'],
+                ['\u{1134B}','\u0BCA'],
+                ['\u{1134C}','\u0BCC'],
+                ['\u{1134D}','\u0BCD'],
+                ['\u{11357}','\u0BD7']
+            ]);
+            const tmc = ['\u0BA9','\u0BB1','\u0BB3','\u0BB4'];
+            const rgex = new RegExp(`([${tmc.join('')}])([${[...grv.keys()].join('')}])`,'gu');
             //const smushed = txt
             //    .replace(/([kṅcñṭṇtnpmyrlvḻ])\s+([aāiīuūeēoō])/g, '$1$2')
             //    .toLowerCase()
@@ -351,7 +368,10 @@ const Transliterate = (function() {
                 .replace(/ḿ/g,'ṁ') // no Jaina oṃkāra
                 .replace(/(\S)·/g,'$1\u200C');
                 //.replace(/ḷ/g,'l̥');
-            return Sanscript.t(smushed,'iast','grantha');
+            const pretext = Sanscript.t(smushed,'iast','grantha');
+            return pretext.replace(rgex, function(m,p1,p2) {
+                return p1+grv.get(p2); 
+            });
         },
         malayalam: function(txt) {
             const chillu = {
