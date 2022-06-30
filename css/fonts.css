@@ -112,13 +112,19 @@
 @font-face {
     font-family: 'Noto Sans Newa';
     src: url('../fonts/noto/NotoSansNewa-Regular-custom.otf');
-    unicode-range: ~"U+114400-1147F";
+    unicode-range: ~"U+11400-1147F";
 }
 
 @font-face {
     font-family: 'Satisar Sharada';
     src: url('../fonts/Sharada.ttf');
     unicode-range: ~"U+11180-111DF";
+}
+
+@font-face {
+    font-family: 'Tibetan Machine Uni';
+    src: url('../fonts/TibMachUni-1.901b.ttf');
+    unicode-range: ~"U+0F00-0FFF";
 }
 
 .aalt {
@@ -149,7 +155,12 @@
     font-feature-settings: "ss01" 1;
 }
 
+[lang='bod'] {
+    font-size: 1.9rem;
+    line-height: 4rem;
+}
+
 body {
-    font-family: Brill, et-book, "Noto Serif Tamil", "TST Grantha", "Bangla", "PedanticDevanagari", "PedanticMalayalam", "PedanticTelugu", "Noto Sans Newa", "Satisar Sharada", Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+    font-family: Brill, et-book, "Noto Serif Tamil", "TST Grantha", "Bangla", "PedanticDevanagari", "PedanticMalayalam", "PedanticTelugu", "Noto Sans Newa", "Satisar Sharada", "Tibetan Machine Uni", Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
     hyphens: auto;
 }
