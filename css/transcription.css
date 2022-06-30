@@ -155,10 +155,7 @@ span.lb, span.cb {
 .cb::after {
     content: 'c';
     font-size: 75%;
-    top: -0.5em;
-    line-height: 0;
     position: relative;
-    vertical-align: baseline;
 }
 
 .cb.diplo::after {
