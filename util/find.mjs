@@ -119,6 +119,7 @@ const find = {
     languages: (xmlDoc) => {
         const isocodes = new Map([
             ['ara','Arabic'],
+            ['bod','Tibetan'],
             ['eng','English'],
             ['fra','French'],
             ['deu','German'],
