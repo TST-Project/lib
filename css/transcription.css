@@ -207,15 +207,16 @@ blockquote > .cb.diplo:first-child::after {
         font-size: 100%;
 }
 
-.pb {color:#FF9900;
-        letter-spacing:-0.3em;
-        font-size:1.5rem;
-        /*line-height:0.76;*/
-        font-weight:normal;
-        font-family: sans-serif;
-        text-decoration: none;
-        vertical-align:top;
-        white-space: nowrap;
+.pb {/*color:#FF9900;*/
+    color: #A85110;
+    letter-spacing:-0.3em;
+    font-size:1.5rem;
+    /*line-height:0.76;*/
+    font-weight:normal;
+    font-family: sans-serif;
+    text-decoration: none;
+    vertical-align:top;
+    white-space: nowrap;
 }
 
 .devanagari .pb {
@@ -228,21 +229,12 @@ blockquote > .cb.diplo:first-child::after {
                      vertical-align: text-bottom;
 }
 
-span.pb {
-         cursor: default;
-}
-
-a.pb:link, a.pb:visited {
-      color: #FF9900;
-      text-decoration: none;
-
-}
 .footnote {
     color: #A85110;
     cursor: default;
 }
 
-a.pb:hover, .footnote:hover {
+.footnote:hover {
       color: #2B73B7;
       text-decoration: none !important;
 }
@@ -469,10 +461,8 @@ span.locus {
     color: #A85110;
 }
 
-.locus[data-loc], .milestone[data-loc], .pb[data-loc] {
+[data-loc] {
     cursor: pointer;
-}
-.locus[data-loc]:hover, .milestone[data-loc]:hover .pb[data-loc]:hover {
     text-decoration: underline;
 }
 
