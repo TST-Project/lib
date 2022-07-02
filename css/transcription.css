@@ -287,13 +287,22 @@ span.note::after {
     content: ']';
 }
 
+span.note.super::before {
+    content: '';
+}
+span.note.super::after {
+    content: '';
+}
+
 span.inline {margin-left: 0.5em;
 }
 
-span.super {vertical-align: super;
-            margin-left: 0.2em;
-            margin-right: 0.2em;
-            line-height: normal;
+span.super, span.note.super {
+    /*vertical-align: super;*/
+    margin-left: 0.2em;
+    margin-right: 0.2em;
+    line-height: normal;
+    font-variant: super;
 }
 
 span.sub {vertical-align: -20%;
