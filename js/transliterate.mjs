@@ -407,6 +407,9 @@ const Transliterate = (function() {
             const pretext = txt.replace(/ṙ/g, 'r')
                 .replace(/e/g,'ē')
                 .replace(/o(?![ṁḿ])/g,'ō')
+                .replace(/([^aāiīuūeēoōṛṝḷḹ])ṃ/,'$1\'\u200Dṃ') // standalone anusvāra
+                .replace(/([^aāiīuūeēoōṛṝḷḹ])ḥ/,'$1\'\u200Dḥ') // standalone visarga
+                .replace(/(^|\s)_y/,'$1\'\u200Dy') // half-form of ya
                 .replace(/(^|\s)_ā/g,'$1\u093D\u200D\u093E')
                 .replace(/(^|\s)_r/g,'$1\u093D\u200D\u0930\u094D');
 
