@@ -244,7 +244,12 @@
             <xsl:element name="th">
                 <xsl:attribute name="colspan">2</xsl:attribute>
                 <xsl:attribute name="class">left-align</xsl:attribute>
-                <xsl:variable name="cu" select="substring-after(@synch,'#')"/>
+                <xsl:variable name="cu">
+                    <xsl:call-template name="search-and-replace">
+                        <xsl:with-param name="input" select="@synch"/>
+                        <xsl:with-param name="search-string">#</xsl:with-param>
+                    </xsl:call-template>
+                </xsl:variable>
                 <xsl:variable name="thisid" select="@xml:id"/>
                 <xsl:value-of select="$cu"/>
                 <xsl:choose>
@@ -1012,8 +1017,18 @@
                     <span>
                         <xsl:attribute name="class">type</xsl:attribute>
                         <xsl:variable name="type" select="@function"/>
-                        <xsl:variable name="cu" select="substring-after(ancestor::x:text/@synch,'#')"/>
-                        <xsl:variable name="tu" select="substring-after(ancestor::x:text/@corresp,'#')"/>
+                        <xsl:variable name="cu">
+                            <xsl:call-template name="search-and-replace">
+                                <xsl:with-param name="input" select="substring-after(ancestor::x:text/@synch)"/>
+                                <xsl:with-param name="search-string">#</xsl:with-param>
+                            </xsl:call-template>
+                        </xsl:variable>
+                        <xsl:variable name="tu">
+                            <xsl:call-template name="search-and-replace">
+                                <xsl:with-param name="input" select="substring-after(ancestor::x:text/@corresp)"/>
+                                <xsl:with-param name="search-string">#</xsl:with-param>
+                            </xsl:call-template>
+                        </xsl:variable>
                         <xsl:if test="$cu or $tu">
                             <span class="lihead">
                                 <xsl:value-of select="$cu"/>
