@@ -462,7 +462,7 @@
 <xsl:template match="x:lb">
     <xsl:call-template name="lb"/>
 </xsl:template>
-<xsl:template match="x:q[@rend='block']//x:lg//x:lb | x:quote[@rend='block']//x:lg//x:lb">
+<xsl:template match="x:q[@rend='block']//x:lg//x:lb | x:quote[@rend='block']//x:lg//x:lb | x:q[not(@rend)]//x:lb | x:quote[not(@rend)]//x:lb">
     <xsl:call-template name="lb">
         <xsl:with-param name="diplo">false</xsl:with-param>
     </xsl:call-template>
