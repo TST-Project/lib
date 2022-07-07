@@ -120,7 +120,7 @@ const output = {
                 `<a href="${cur1.fname}?facs=${ret.facs}">${ret.milestone}</a>` :
                 ret.milestone;
 
-            const unit = synch ? synch.replace(/^#/,'') : '';
+            const unit = synch ? synch.replace(/#/g,'') : '';
             const processed = SaxonJS.transform({
                 stylesheetText: xsltSheet,
                 sourceText: '<TEI xmlns="http://www.tei-c.org/ns/1.0">'+inner+'</TEI>',
@@ -187,7 +187,7 @@ const output = {
             const milestone = ret.milestone;
             const synch = ret.synch;
 
-            const unit = synch ? synch.replace(/^#/,'') : '';
+            const unit = synch ? synch.replace(/#/g,'') : '';
 
             const processed = SaxonJS.transform({
                 stylesheetText: xslx_Sheet,
@@ -228,7 +228,7 @@ const output = {
             const ret = util.innertext(cur);
             const inner = ret.inner;
             const placement = ret.placement;
-            const unit = ret.synch ? ret.synch.replace(/^#/,'') : '';
+            const unit = ret.synch ? ret.synch.replace(/#/g,'') : '';
             const milestone = ret.facs ?
                 `<a href="${cur1.fname}?facs=${ret.facs}">${ret.milestone}</a>` :
                 ret.milestone;
@@ -299,7 +299,7 @@ const output = {
             const is_satellite = 
                 'satellite-stanza' === (cur.getAttribute('function') || cur.getAttribute('type')) ?
                 '✓' : '';
-            const unit = synch ? synch.replace(/^#/,'') : '';
+            const unit = synch ? synch.replace(/#/g,'') : '';
             const processed = SaxonJS.transform({
                 stylesheetText: xsltSheet,
                 sourceText: '<TEI xmlns="http://www.tei-c.org/ns/1.0">'+inner+'</TEI>',
