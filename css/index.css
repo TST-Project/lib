@@ -67,6 +67,9 @@ th, td {
     padding-left: 0.5rem;
     padding-right: 0.5rem;
 }
+td {
+    hyphens: auto;
+}
 tbody tr:nth-child(even) {
     background-color: rgba(239,239,205,0.5);
 }
