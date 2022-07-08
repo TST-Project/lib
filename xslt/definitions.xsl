@@ -33,7 +33,7 @@
 <tst:technology>
     <tst:entry key="manuscript">manuscript</tst:entry>
     <tst:entry key="engraving">engraving</tst:entry>
-    <tst:entry key="squeeze">squeeze</tst:entry>
+    <tst:entry key="estampage">estampage</tst:entry>
     <tst:entry key="xylography">xylography</tst:entry>
     <tst:entry key="lithography">lithography</tst:entry>
     <tst:entry key="movable-type">movable type</tst:entry>
