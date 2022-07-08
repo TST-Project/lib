@@ -412,8 +412,7 @@
         <tst:entry key="commenting-note">commenting note</tst:entry>
     </tst:group>
     <tst:group label="documenting">
-        <tst:entry key="benediction">benediction (prose)</tst:entry>
-        <tst:entry key="blessing">blessing (formulaic)</tst:entry>
+        <tst:entry key="blessing">blessing (prose)</tst:entry>
         <tst:entry key="copy-statement">copy statement</tst:entry>
         <tst:entry key="date">date</tst:entry>
         <tst:entry key="dedication">dedication</tst:entry>
