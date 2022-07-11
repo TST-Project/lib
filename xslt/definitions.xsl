@@ -408,7 +408,7 @@
         <tst:entry key="correction">correction</tst:entry>
         <tst:entry key="gloss">gloss/commentary</tst:entry>
         <tst:entry key="label">label</tst:entry>
-        <tst:entry key="metre">metre</tst:entry>
+        <tst:entry key="prosody">prosody</tst:entry>
         <tst:entry key="commenting-note">commenting note</tst:entry>
     </tst:group>
     <tst:group label="documenting">
