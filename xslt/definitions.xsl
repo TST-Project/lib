@@ -32,7 +32,7 @@
 
 <tst:technology>
     <tst:entry key="manuscript">manuscript</tst:entry>
-    <tst:entry key="engraving">engraving</tst:entry>
+    <tst:entry key="inscription">inscription</tst:entry>
     <tst:entry key="estampage">estampage</tst:entry>
     <tst:entry key="xylography">xylography</tst:entry>
     <tst:entry key="lithography">lithography</tst:entry>
