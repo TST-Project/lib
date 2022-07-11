@@ -46,7 +46,7 @@ const output = {
 
             const poststr = 
 `  <td>${cur.repo}</td>
-  <td>${cur.title}</td>
+  <td><a href="${cur.fname}">${cur.title}</a></td>
   <td>${cur.languages}</td>
   <td>${cur.material}</td>
   <td data-content="${cur.extent[0]}">${cur.extent[1]}</td>
@@ -57,7 +57,7 @@ const output = {
             if(!opts || !opts.prefix) {
                 return acc +            
 `<tr>
-  <th data-content="${cur.cote.sort}"${isMSPart(cur.cote.text)}><a href="${cur.fname}">${cur.cote.text}</a></th>` + poststr;
+  <th data-content="${cur.cote.sort}"${isMSPart(cur.cote.text)}>${cur.cote.text}</th>` + poststr;
             }
 
             // with prefix
@@ -85,7 +85,7 @@ const output = {
  
             return acc +
 `<tr>
-  <th data-content="${oldsort}"${isMSPart(cur.cote.text)}><a href="${cur.fname}">${oldcote}</th>
+  <th data-content="${oldsort}"${isMSPart(cur.cote.text)}>${oldcote}</th>
   <td data-content="${cur.cote.sort}"${isMSPart(cur.cote.text)}>${cur.cote.text}</td>` + poststr;
         },'');
 
