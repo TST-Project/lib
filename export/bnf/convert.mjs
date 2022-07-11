@@ -1,0 +1,128 @@
+import yargs from 'yargs';
+import fs from 'fs';
+import path from 'path';
+import SaxonJS from 'saxon-js';
+import jsdom from 'jsdom';
+import serializer from 'w3c-xmlserializer';
+import { Transliterate } from '../../js/transliterate.mjs';
+import { hideBin } from 'yargs/helpers';
+
+const argv = yargs(hideBin(process.argv))
+    .option('in', {
+        alias: 'i',
+        description: 'Input file',
+        type: 'string'
+    })
+    .option('out', {
+        alias: 'o',
+        description: 'Output file',
+        type: 'string'
+    })
+    .help().alias('help','h').argv;
+
+const parseXML = function(str) {
+    const dom = new jsdom.JSDOM('');
+    const parser = new dom.window.DOMParser();
+    return parser.parseFromString(str,'text/xml');
+};
+
+const replaceEl = function(newdoc,par,parname,kidname,inplace = false) {
+    const oldel = par.querySelector(`:scope > ${kidname}`);
+    const newel = newdoc.querySelector(`${parname} > ${kidname}`);
+    if(!newel) return;
+    if(oldel) {
+        if(inplace) par.replaceChild(newel,oldel);
+        else {
+            par.removeChild(oldel);
+            par.appendChild(newel);
+        }
+    }
+    else
+        par.appendChild(newel);
+};
+
+const transliterate = function(doc) {
+    const els = doc.querySelectorAll('unittitle[type="non-latin originel"]');
+    for(const el of els) {
+        const toconverts = el.querySelectorAll('[xml:lang="ta"]');
+        //const langs = el.querySelectorAll('[lang="sa"],[lang="ta"]');
+        if(toconverts.length === 0) {
+            el.remove();
+        }
+        else {
+            for(const toconvert of toconverts) {
+                toconvert.textContent = Transliterate.to.tamil(toconvert.textContent);
+            }
+            const newtxt = el.textContent.trim();
+            el.innerHTML = '';
+            el.appendChild(doc.createTextNode(newtxt));
+        }
+    }
+};
+
+const main = function() {
+    const infile = argv.in;
+    if(!infile) { console.error('No input file.'); return; }
+    const outfile = argv.out;
+    if(!outfile) { console.error('No output file.'); return; }
+    
+
+    const intext = fs.readFileSync(infile,{encoding: 'utf-8'});
+    
+    const outtext = (fs.existsSync(outfile)) ?
+        fs.readFileSync(outfile,{encoding: 'utf-8'}) : null;
+    
+    const xsltSheet = fs.readFileSync('tei-to-ead.sef.json',{encoding: 'utf-8'});
+
+    const inxml = parseXML(intext);
+    const subunits = inxml.querySelectorAll('msItem[source]');
+    for(const subunit of subunits) {
+        const dir = path.dirname(infile);
+        const subfilename = dir + '/' + subunit.getAttribute('source');
+        const subfile = fs.readFileSync(subfilename,{encoding: 'utf-8'});
+        const subXML = parseXML(subfile);
+        subunit.innerHTML = '';
+        const tei = subXML.querySelector('TEI');
+        subunit.appendChild(tei);
+    };
+
+    const processed = SaxonJS.transform({
+        stylesheetText: xsltSheet,
+        sourceText: serializer(inxml),
+        destination: 'serialized'},
+        'sync');
+    const indoc = parseXML(processed.principalResult);
+
+    transliterate(indoc);
+
+    const header = '<?xml version="1.0" encoding="UTF-8"?>';
+
+    if(!outtext)
+        fs.writeFile(outfile,header+serializer(indoc),{encoding: 'utf-8'},function(){return;});
+    else {
+        const outdoc = parseXML(outtext);
+        const eadheader = outdoc.querySelector('eadheader');
+        if(eadheader) {
+            replaceEl(indoc, eadheader,'eadheader','filedesc',true);
+            replaceEl(indoc, eadheader,'eadheader','profiledesc',true);
+        }
+        const level = indoc.querySelector('archdesc[level="otherlevel"]') ? 'otherlevel' : 'item';
+        const archname = `archdesc[level="${level}"]`;
+        var archdesc = outdoc.querySelector(archname) || outdoc.querySelector('c');
+        if(!archdesc && level === 'otherlevel') { // wasn't a collection before, change to collection
+            archdesc = outdoc.querySelector('archdesc');
+            archdesc.setAttribute('level','otherlevel');
+        }
+        replaceEl(indoc, archdesc,archname,'did',true);
+        replaceEl(indoc, archdesc,archname,'scopecontent');
+        replaceEl(indoc, archdesc,archname,'dsc');
+        replaceEl(indoc, archdesc,archname,'bibliography');
+        replaceEl(indoc, archdesc,archname,'custodhist');
+        replaceEl(indoc, archdesc,archname,'acqinfo');
+        replaceEl(indoc, archdesc,archname,'processinfo');
+        
+        fs.writeFile(outfile,header+serializer(outdoc),{encoding: 'utf-8'},function(){return;});
+    }
+};
+
+main();
