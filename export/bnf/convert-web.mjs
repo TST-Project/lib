@@ -50,7 +50,7 @@ const main = async () => {
     const fileHandle = await showSaveFilePicker({
         _preferPolyfill: false,
         suggestedName: filename,
-        types: [ {description: 'EAD XML', accept: {'text/xml': ['.xml']} } ],
+        types: [ {description: 'EAD XML', accept: {'application/xml': ['.xml']} } ],
     });
     const writer = await fileHandle.createWritable();
     writer.write(file);
