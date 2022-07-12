@@ -1155,7 +1155,7 @@
     <emph render="bold"><xsl:text>〛</xsl:text></emph>
 </xsl:template>
 
-<xsl:template match="x:placeName | x:geogName">
+<xsl:template match="x:placeName | x:geogName | x:orgName">
     <xsl:apply-templates/>
 </xsl:template>
 </xsl:stylesheet>
