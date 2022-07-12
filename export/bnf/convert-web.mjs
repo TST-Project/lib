@@ -17,7 +17,7 @@ const upload = async (arr) => {
 
 const main = async () => {
     const tstfile = document.getElementById('tstfile').files[0];
-    if(tstfile) { alert('Missing TST file.'); return; }
+    if(!tstfile) { alert('Missing TST file.'); return; }
     const eadfile = document.getElementById('eadfile').files[0];
     if(!eadfile) { alert('Missing EAD file'); return; }
     
@@ -26,9 +26,6 @@ const main = async () => {
     const xsltSheet = xml.parseString(await xsltres.text());
     
     const tstxml = xml.parseString(tsttext);
-    
-    // lazily get just the first script mentioned
-    const script = tstxml.querySelector('handNote').getAttribute('script').split(' ')[0];
     
     /*
     const subunits = inxml.querySelectorAll('msItem[source]');
@@ -43,13 +40,13 @@ const main = async () => {
     };
     */
     const indoc = await xml.XSLTransform(xsltSheet,tstxml);
-    transliterateTitle(indoc,script);
+    transliterateTitle(indoc,tstxml);
 
     const outdoc = xml.parseString(eadtext);
     const newdoc = convertFile(indoc,outdoc);
     
     const file = new Blob([xml.serialize(newdoc)], {type: 'text/xml;charset=utf-u'});
-    const filename = outfile.name.replace(/^\[(.+)\]$/,'$1_TST.xml');
+    const filename = eadfile.name.replace(/^\[(.+)\]$/,'$1_TST.xml');
     const fileHandle = await showSaveFilePicker({
         _preferPolyfill: false,
         suggestedName: filename,
