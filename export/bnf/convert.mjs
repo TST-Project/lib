@@ -59,8 +59,7 @@ const main = function() {
         'sync');
     const indoc = parseXML(processed.principalResult);
 
-    const script = inxml.querySelector('handNote').getAttribute('script').split(' ')[0];
-    transliterateTitle(indoc,script);
+    transliterateTitle(indoc,inxml);
 
     const header = '<?xml version="1.0" encoding="UTF-8"?>';
 
