@@ -11,6 +11,9 @@
   ol > li {
     margin-bottom: 2rem;
   }
+  button, input {
+    font-size: 1.1rem;
+  }
 </style>
 <script type="module" src="convert-web.mjs"></script>
 
@@ -28,7 +31,7 @@
             <li><label for="eadfile">Upload your EAD file:</label> <input autocomplete="off" type="file" id="eadfile" name="eadfile" accept=".xml"></li>
           </ul>
         </li>
-        <li><a href="https://teibyexample.org/tools/TBEvalidator.htm">Validate</a> the corresponding TST XML file.
+        <li>(Optional: <a href="https://teibyexample.org/tools/TBEvalidator.htm">Validate</a> the corresponding TST XML file.)
           <ul>
             <li><label for="tstfile">Upload your TST file:</label> <input autocomplete="off" type="file" id="tstfile" name="tstfile" accept=".xml"></li>
           </ul>
