@@ -1,0 +1,65 @@
+import { replaceEl, transliterateTitle, convertFile } from './common.mjs';
+import { xml } from '../../../editor/lib/utils.mjs';
+import { showSaveFilePicker } from 'https://cdn.jsdelivr.net/npm/native-file-system-adapter/mod.js';
+
+'use strict';
+
+const upload = async (arr) => {
+    const files = arr.map(file => {
+        const reader = new FileReader();
+        return new Promise(res => {
+            reader.onload = () => res(reader.result);
+            reader.readAsText(file);
+        });
+    });
+    return await Promise.all(files);
+};
+
+const main = async () => {
+    const tstfile = document.getElementById('tstfile').files[0];
+    if(tstfile) { alert('Missing TST file.'); return; }
+    const eadfile = document.getElementById('eadfile').files[0];
+    if(!eadfile) { alert('Missing EAD file'); return; }
+    
+    const [tsttext,eadtext] = await upload([tstfile,eadfile]);
+    const xsltres = await fetch('./tei-to-ead.xsl',{encoding: 'utf-8'});
+    const xsltSheet = xml.parseString(await xsltres.text());
+    
+    const tstxml = xml.parseString(tsttext);
+    
+    // lazily get just the first script mentioned
+    const script = tstxml.querySelector('handNote').getAttribute('script').split(' ')[0];
+    
+    /*
+    const subunits = inxml.querySelectorAll('msItem[source]');
+    for(const subunit of subunits) {
+        const dir = path.dirname(infile);
+        const subfilename = dir + '/' + subunit.getAttribute('source');
+        const subfile = fs.readFileSync(subfilename,{encoding: 'utf-8'});
+        const subXML = xml.parseString(subfile);
+        subunit.innerHTML = '';
+        const tei = subXML.querySelector('TEI');
+        subunit.appendChild(tei);
+    };
+    */
+    const indoc = await xml.XSLTransform(xsltSheet,tstxml);
+    transliterateTitle(indoc,script);
+
+    const outdoc = xml.parseString(eadtext);
+    const newdoc = convertFile(indoc,outdoc);
+    
+    const file = new Blob([xml.serialize(newdoc)], {type: 'text/xml;charset=utf-u'});
+    const filename = outfile.name.replace(/^\[(.+)\]$/,'$1_TST.xml');
+    const fileHandle = await showSaveFilePicker({
+        _preferPolyfill: false,
+        suggestedName: filename,
+        types: [ {description: 'EAD XML', accept: {'text/xml': ['.xml']} } ],
+    });
+    const writer = await fileHandle.createWritable();
+    writer.write(file);
+    writer.close();
+};
+
+window.addEventListener('load', () => {
+    document.getElementById('convertfile').addEventListener('click',main);
+});

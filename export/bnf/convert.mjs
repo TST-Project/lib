@@ -4,8 +4,8 @@ import path from 'path';
 import SaxonJS from 'saxon-js';
 import jsdom from 'jsdom';
 import serializer from 'w3c-xmlserializer';
-import { Transliterate } from '../../js/transliterate.mjs';
 import { hideBin } from 'yargs/helpers';
+import { replaceEl, transliterateTitle, convertFile } from './common.mjs';
 
 const argv = yargs(hideBin(process.argv))
     .option('in', {
@@ -24,40 +24,6 @@ const parseXML = function(str) {
     const dom = new jsdom.JSDOM('');
     const parser = new dom.window.DOMParser();
     return parser.parseFromString(str,'text/xml');
-};
-
-const replaceEl = function(newdoc,par,parname,kidname,inplace = false) {
-    const oldel = par.querySelector(`:scope > ${kidname}`);
-    const newel = newdoc.querySelector(`${parname} > ${kidname}`);
-    if(!newel) return;
-    if(oldel) {
-        if(inplace) par.replaceChild(newel,oldel);
-        else {
-            par.removeChild(oldel);
-            par.appendChild(newel);
-        }
-    }
-    else
-        par.appendChild(newel);
-};
-
-const transliterate = function(doc) {
-    const els = doc.querySelectorAll('unittitle[type="non-latin originel"]');
-    for(const el of els) {
-        const toconverts = el.querySelectorAll('[xml:lang="ta"]');
-        //const langs = el.querySelectorAll('[lang="sa"],[lang="ta"]');
-        if(toconverts.length === 0) {
-            el.remove();
-        }
-        else {
-            for(const toconvert of toconverts) {
-                toconvert.textContent = Transliterate.to.tamil(toconvert.textContent);
-            }
-            const newtxt = el.textContent.trim();
-            el.innerHTML = '';
-            el.appendChild(doc.createTextNode(newtxt));
-        }
-    }
 };
 
 const main = function() {
@@ -93,35 +59,17 @@ const main = function() {
         'sync');
     const indoc = parseXML(processed.principalResult);
 
-    transliterate(indoc);
+    const script = inxml.querySelector('handNote').getAttribute('script').split(' ')[0];
+    transliterateTitle(indoc,script);
 
     const header = '<?xml version="1.0" encoding="UTF-8"?>';
 
     if(!outtext)
         fs.writeFile(outfile,header+serializer(indoc),{encoding: 'utf-8'},function(){return;});
-    else {
+    else {        
         const outdoc = parseXML(outtext);
-        const eadheader = outdoc.querySelector('eadheader');
-        if(eadheader) {
-            replaceEl(indoc, eadheader,'eadheader','filedesc',true);
-            replaceEl(indoc, eadheader,'eadheader','profiledesc',true);
-        }
-        const level = indoc.querySelector('archdesc[level="otherlevel"]') ? 'otherlevel' : 'item';
-        const archname = `archdesc[level="${level}"]`;
-        var archdesc = outdoc.querySelector(archname) || outdoc.querySelector('c');
-        if(!archdesc && level === 'otherlevel') { // wasn't a collection before, change to collection
-            archdesc = outdoc.querySelector('archdesc');
-            archdesc.setAttribute('level','otherlevel');
-        }
-        replaceEl(indoc, archdesc,archname,'did',true);
-        replaceEl(indoc, archdesc,archname,'scopecontent');
-        replaceEl(indoc, archdesc,archname,'dsc');
-        replaceEl(indoc, archdesc,archname,'bibliography');
-        replaceEl(indoc, archdesc,archname,'custodhist');
-        replaceEl(indoc, archdesc,archname,'acqinfo');
-        replaceEl(indoc, archdesc,archname,'processinfo');
-        
-        fs.writeFile(outfile,header+serializer(outdoc),{encoding: 'utf-8'},function(){return;});
+        const newdoc = convertFile(indoc,outdoc);
+        fs.writeFile(outfile,header+serializer(newdoc),{encoding: 'utf-8'},function(){return;});
     }
 };
 

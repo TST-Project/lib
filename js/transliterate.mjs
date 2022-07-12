@@ -685,7 +685,8 @@ const Transliterate = (function() {
     
     return {
         init: init,
-        to: to
+        to: to,
+        scripts: () => new Set(_state.availsanscripts)
     };
 }());
 
