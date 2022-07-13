@@ -555,9 +555,20 @@
         <xsl:attribute name="lang">en</xsl:attribute>
         <xsl:variable name="facs" select="@facs"/>
         <xsl:variable name="unit" select="//x:extent/x:measure/@unit"/>
-        <xsl:if test="$excerpt = 'no' and @break = 'no'">
+        <!--xsl:if test="$excerpt = 'no' and @break = 'no'">
             <xsl:attribute name="data-nobreak"/>
-        </xsl:if>
+        </xsl:if-->
+        <xsl:choose>
+            <xsl:when test="$excerpt = 'no' and @break = 'no'">
+                <xsl:attribute name="data-nobreak"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:variable name="pretext" select="preceding::text()[1]"/>
+                <xsl:if test="position() != 1 and normalize-space(substring($pretext,string-length($pretext))) != ''">
+                    <xsl:attribute name="data-nobreak"/>
+                </xsl:if>
+            </xsl:otherwise>
+        </xsl:choose>
         <xsl:if test="$facs and $facs != ''">
             <xsl:attribute name="data-loc">
                 <xsl:value-of select="$facs"/>
