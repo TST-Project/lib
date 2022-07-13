@@ -254,7 +254,7 @@
                 <xsl:value-of select="$cu"/>
                 <xsl:choose>
                     <xsl:when test="$thisid">
-                        <xsl:if test="$cu">
+                        <xsl:if test="$cu != ''">
                             <xsl:text>, </xsl:text>
                         </xsl:if>
                         <xsl:choose>
