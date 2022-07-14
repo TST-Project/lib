@@ -100,7 +100,7 @@ const output = {
     const fname = opts && opts.prefix ?
         opts.prefix.toLowerCase() + '.html' :
         'index.html';
-    fs.writeFile(`../${fname}`,template.documentElement.outerHTML,{encoding: 'utf8'},function(){return;});
+    fs.writeFileSync(`../${fname}`,template.documentElement.outerHTML,{encoding: 'utf8'});
     },
 
     paratexts: (data, opts) => {
@@ -172,7 +172,7 @@ const output = {
         table.innerHTML = `${thead}<tbody>${tstr}</tbody>`;
         table.querySelector('thead th').dataset.sort = 'sortTamil';
         //table.querySelectorAll('th')[1].classList.add('sorttable_alphanum');
-        fs.writeFile(`../${pfilename}`,template.documentElement.outerHTML,{encoding: 'utf8'},function(){return;});
+        fs.writeFileSync(`../${pfilename}`,template.documentElement.outerHTML,{encoding: 'utf8'});
     },
    
     xslx: (data,opts) => {
@@ -283,7 +283,7 @@ const output = {
         table.querySelector('thead th').dataset.sort = 'sortTamil';
         //table.querySelectorAll('th')[1].classList.add('sorttable_alphanum');
 
-        fs.writeFile('../colophons.html',template.documentElement.outerHTML,{encoding: 'utf8'},function(){return;});
+        fs.writeFileSync('../colophons.html',template.documentElement.outerHTML,{encoding: 'utf8'});
     },
     invocations: (data) => {
         
@@ -355,7 +355,7 @@ const output = {
         table.innerHTML = `${thead}<tbody>${tstr}</tbody>`;
         table.querySelector('thead th').dataset.sort = 'sortTamil';
         //table.querySelectorAll('th')[1].classList.add('sorttable_alphanum');
-        fs.writeFile('../invocations.html',template.documentElement.outerHTML,{encoding: 'utf8'},function(){return;});
+        fs.writeFileSync('../invocations.html',template.documentElement.outerHTML,{encoding: 'utf8'});
     },
     persons: (data) => {
 
@@ -397,7 +397,7 @@ const output = {
         table.innerHTML = `${thead}<tbody>${tstr}</tbody>`;
         table.querySelector('thead th').dataset.sort = 'sortTamil';
         //table.querySelectorAll('th')[2].classList.add('sorttable_alphanum');
-        fs.writeFile('../persons.html',template.documentElement.outerHTML,{encoding: 'utf8'},function(){return;});
+        fs.writeFileSync('../persons.html',template.documentElement.outerHTML,{encoding: 'utf8'});
     },
     personsnetwork: (data) => {
 
@@ -505,7 +505,7 @@ document.querySelector('section').style.visibility = 'visible';
 section.addEventListener('mouseover',chartMouseover);
 `
 template.body.appendChild(script);
-        fs.writeFile('../persons-network.html',template.documentElement.outerHTML,{encoding: 'utf8'},function(){return;});
+        fs.writeFileSync('../persons-network.html',template.documentElement.outerHTML,{encoding: 'utf8'});
     },
 };
 
