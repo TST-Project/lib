@@ -27,18 +27,22 @@ const main = async () => {
     
     const tstxml = xml.parseString(tsttext);
     
-    /*
-    const subunits = inxml.querySelectorAll('msItem[source]');
+    const subunits = tstxml.querySelectorAll('msItem[source]');
+    const subfiles = [...document.getElementById('subfiles').files];
+    const subtexts = await upload(subfiles);
+    const subfilemap = new Map();
+    for(let i=0;i<subfiles.length;i++)
+        subfilemap.set(subfiles[i].name,subtexts[i]);
+    
     for(const subunit of subunits) {
-        const dir = path.dirname(infile);
-        const subfilename = dir + '/' + subunit.getAttribute('source');
-        const subfile = fs.readFileSync(subfilename,{encoding: 'utf-8'});
+        const subfilename = subunit.getAttribute('source');
+        const subfile = subfilemap.get(subfilename);
         const subXML = xml.parseString(subfile);
         subunit.innerHTML = '';
         const tei = subXML.querySelector('TEI');
         subunit.appendChild(tei);
     };
-    */
+    
     const indoc = await xml.XSLTransform(xsltSheet,tstxml);
     transliterateTitle(indoc,tstxml);
 
