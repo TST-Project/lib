@@ -155,7 +155,19 @@
             <xsl:value-of select="$TST/tst:mstypes/tst:entry[@key=$class]"/>
             <xsl:text>)</xsl:text>
         </p>
-        <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msContents/x:msItem[not(@source)]"/>
+        <xsl:for-each select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msContents/x:msItem">
+            <xsl:choose>
+                <xsl:when test="not[@source]">
+                    <xsl:apply-templates/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <p> 
+                        <xsl:call-template name="msItemHeader"/>
+                    </p>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:for-each>
+        <!--xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msContents/x:msItem[not(@source)]"/-->
         <p>
             <emph render="bold">Paratexts</emph>
             <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:physDesc/x:additions"/>
@@ -430,19 +442,30 @@
     </xsl:choose>
 </xsl:template>
 
+<xsl:template name="msItemHeader">
+    <xsl:if test="@corresp or @synch">
+        <xsl:call-template name="synch-format"/>
+    </xsl:if>
+    <xsl:if test="./x:author">
+        <xsl:apply-templates select="x:author"/><xsl:text>, </xsl:text>
+    </xsl:if>
+    <title>
+        <xsl:choose>
+            <xsl:when test="x:title"><xsl:apply-templates select="x:title"/></xsl:when>
+            <xsl:otherwise>
+                <xsl:apply-templates select="x:TEI/x:teiHeader/x:fileDesc/x:titleStmt/x:title"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </title>
+    <xsl:if test="@defective = 'true'">
+        <xsl:text> (incomplete)</xsl:text>
+    </xsl:if>
+</xsl:template>
+
 <xsl:template match="x:msItem">
     <xsl:variable name="thisid" select="@xml:id"/>
     <p> 
-        <xsl:if test="@corresp or @synch">
-            <xsl:call-template name="synch-format"/>
-        </xsl:if>
-        <xsl:if test="x:author">
-            <xsl:apply-templates select="x:author"/><xsl:text>, </xsl:text>
-        </xsl:if>
-        <xsl:apply-templates select="x:title"/>
-        <xsl:if test="@defective = 'true'">
-            <xsl:text> (incomplete)</xsl:text>
-        </xsl:if>
+        <xsl:call-template name="msItemHeader"/>
         <xsl:variable name="items" select="x:rubric or x:incipit or x:explicit or x:finalRubric or x:colophon or ancestor::x:TEI/x:text[@corresp=concat('#',$thisid)]//x:seg[@function='rubric' or @function='incipit' or @function='explicit' or @function='finalRubric' or @function='colophon']"/>
         <xsl:if test="$items">
             <list>
@@ -685,10 +708,6 @@
         </xsl:if>
         <xsl:apply-templates/>
     </xsl:element>
-</xsl:template>
-
-<xsl:template match="x:msItem/x:title">
-    <title><xsl:apply-templates/></title>
 </xsl:template>
 
 <xsl:template match="x:binding/x:p |x:binding//x:material">
