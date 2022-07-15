@@ -14,12 +14,40 @@
 <xsl:output method="xml" encoding="UTF-8" omit-xml-declaration="no" indent="yes"/>
 
 <xsl:variable name="gallica">
-    <xsl:variable name="url" select="//x:facsimile/x:graphic/@url"/>
+    <xsl:variable name="url" select="/x:TEI/x:facsimile/x:graphic/@url"/>
     <xsl:variable name="pre" select="substring-after($url,'https://gallica.bnf.fr/iiif')"/>
     <xsl:variable name="mid" select="substring-before($pre,'manifest.json')"/>
     <xsl:text>https://gallica.bnf.fr</xsl:text>
     <xsl:value-of select="$mid"/>
     <xsl:text>f</xsl:text>
+</xsl:variable>
+
+<xsl:variable name="shelfmark" select="/x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msIdentifier/x:idno[@type='shelfmark']"/>
+
+<xsl:variable name="tsturl">
+    <xsl:variable name="shelf1" select="substring-before($shelfmark,' ')"/>
+    <xsl:variable name="shelf2" select="substring-after($shelfmark,' ')"/>
+    <xsl:variable name="shelf2letters" select="translate($shelf2,'0123456789','')"/>
+    <xsl:variable name="shelf2numbers" select="format-number(translate($shelf2,$shelf2letters,''),'0000')"/>
+    <xsl:text>https://tst-project.github.io/mss/</xsl:text>
+    <xsl:value-of select="$shelf1"/>
+    <xsl:text>_</xsl:text>
+    <xsl:value-of select="$shelf2numbers"/>
+    <xsl:value-of select="$shelf2letters"/>
+    <xsl:text>.xml</xsl:text>
+</xsl:variable>
+
+<xsl:variable name="facslink">
+    <xsl:variable name="url" select="/x:TEI/x:facsimile/x:graphic/@url"/>
+    <xsl:choose>
+        <xsl:when test="starts-with($url,'https://gallica.bnf.fr/')">
+            <xsl:value-of select="$gallica"/>
+        </xsl:when>
+        <xsl:otherwise>
+            <xsl:value-of select="$tsturl"/>
+            <xsl:text>?facs=</xsl:text>
+        </xsl:otherwise>
+    </xsl:choose>
 </xsl:variable>
 
 <xsl:template match="x:title">
@@ -43,11 +71,10 @@
             <filedesc>
                 <titlestmt>
                     <xsl:element name="titleproper">
-                        <xsl:variable name="sf" select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msIdentifier/x:idno[@type='shelfmark']"/>
-                        <xsl:value-of select="substring-before($sf,' ')"/>
+                        <xsl:value-of select="substring-before($shelfmark,' ')"/>
                         <xsl:text> </xsl:text>
                         <num>
-                            <xsl:value-of select="substring-after($sf,' ')"/>
+                            <xsl:value-of select="substring-after($shelfmark,' ')"/>
                         </num>
                         <xsl:text>. </xsl:text>
                         <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:titleStmt/x:title"/>
@@ -86,7 +113,7 @@
 <xsl:template name="didetc">
     <xsl:param name="repo">true</xsl:param>
     <did>
-        <unitid type="cote"><xsl:value-of select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msIdentifier/x:idno[@type='shelfmark']"/></unitid>
+        <unitid type="cote"><xsl:value-of select="$shelfmark"/></unitid>
         <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msIdentifier/x:idno[@type='alternate']/x:idno"/>
         <unittitle><xsl:apply-templates select="x:teiHeader/x:fileDesc/x:titleStmt/x:title"/></unittitle>
         <unittitle type="non-latin originel"><xsl:copy-of select="x:teiHeader/x:fileDesc/x:titleStmt/x:title"/></unittitle>
@@ -306,7 +333,6 @@
 </xsl:template>
 
 <xsl:template name="citation">
-    <xsl:variable name="shelfmark" select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msIdentifier/x:idno[@type='shelfmark']"/>
     <processinfo>
         <p><xsl:text>This catalogue entry has been adapted from:</xsl:text></p>
         <p>
@@ -333,22 +359,12 @@
                 <xsl:text>. </xsl:text>
                 <xsl:text>“</xsl:text>
                 <xsl:element name="extref">
-                    <xsl:variable name="shelf1" select="substring-before($shelfmark,' ')"/>
-                    <xsl:variable name="shelf2" select="substring-after($shelfmark,' ')"/>
-                    <xsl:variable name="shelf2letters" select="translate($shelf2,'0123456789','')"/>
-                    <xsl:variable name="shelf2numbers" select="format-number(translate($shelf2,$shelf2letters,''),'0000')"/>
                     <xsl:attribute name="actuate">onrequest</xsl:attribute>
                     <xsl:attribute name="show">new</xsl:attribute>
                     <xsl:attribute name="href">
-                        <xsl:text>https://tst-project.github.io/mss/</xsl:text>
-                        <xsl:value-of select="$shelf1"/>
-                        <xsl:text>_</xsl:text>
-                        <xsl:value-of select="$shelf2numbers"/>
-                        <xsl:value-of select="$shelf2letters"/>
-                        <xsl:text>.xml</xsl:text>
+                        <xsl:value-of select="$tsturl"/>
                     </xsl:attribute>
-                    <xsl:value-of select="$shelfmark"/>
-                    <xsl:text>. </xsl:text>
+                    <xsl:value-of select="$shelfmark"/><xsl:text>. </xsl:text>
                     <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:titleStmt/x:title"/>
                     <xsl:text>.</xsl:text>
                 </xsl:element>
@@ -495,7 +511,7 @@
             <xsl:element name="extref">
                 <xsl:attribute name="show">new</xsl:attribute>
                 <xsl:attribute name="actuate">onrequest</xsl:attribute>
-                <xsl:attribute name="href"><xsl:value-of select="$gallica"/><xsl:value-of select="@facs"/></xsl:attribute>
+                <xsl:attribute name="href"><xsl:value-of select="$facslink"/><xsl:value-of select="@facs"/></xsl:attribute>
                 <xsl:call-template name="milestone"/>
             </xsl:element>
         </xsl:when>
@@ -534,7 +550,7 @@
             <xsl:element name="extref">
                 <xsl:attribute name="show">new</xsl:attribute>
                 <xsl:attribute name="actuate">onrequest</xsl:attribute>
-                <xsl:attribute name="href"><xsl:value-of select="$gallica"/><xsl:value-of select="@facs"/></xsl:attribute>
+                <xsl:attribute name="href"><xsl:value-of select="$facslink"/><xsl:value-of select="@facs"/></xsl:attribute>
                 <xsl:text>[</xsl:text><xsl:value-of select="@n"/><xsl:text>]</xsl:text>
             </xsl:element>
             <xsl:text> </xsl:text>
@@ -894,7 +910,7 @@
             <xsl:element name="extref">
                 <xsl:attribute name="show">new</xsl:attribute>
                 <xsl:attribute name="actuate">onrequest</xsl:attribute>
-                <xsl:attribute name="href"><xsl:value-of select="$gallica"/><xsl:value-of select="@facs"/></xsl:attribute>
+                <xsl:attribute name="href"><xsl:value-of select="$facslink"/><xsl:value-of select="@facs"/></xsl:attribute>
                 <xsl:apply-templates/>
             </xsl:element>
         </xsl:when>
