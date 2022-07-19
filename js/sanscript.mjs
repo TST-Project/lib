@@ -39,7 +39,7 @@ var schemes = Sanscript.schemes = {
         tamil: {
             vowels: ['அ','ஆ','இ','ஈ','உ','ஊ','','','','','எ','ஏ','ஐ','ஒ','ஓ','ஔ'],
             vowel_marks: ['ா','ி','ீ','ு','ூ','','','','','ெ','ே','ை','ொ','ோ','ௌ'],
-            other_marks: 'ஂ \u{11303} ஃ'.split(' '),
+            other_marks: ['ஂ','\u{11303}','','','','ஃ'],
             virama: ['்'],
             consonants: 'க \u{11316} \u{11317} \u{11318} ங ச \u{1131B} ஜ \u{1131D} ஞ ட \u{11320} \u{11321} \u{11322} ண த \u{11325} \u{11326} \u{11327} ந ப \u{1132B} \u{1132C} \u{1132D} ம ய ர ல வ ஶ ஷ ஸ ஹ ழ ள ற ன'.split(' '),
             symbols: '௦ ௧ ௨ ௩ ௪ ௫ ௬ ௭ ௮ ௯ ௐ  ऽ । ॥ ௰ ௱ ௲'.split(' '),
@@ -63,7 +63,7 @@ var schemes = Sanscript.schemes = {
                 '\u{11346}','\u{11347}','\u{11348}',
                 '\u{1134A}','\u{1134B}','\u{1134C}'
             ],
-            other_marks: ['\u{11302}','\u{11303}',''],
+            other_marks: ['\u{11302}','\u{11303}','','','','ஃ'],
             virama: ['\u{1134D}'],
             consonants: ['\u{11315}','\u{11316}','\u{11317}','\u{11318}','\u{11319}',
                 '\u{1131A}','\u{1131B}','\u{1131C}','\u{1131D}','\u{1131E}',
@@ -95,7 +95,7 @@ var schemes = Sanscript.schemes = {
                 '\u{0D46}','\u{0D47}','\u{0D48}',
                 '\u{0D4A}','\u{0D4B}','\u{0D4C}'
             ],
-            other_marks: ['\u{0D02}','\u{0D03}','','\u{0D01}'],
+            other_marks: ['\u{0D02}','\u{0D03}','\u{0D01}','','',''],
             virama: ['\u{0D4D}'],
 
             consonants: ['\u{0D15}','\u{0D16}','\u{0D17}','\u{0D18}','\u{0D19}',
@@ -158,7 +158,7 @@ var schemes = Sanscript.schemes = {
                 '','\u{111BC}','\u{111BD}',
                 '','\u{111BE}','\u{111BF}'
             ],
-            other_marks: ['\u{11181}','\u{11182}','\u{11180}','\u{111C1}','\u{111C2}'],
+            other_marks: ['\u{11181}','\u{11182}','\u{11180}','\u{111C1}','\u{111C2}',''],
             virama: ['\u{111C0}'],
             consonants: ['\u{11191}','\u{11192}','\u{11193}','\u{11194}','\u{11195}',
                 '\u{11196}','\u{11197}','\u{11198}','\u{11199}','\u{1119A}',
@@ -171,13 +171,47 @@ var schemes = Sanscript.schemes = {
             ],
             symbols: ['\u{111D0}','\u{111D1}','\u{111D2}','\u{111D3}','\u{111D4}','\u{111D5}',
                 '\u{111D6}','\u{111D7}','\u{111D8}','\u{111D9}',
-                '\u{111C4}','\u{111C1}','','\u{111C5}','\u{111C6}']
+                '\u{111C4}','','\u{111C1}','\u{111C5}','\u{111C6}']
+        },
+
+        nandinagari: {
+            vowels: ['\u{119A0}','\u{119A1}',
+                '\u{119A2}','\u{119A3}',
+                '\u{1194}','\u{119A5}',
+                '\u{119A6}','\u{119A7}',
+                '\u{119C9}\u{119D6}','\u{119C9}\u{119D7}',
+                '','\u{119AA}','\u{119AB}',
+                '','\u{119AC}','\u{119AD}'
+            ],
+            vowel_marks: ['\u{119D1}',
+                '\u{119D2}','\u{119D3}',
+                '\u{119D4}','\u{119D5}',
+                '\u{119D6}','\u{119D7}',
+                '\u{119C9}\u{119D6}','\u{119C9}\u{119D7}',
+                '','\u{119DA}','\u{119DB}',
+                '','\u{119DC}','\u{119DD}'
+            ],
+            other_marks: ['\u{119DE}','\u{119DF}','','',''],
+            virama: ['\u{119E0}'],
+            consonants: ['\u{119AE}','\u{119AF}','\u{119B0}','\u{119B1}','\u{11B2}',
+                '\u{119B3}','\u{119B4}','\u{119B5}','\u{119B6}','\u{119B7}',
+                '\u{119B8}','\u{119B9}','\u{119BA}','\u{119BB}','\u{119BC}',
+                '\u{119BD}','\u{119BE}','\u{119BF}','\u{119C0}','\u{119C1}',
+                '\u{119C2}','\u{119C3}','\u{119C4}','\u{119C5}','\u{119C6}',
+                '\u{119C7}','\u{119C8}','\u{119C9}','\u{119CA}',
+                '\u{119CB}','\u{119CC}','\u{119CD}','\u{119CE}',
+                '\u{119CF}','','\u{119D0}'
+            ],
+            // use Kannada numerals & Devanagari daṇḍas
+            symbols: ['\u{0CE6}','\u{0CE7}','\u{0CE8}','\u{0CE9}','\u{0CEA}','\u{0CEB}',
+                '\u{0CEC}','\u{0CED}','\u{0CEE}','\u{0CEF}',
+                '','','\u{119E1}','।','॥']
         },
 
         bengali: {
             vowels: 'অ আ ই ঈ উ ঊ ঋ ৠ ঌ ৡ  এ ঐ  ও ঔ এ ঐ ও ঔ'.split(' '),
             vowel_marks: 'া ি ী ু ূ ৃ ৄ ৢ ৣ  ে ৈ  ো ৌ'.split(' '),
-            other_marks: ['ং','ঃ','','ঁ'],
+            other_marks: ['ং','ঃ','ঁ','','',''],
             virama: ['্'],
             consonants: ['ক','খ','গ','ঘ','ঙ','চ','ছ','জ','ঝ','ঞ','ট','ঠ','ড','ঢ','ণ',
                 'ত','থ','দ','ধ','ন','প','ফ','ব','ভ','ম','য','র','ল','ব','শ','ষ','স','হ',
@@ -200,7 +234,7 @@ var schemes = Sanscript.schemes = {
             vowel_marks: 'ा ि ी ु ू ृ ॄ ॢ ॣ ॆ े ै ॊ ो ौ ॎ ॎे ॎा ॎो ॆ ॏ'.split(' '),
 
             // Miscellaneous marks, all of which are used in Sanskrit.
-            other_marks: ['ं','ः','ᳵ','ँ'],
+            other_marks: ['ं','ः','ँ','ᳵ','ᳶ',''],
 
             // In syllabic scripts like Devanagari, consonants have an inherent
             // vowel that must be suppressed explicitly. We do so by putting a
@@ -238,7 +272,7 @@ var schemes = Sanscript.schemes = {
         telugu: {
             vowels: 'అ ఆ ఇ ఈ ఉ ఊ ఋ ౠ ఌ ౡ ఎ ఏ ఐ ఒ ఓ ఔ'.split(' '),
             vowel_marks: 'ా ి ీ ు ూ ృ ౄ ౢ ౣ ె ే ై ొ ో ౌ'.split(' '),
-            other_marks: 'ం ః   ఁ'.split(' '),
+            other_marks: ['ం','ం','ఁ','','',''],
             virama: ['్'],
             consonants: 'క ఖ గ ఘ ఙ చ ఛ జ ఝ ఞ ట ఠ డ ఢ ణ త థ ద ధ న ప ఫ బ భ మ య ర ల వ శ ష స హ ళ ఴ ఱ  '.split(' '),
             symbols: '౦ ౧ ౨ ౩ ౪ ౫ ౬ ౭ ౮ ౯ ఓం ఽ । ॥'.split(' '),
@@ -252,8 +286,7 @@ var schemes = Sanscript.schemes = {
         iast: {
             vowels: 'a ā i ī u ū ṛ ṝ ḷ ḹ e ē ai o ō au ê aî ô aû'.split(' '),
             //vowels: 'a ā i ī u ū e ē ai o ō au'.split(' '),
-            other_marks: ['ṃ','ḥ','ḵ','m̐'],
-            //other_marks: ['ṃ', 'ḵ', 'ḥ'],
+            other_marks: ['ṃ','ḥ','m̐','ẖ','ḫ','ḵ'],
             virama: [''],
             //skip: ['_'],
             //consonants: 'k kh g gh ṅ c ch j jh ñ ṭ ṭh ḍ ḍh ṇ t th d dh n p ph b bh m y r l v ś ṣ s h ḻ kṣ jñ'.split(' '),

@@ -10,7 +10,7 @@ const Transliterate = (function() {
     const _state = {
         curlang: 'en',
         availlangs: ['en'],
-        availsanscripts: ['bengali','devanagari','grantha','malayalam','newa','sarada','telugu'],
+        availsanscripts: ['bengali','devanagari','grantha','malayalam','newa','sarada','telugu','nandinagari'],
         features: new Set(),
         langselector: '',
         otherlangs: ['ta','sa'],
@@ -263,6 +263,11 @@ const Transliterate = (function() {
             if(txtnode.parentNode.lang === 'sa')
                 return to.sarada(cached);
         },
+        'sa-nandinagari': function(txtnode) {
+            const cached = getCached(txtnode);
+            if(txtnode.parentNode.lang === 'sa')
+                return to.nandinagari(cached);
+        },
 
         roman: function(txtnode) {
             if(_state.otherlangs.includes(txtnode.parentNode.lang))
@@ -485,6 +490,19 @@ const Transliterate = (function() {
 
             const text = Sanscript.t(smushed,'iast','sarada')
                 .replace(/¯/g, 'ꣻ');
+            return text;
+        },
+
+        nandinagari: function(txt,placeholder) {
+
+            const pretext = txt.replace(/ṙ/g, 'r')
+                .replace(/e/g,'ē')
+                .replace(/o(?![ṁḿ])/g,'ō');
+
+            const smushed = to.smush(pretext, (placeholder || '') );
+
+            const text = Sanscript.t(smushed,'iast','nandinagari')
+                .replace(/¯/g, '\u{119E3}');
             return text;
         },
     };
