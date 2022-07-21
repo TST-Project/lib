@@ -42,7 +42,7 @@
 @font-face {
     font-family: 'Tantular Bali';
     src: url('fonts/TantularBali.ttf');
-    unicode-range: ~"U+1B00-U+1B7F";
+    unicode-range: U+1B00-U+1B7F;
 }
 */
 
@@ -130,7 +130,7 @@
 @font-face {
     font-family: 'Noto Sans Nandinagari';
     src: url('../fonts/noto/NotoSansNandinagari-Regular.ttf');
-    unicode-range: U+119A0-119FF,U+0C6-0CEF;
+    unicode-range: U+119A0-119FF,U+0CE6-0CEF;
 }
 .aalt {
     font-feature-settings: "aalt" 1;
