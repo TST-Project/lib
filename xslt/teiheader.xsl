@@ -894,6 +894,7 @@
 
 <xsl:template name="synch-format">
         <xsl:if test="@synch">
+            <xsl:attribute name="data-synch"><xsl:value-of select="@synch"/></xsl:attribute>
             <xsl:element name="span">
                 <xsl:attribute name="class">lihead</xsl:attribute>
                 <xsl:call-template name="splitlist">

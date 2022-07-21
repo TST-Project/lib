@@ -16,6 +16,7 @@
     </xsl:element>
     <xsl:element name="section">
         <xsl:attribute name="class">teitext</xsl:attribute>
+        <xsl:attribute name="dataset-unit"><xsl:value-of select="@synch"/></xsl:attribute>
         <xsl:call-template name="lang"/>
         <xsl:element name="table">
             <xsl:attribute name="class">texttitle</xsl:attribute>
@@ -56,7 +57,7 @@
 </xsl:template>
 
 <xsl:template match="x:body/x:ab">
-    <xsl:element name="section">
+    <xsl:element name="div">
         <xsl:call-template name="lang"/>
         <xsl:apply-templates/>
     </xsl:element>
