@@ -87,8 +87,7 @@
 </xsl:template>
 
 <xsl:template match="x:title[@type='article']">
-    <xsl:element name="em">
-        <xsl:attribute name="class">title-article</xsl:attribute>
+    <xsl:element name="q">
         <xsl:call-template name="lang"/>
         <xsl:apply-templates />
     </xsl:element>

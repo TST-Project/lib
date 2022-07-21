@@ -457,14 +457,14 @@ span.interp {
 span.retrace {
     font-weight: bold;
 }
-
+/*
 span.quote::before {
     content: "“";
 }
 span.quote::after {
     content: "”";
 }
-
+*/
 span.locus {
     font-size: 0.9em;
     color: #A85110;

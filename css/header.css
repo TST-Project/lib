@@ -71,7 +71,7 @@ th {
 em.title.ta, em.title.sa, .teitext em.title, .excerpt em.title {
     font-style: normal;
 }
-
+/*
 em.title-article {
     font-style: normal;
 }
@@ -81,7 +81,7 @@ em.title-article::before {
 em.title-article::after {
     content: '”';
 }
-
+*/
 h1 {
     margin-right: 0.5rem;
 }
