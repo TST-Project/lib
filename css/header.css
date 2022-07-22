@@ -68,7 +68,7 @@ th {
     width: 5rem;
 }
 
-em.title.ta, em.title.sa, .teitext em.title, .excerpt em.title {
+em.title:lang(ta-Taml), em.title:lang(sa-Beng), em.title:lang(sa-Deva), em.title:lang(sa-Gran), em.title:lang(sa-Mlym), em.title:lang(sa-Nand), em.title:lang(sa-Newa), em.title:lang(sa-Telu), .teitext em.title, .excerpt em.title {
     font-style: normal;
 }
 /*
@@ -86,7 +86,7 @@ h1 {
     margin-right: 0.5rem;
 }
 
-h1 em.title.tamil, h1 em.title.devanagari, h1 em.title.telugu {
+h1 em.title.tamil, h1 em.title:lang(sa-Deva), h1 em.title:lang(sa-Telu) {
     line-height: 4rem;
 }
 

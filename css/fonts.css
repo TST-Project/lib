@@ -106,6 +106,7 @@
 @font-face {
     font-family: 'Bangla';
     src: url('../fonts/Bangla-custom.woff');
+    size-adjust: 115%;
     unicode-range: U+0980-09FF;
 }
 
@@ -169,3 +170,19 @@ body {
     font-family: Brill, et-book, "Noto Serif Tamil", "TST Grantha", "Bangla", "PedanticDevanagari", "PedanticMalayalam", "PedanticTelugu", "Noto Sans Newa", "Satisar Sharada", "Tibetan Machine Uni", "Noto Sans Nandinagari", Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
     hyphens: auto;
 }
+/*
+.teitext :lang(sa-Beng) {
+    font-size: 1.8rem;
+}
+:lang(sa-Beng).super, :lang(sa-Beng).sub {
+    font-size: 1.3rem;
+}
+
+h1 :lang(sa-Beng) {
+    font-size: 1em;
+}
+
+p:lang(sa-Deva) {
+    font-size: 1.1em;    
+}
+*/
