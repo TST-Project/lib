@@ -1072,14 +1072,15 @@
                                 </xsl:variable>
                                 <xsl:for-each select="exsl:node-set($uniquetypes)/x:seg">
                                     <xsl:variable name="pos" select="position()"/>
-                                    <xsl:if test="$pos = last() or not(@function=following-sibling::x:seg/@function)">
+                                    <xsl:variable name="notdup" select="not(@function=following-sibling::x:seg/@function)"/>
+                                    <xsl:if test="$pos = last() or $notdup">
                                         <xsl:variable name="func" select="@function"/>
                                         <xsl:variable name="addname" select="$TST/tst:additiontype//tst:entry[@key=$func]"/>
                                         <xsl:choose>
                                             <xsl:when test="$addname"><xsl:value-of select="$addname"/></xsl:when>
                                             <xsl:otherwise><xsl:value-of select="$func"/></xsl:otherwise>
                                         </xsl:choose>
-                                        <xsl:if test="not($pos = last())">
+                                        <xsl:if test="not($pos = last()) and $func">
                                             <xsl:text>, </xsl:text>
                                         </xsl:if>
                                     </xsl:if>
