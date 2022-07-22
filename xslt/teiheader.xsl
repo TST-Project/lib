@@ -360,6 +360,7 @@
 
 <xsl:template match="x:msItem">
   <table class="msItem">
+    <xsl:attribute name="data-synch"><xsl:value-of select="@synch"/></xsl:attribute>
     <xsl:variable name="thisid" select="@xml:id"/>
     <xsl:variable name="source" select="@source"/>
     <xsl:call-template name="msItemHeader"/>
