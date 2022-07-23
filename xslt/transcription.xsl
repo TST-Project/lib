@@ -16,7 +16,7 @@
     </xsl:element>
     <xsl:element name="section">
         <xsl:attribute name="class">teitext</xsl:attribute>
-        <xsl:attribute name="dataset-unit"><xsl:value-of select="@synch"/></xsl:attribute>
+        <xsl:attribute name="data-synch"><xsl:value-of select="@synch"/></xsl:attribute>
         <xsl:call-template name="lang"/>
         <xsl:element name="table">
             <xsl:attribute name="class">texttitle</xsl:attribute>
@@ -844,5 +844,43 @@
         <xsl:call-template name="lang"/>
         <xsl:apply-templates/>
     </td>
+</xsl:template>
+
+<xsl:template match="x:ruby">
+    <xsl:element name="ruby">
+        <xsl:call-template name="lang"/>
+        <xsl:variable name="place" select="x:rt/@place"/>
+        <xsl:attribute name="class">
+            <xsl:choose>
+                <xsl:when test="$place='bottom-margin' or $place='below'">
+                    <xsl:text>under</xsl:text>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:text>over</xsl:text>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:attribute>
+        <xsl:apply-templates/>
+    </xsl:element>
+</xsl:template>
+
+<xsl:template match="x:rt">
+    <xsl:element name="rt">
+        <xsl:call-template name="lang"/>
+        <xsl:attribute name="data-anno">
+            <xsl:text>annotation</xsl:text>
+            <xsl:if test="@place">
+                <xsl:text> (</xsl:text><xsl:value-of select="@place"/><xsl:text>)</xsl:text>
+            </xsl:if>
+        </xsl:attribute>
+        <xsl:apply-templates/>
+    </xsl:element>
+</xsl:template>
+
+<xsl:template match="x:rb">
+    <xsl:element name="rb">
+        <xsl:call-template name="lang"/>
+        <xsl:apply-templates/>
+    </xsl:element>
 </xsl:template>
 </xsl:stylesheet>

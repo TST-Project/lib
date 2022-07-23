@@ -82,11 +82,11 @@ div.lg div.l {
         /*margin-bottom: 0.5em;*/
 }
 
-.devanagari .l {
+:lang(sa-Deva) .l {
                         line-height: 1.4em;
 }
 
-.malayalam .l {
+:lang(sa-Mlym) .l {
                         line-height: 1.3em;
 }
 
@@ -200,10 +200,10 @@ blockquote > .cb.diplo:first-child::after {
 }
 */
 
-.devanagari span.lb {
+:lang(sa-Deva) span.lb {
         font-size: 100%;
 }
-.malayalam span.lb {
+:lang(sa-Mlym) span.lb {
         font-size: 100%;
 }
 
@@ -219,12 +219,12 @@ blockquote > .cb.diplo:first-child::after {
     white-space: nowrap;
 }
 
-.devanagari .pb {
+:lang(sa-Deva) .pb {
                      font-size: 100%;
                      vertical-align: text-bottom;
 }
 
-.malayalam .pb {
+:lang(sa-Mlym) .pb {
                      font-size: 100%;
                      vertical-align: text-bottom;
 }
@@ -287,10 +287,10 @@ span.note::after {
     content: ']';
 }
 
-span.note.super::before {
+span.note.super::before, span.note.sub::before {
     content: '';
 }
-span.note.super::after {
+span.note.super::after, span.note.sub::after {
     content: '';
 }
 
@@ -533,4 +533,20 @@ span.caesura.diplo {
 
 .teitext table:not(.texttitle) {
     width: auto;
+}
+
+.over {
+    ruby-position: over;
+    display: inline-block;
+    margin-top: 0.6rem;
+}
+.under {
+    ruby-position: under;
+    display: inline-block;
+    margin-bottom: 0.6rem;
+}
+
+rt {
+    color: #CC0000;
+    font-size: 1.1rem;
 }
