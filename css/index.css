@@ -57,6 +57,7 @@ thead a:link {
 tbody th {
     text-align: left;
 }
+
 th.subpart, .dataTable-table > tbody > tr > th.subpart {
     padding-left: 1rem;
 }
@@ -214,4 +215,10 @@ a[href]:hover::after {
 
 div.lg {
     padding-left: 0;
+}
+
+@media (max-width: 1200px) {
+    .dataTable-container {
+        overflow-x: auto;
+    }
 }
