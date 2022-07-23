@@ -27,7 +27,7 @@ const Transliterate = (function() {
         otherlangs: ['ta','sa'],
         //otherscripts: ['ta-Taml'],
         savedtext: new Map(),
-        cleanedcache: new Map(),
+        //cleanedcache: new Map(),
         parEl: null,
         hyphenator: {
             'ta-Taml': new Hypher(hyphenation_ta),
@@ -138,9 +138,11 @@ const Transliterate = (function() {
             }
         },
 
-        get: (txtnode) => _state.cleanedcache.get(txtnode) ||
-                                   _state.savedtext.get(txtnode) ||
-                                   txtnode.data,
+        get: (txtnode) => //_state.cleanedcache.has(txtnode) ? 
+                          //  _state.cleanedcache.get(txtnode) :
+                            _state.savedtext.has(txtnode) ?
+                               _state.savedtext.get(txtnode) :
+                               txtnode.data,
     };
    
     const getScript = (handDescs) => {
@@ -287,6 +289,7 @@ const Transliterate = (function() {
                 const fromLatn = curnode.parentNode.lang.split('-')[1];
                 if(fromLatn === 'Latn') {
                     const result = (() => {
+                        // bypass cleanedcache
                         const cached = cache.get(curnode);
                         if(curnode.parentNode.classList.contains('originalscript'))
                             //TODO: also do for sa-Beng, sa-Deva, etc.
@@ -315,8 +318,8 @@ const Transliterate = (function() {
                next && (next.nodeType === Node.TEXT_NODE)) {
                 next.data = prev.data + next.data;
                 prev.data = '';
-                _state.cleanedcache.set(next,next.data);
-                _state.cleanedcache.set(prev,'');
+                //_state.cleanedcache.set(next,next.data);
+                //_state.cleanedcache.set(prev,'');
             }
         }
          
@@ -343,8 +346,9 @@ const Transliterate = (function() {
                             return curnode.parentElement.dataset.glyph;
 
                         if(!scriptfunc) return undefined;
-                        const cached = cache.get(curnode);
-                        return scriptfunc(cached);
+                        //const cached = cache.get(curnode);
+                        //return scriptfunc(cached);
+                        return scriptfunc(curnode.data);
                     })();
                     if(result !== undefined) curnode.data = result;
                 }
