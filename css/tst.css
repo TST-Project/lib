@@ -81,6 +81,7 @@ body {
 }
 
 #transbutton {
+    display: none;
     position: absolute;
     top: 0;
     left: -3.5rem;
@@ -96,17 +97,17 @@ body {
     }
 }
 
-#transbutton.tamil, #transbutton.grantha {
+#transbutton:lang('ta-Taml'), #transbutton:lang('sa-Gran') {
     padding: 0 0.4rem 0.1rem 0.5rem;
     font-size: 1rem;
 }
 
-#transbutton.devanagari {
+#transbutton:lang('sa-Deva') {
     padding: 0 0.5rem 0 0.4rem;
     font-size: 1.4rem;
 }
 
-#transbutton.telugu {
+#transbutton:lang('sa-Telu') {
     padding: 0 0.6rem 0 0.6rem;
     font-size: 1.1rem;
 }
@@ -212,25 +213,6 @@ span.spacer {display: none;
     font-family: Brill, PedanticDevanagari, PedanticMalayalam, PedanticTelugu, Tantular Bali, serif;
 }
 */
-
-.bengali:lang(sa) {
-    /*font-size: 1.5rem;*/
-}
-
-.teitext .bengali:lang(sa) {
-    font-size: 1.8rem;
-}
-.bengali:lang(sa).super, .bengali:lang(sa).sub {
-    font-size: 1.3rem;
-}
-
-h1 .bengali:lang(sa) {
-    font-size: 1em;
-}
-
-p.devanagari:lang(sa) {
-    font-size: 1.1em;    
-}
 
 div.teitext {
     border: 0;

@@ -68,7 +68,7 @@ th {
     width: 5rem;
 }
 
-em.title:lang(ta-Taml), em.title:lang(sa-Beng), em.title:lang(sa-Deva), em.title:lang(sa-Gran), em.title:lang(sa-Mlym), em.title:lang(sa-Nand), em.title:lang(sa-Newa), em.title:lang(sa-Telu), .teitext em.title, .excerpt em.title {
+em.title:lang(ta-Taml), em.title:lang(sa-Beng), em.title:lang(sa-Deva), em.title:lang(sa-Gran), em.title:lang(sa-Mlym), em.title:lang(sa-Nand), em.title:lang(sa-Newa), em.title:lang(sa-Shrd), em.title:lang(sa-Telu), .teitext em.title, .excerpt em.title {
     font-style: normal;
 }
 /*

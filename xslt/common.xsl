@@ -97,4 +97,13 @@
         <xsl:apply-templates/>
     </xsl:element>
 </xsl:template>
+
+<xsl:template match="x:date">
+    <xsl:apply-templates/>
+</xsl:template>
+
+<xsl:template match="x:publisher">
+    <xsl:apply-templates/>
+</xsl:template>
+
 </xsl:stylesheet>

@@ -8,274 +8,349 @@ import { hyphenation_sa } from './sa.mjs';
 
 const Transliterate = (function() {
     const _state = {
-        curlang: 'en',
-        availlangs: ['en'],
-        availsanscripts: ['bengali','devanagari','grantha','malayalam','newa','sarada','telugu','nandinagari'],
-        features: new Set(),
-        langselector: '',
+        //curlang: 'en',
+        //availlangs: ['en'],
+        scriptToIso: new Map([
+            ['tamil','Taml'],
+            ['bengali','Beng'],
+            ['devanagari','Deva'],
+            ['grantha','Gran'],
+            ['malayalam','Mlym'],
+            ['newa','Newa'],
+            ['sarada','Shrd'],
+            ['telugu','Telu'],
+            ['nandinagari','Nand']
+        ]),
+        //scriptnames: new Set(['bengali','devanagari','grantha','malayalam','newa','sarada','telugu','nandinagari']),
+        //features: new Set(),
+        //langselector: '[lang|="ta"],[lang|="sa"]',
         otherlangs: ['ta','sa'],
-        otherscripts: ['ta-Taml'],
+        //otherscripts: ['ta-Taml'],
         savedtext: new Map(),
         cleanedcache: new Map(),
         parEl: null,
         hyphenator: {
-            ta: new Hypher(hyphenation_ta),
-            sa: new Hypher(hyphenation_sa),
+            'ta-Taml': new Hypher(hyphenation_ta),
+            'sa-Latn': new Hypher(hyphenation_sa),
             'ta-Latn': new Hypher(hyphenation_ta_Latn)
-        }
+        },
+        defaultSanscript: null,
+        reverselangs: new Map([
+            ['ta-Latn-t-ta-Taml','ta-Taml-t-ta-Latn'],
+            ['ta-Taml-t-ta-Latn','ta-Latn-t-ta-Taml']
+        ]),
     };
     
-    const init = function(par) {
+    _state.scriptnames = new Set(_state.scriptToIso.keys());
+    _state.isonames = new Set(_state.scriptToIso.values());
+    for(const val of _state.isonames) {
+        _state.reverselangs.set(`sa-${val}-t-sa-Latn`,`sa-Latn-t-sa-${val}`);
+        _state.reverselangs.set(`sa-Latn-t-sa-${val}`,`sa-${val}-t-sa-Latn`);
+    }
+
+    const init = function(par = document.body) {
 
         // reset state
-        _state.availlangs = ['en'];
-
-        // prepare transliteration functions
-        const langtags = [...document.getElementsByClassName('record_languages')];
-        const langs = langtags.reduce((acc,cur) => {
-            const arr = acc;
-            if(cur.dataset.mainlang) arr.push(cur.dataset.mainlang);
-            if(cur.dataset.otherlangs) 
-                cur.dataset.otherlangs.split(' ').forEach(str => arr.push(str));
-            return arr;
-        },[]);
-        if(langs.includes('tam')) {
-            _state.availlangs.push('ta-tamil');
-            _state.langselector = _state.langselector ?
-                [_state.langselector,'[lang|="ta"]'].join(',') :
-                '[lang|="ta"]';
-        }
-        if(langs.includes('san')) {
-            const scripttags = [...document.getElementsByClassName('record_scripts')];
-            const scripts = new Set();
-            for(const tag of scripttags) {
-                tag.dataset.script.split(' ').forEach(str => scripts.add(str));
-                tag.dataset.scriptref.split(' ').forEach(str => _state.features.add(str));
-            }
-            for(const script of _state.availsanscripts) {
-                if(scripts.has(script))
-                    _state.availlangs.push(`sa-${script}`);
-            }
-            _state.langselector = _state.langselector ? 
-                [_state.langselector,'[lang|="sa"]'].join(',') :
-                '[lang|="sa"]';
-        }
-        
-        _state.parEl = par || document.body; 
+        _state.parEl = par; 
         if(!_state.parEl.lang) _state.parEl.lang = 'en';
 
-        const walker = document.createTreeWalker(_state.parEl,NodeFilter.SHOW_ALL);
-        var curnode = walker.currentNode;
+        // prepare transliteration functions
+        const foundTamil = par.querySelector('[lang|="ta"]');
+        const foundSanskrit = par.querySelector('[lang|="sa"]');
+        if(!foundTamil && !foundSanskrit) return;
+
+        if(foundSanskrit) {
+            const scripttags = [...par.getElementsByClassName('record_scripts')];
+            const defaultSanscript = getScript(scripttags);
+            if(!defaultSanscript && !foundTamil) {
+                // hyphenate text even if no transliteration available
+                const walker = document.createTreeWalker(par,NodeFilter.SHOW_ALL);
+                textLangWalker(walker);
+                return;
+            }
+            else _state.defaultSanscript = defaultSanscript;
+        }
+       
+        // use BCP47 RFC6497: https://datatracker.ietf.org/doc/html/rfc6497
+        tagTextLang();
+
+        // initialize button
+        _state.button = document.getElementById('transbutton');
+        button.init(foundTamil);
+    };
+
+    const button = {
+        init(tamil) {
+            if(tamil) {
+                _state.button.textContent = to.tamil('a');
+                _state.button.lang = 'ta-Taml';
+            }
+            else {
+                _state.button.textContent = to[_state.defaultSanscript]('a');
+                _state.button.lang = `sa-${_state.scriptToIso.get(_state.defaultSanscript)}`;
+            }
+            _state.button.addEventListener('click',events.transClick);
+            _state.button.style.display = 'block';
+        },
+        revert() {
+            _state.button.textContent = _state.button.dataset.oldcontent;
+            _state.button.lang = _state.button.dataset.oldlang;
+        },
+        transliterate() {
+            _state.button.dataset.oldcontent = _state.button.textContent;
+            _state.button.dataset.oldlang = _state.button.lang;
+            _state.button.textContent = 'A';
+            _state.button.lang = 'en';
+        },
+    };
+
+    const cache = {
+        set(txtnode) {
+            // don't break before daṇḍa, or between daṇḍa and numeral/puṣpikā
+            const nbsp = String.fromCodePoint('0x0A0');
+            const txt = txtnode.data
+                .replace(/\s+\|/g,`${nbsp}|`)
+                .replace(/\|\s+(?=[\d❈꣸৽])/g,`|${nbsp}`);
+            
+            const getShortLang = (node) => {
+                const s = node.lang.split('-t-');
+                if(node.classList.contains('originalscript'))
+                    return s[1];
+                else
+                    return s[0];
+            };
+            // hyphenate according to script (Tamil or Romanized)
+            const lang = txtnode.parentNode.lang;
+            const shortlang = getShortLang(txtnode.parentNode);
+            if(_state.hyphenator.hasOwnProperty(shortlang)) {
+                const hyphenated = _state.hyphenator[shortlang].hyphenateText(txt);
+                _state.savedtext.set(txtnode,hyphenated);
+                // convert Tamil (and others) to Roman
+                if(shortlang === 'ta-Taml') {
+                    // TODO: also deal with 'sa-Beng', 'sa-Deva', etc.
+                    return to.iast(hyphenated);
+                }
+                else return hyphenated;
+            }
+            else {
+                _state.savedtext.set(txtnode,txt);
+                return txt;
+            }
+        },
+
+        get: (txtnode) => _state.cleanedcache.get(txtnode) ||
+                                   _state.savedtext.get(txtnode) ||
+                                   txtnode.data,
+    };
+   
+    const getScript = (handDescs) => {
+        if(handDescs.length === 0) return _state.defaultSanscript;
+
+        const scripts = [...handDescs].reduce((acc,cur) => {
+            for(const s of cur.dataset.script.split(' '))
+                acc.add(s);
+                return acc;
+        },new Set());
+        
+        // just take first script, or Tamil (Grantha) if necessary
+        let maybetamil = false;
+        for(const s of scripts) {
+            if(s === 'tamil') maybetamil = true;
+            if(_state.scriptnames.has(s)) return s;
+        }
+        return maybetamil ? 'grantha' : false;
+    }
+
+    const tagTextLang = () => {
+        // tag codicological units associated with a script first
+        const synchs = _state.parEl.querySelectorAll('[data-synch]');
+        for(const synch of synchs) {
+            synch.lang = synch.lang ? synch.lang : 'en';
+            const units = synch.dataset.synch.split(' ');
+            const scriptcode = (() => {
+                // if this is a handDesc element
+                if(synch.classList.contains('record_scripts'))
+                    return _state.scriptToIso.get(synch.dataset.script.split(' ')[0]);
+                // otherwise
+                const unitselector = units.map(s => `li.record_scripts[data-synch~='${s}']`);
+                const handDescs = _state.parEl.querySelectorAll(unitselector);
+                const script = getScript(handDescs) || _state.defaultSanscript;
+                return _state.scriptToIso.get(script);
+            })();
+            
+            const walker = document.createTreeWalker(synch,NodeFilter.SHOW_ALL);
+            textLangWalker(walker,scriptcode);
+        }
+
+        // tag rest of the document
+        const isodefault = _state.scriptToIso.get(_state.defaultSanscript);
+        const walker = document.createTreeWalker(_state.parEl,NodeFilter.SHOW_ALL, 
+            { acceptNode(node) { return node.nodeType === Node.ELEMENT_NODE && node.hasAttribute('data-synch') ?
+                NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT} });
+        textLangWalker(walker,isodefault);
+    };
+    
+    const textLangWalker = (walker,scriptcode) => {
+        //TODO: hyphenate the text if scriptcode is undefined
+        let curnode = walker.currentNode;
         while(curnode) {
             if(curnode.nodeType === Node.ELEMENT_NODE) {
-                if(!curnode.lang) curnode.lang = curnode.parentNode.lang;
+                if(curnode.parentNode.classList.contains('originalscript'))
+                    curnode.classList.add('originalscript');
+                if(curnode.lang) {
+                // case 1: sa-Latn[-t-XXXX]
+                // case 2: sa-XXXX
+                // case 3: sa
+                // case 4: undefined
+                // what about script features? (e.g. valapalagilaka)
+                    if(curnode.lang.startsWith('sa-')) {
+                        if(!curnode.lang.startsWith('sa-Latn')) {
+                            // Sanskrit written in a specific script
+                            curnode.lang = curnode.lang + '-t-sa-Latn';
+                            curnode.classList.add('originalscript');
+                        }
+                    }
+                    else if(curnode.lang === 'sa') {
+                        // assume transliterated in IAST
+                        if(curnode.parentNode.lang.startsWith('sa-'))
+                            // script is specified by parent
+                            curnode.lang = curnode.parentNode.lang;
+                            curnode.lang = scriptcode ? 
+                                `sa-Latn-t-sa-${scriptcode}` : 'sa-Latn';
+                    }
+                    // what about Tamil in other scripts?
+                    else if(curnode.lang === 'ta') {
+                        curnode.lang = 'ta-Latn-t-ta-Taml';
+                    }
+                    else if(curnode.lang === 'ta-Taml') {
+                        curnode.classList.add('originalscript');
+                        console.log(curnode.classList);
+                        curnode.lang = 'ta-Latn-t-ta-Taml';
+                    }
+                }
+                else {
+                    curnode.lang = curnode.parentNode.lang;
+                }
             }
             else if(curnode.nodeType === Node.TEXT_NODE) {
-                const curlang = curnode.parentNode.lang.replace(/-\w+$/,'');
+                const curlang = curnode.parentNode.lang.split('-')[0];
                 if(_state.otherlangs.includes(curlang)) {
-                    curnode.data = cacheText(curnode);
+                    curnode.data = cache.set(curnode);
                 }
             }
             curnode = walker.nextNode();
         }
-        
-        const button = document.getElementById('transbutton');
-        if(_state.availlangs.length > 1)
-            button.addEventListener('click',events.transClick);
-        else button.style.display = 'none';
-
     };
 
     const events = {
-        transClick: function(e) {
-            const i = _state.availlangs.indexOf(_state.curlang);
-            const nexti = _state.availlangs.length === i+1 ? 0 : i+1;
+        transClick(e) {
             const vpos = viewPos.getVP(_state.parEl);
-            cycleScript(e.target,_state.curlang,_state.availlangs[nexti]);
+            cycleScript();
             viewPos.setVP(_state.parEl,vpos);
         },
     };
 
-    const cycleScript = function(button,from,to) {
-        const parselangcode = function(str) {
-            const s = str.split('-');
-            return {
-                lang: s[0],
-                script: s.length > 1 ? s[1] : ''
-            };
-        };
+    const cycleScript = () => {
+        if(_state.button.lang === 'en') {
+            revertText();
 
-        const fromlang = parselangcode(from);
-        if(fromlang.script) button.classList.remove(fromlang.script);
-
-
-        if(to === 'en') {
-            const nodes = document.querySelectorAll(_state.langselector);
-            for(const n of nodes) {
-                fromlang.script ? 
-                    n.classList.remove(fromlang.lang,fromlang.script) :
-                    n.classList.remove(fromlang.lang);
-            }
-            textWalk(walkers.roman,fromlang.lang);
-
-            const subst = document.querySelectorAll('span.subst, span.choice, span.expan');
+            const subst = _state.parEl.querySelectorAll('span.subst, span.choice, span.expan');
             for(const s of subst)
                 unjiggle(s);
-            
-            button.innerHTML = 'A';
+            button.revert();
         }
         else {
-            const tolang = parselangcode(to);
-            const subst = document.querySelectorAll(`span.subst[lang|="${tolang.lang}"],span.choice[lang|="${tolang.lang}"],span.expan[lang|="${tolang.lang}"`);
+            const subst = _state.parEl.querySelectorAll('span.subst,span.choice,span.expan');
+            //const subst = document.querySelectorAll(`span.subst[lang|="${tolang.lang}"],span.choice[lang|="${tolang.lang}"],span.expan[lang|="${tolang.lang}"`);
             for(const s of subst)
-                jiggle(s,tolang.script,tolang.lang);
-            const nodes = document.querySelectorAll(`[lang|="${tolang.lang}"]`);
-            for(const n of nodes) {
-                fromlang.script ?
-                    n.classList.remove(fromlang.lang,fromlang.script) :
-                    n.classList.remove(fromlang.lang);
-                n.classList.add(tolang.lang,tolang.script);
-            }
-            textWalk(walkers[to],tolang.lang);
-            button.innerHTML = Sanscript.t('a','iast',tolang.script);
-            button.classList.add(tolang.script);
+                jiggle(s);
+
+            textWalk();
+
+            button.transliterate();
         }
-        _state.curlang = to;
     };
 
-    const cacheText = function(txtnode) {
-        // don't break before daṇḍa, or between daṇḍa and numeral/puṣpikā
-        const nbsp = String.fromCodePoint('0x0A0');
-        const txt = txtnode.data
-            .replace(/\s+\|/g,`${nbsp}|`)
-            .replace(/\|\s+(?=[\d❈꣸])/g,`|${nbsp}`);
-        
-        // hyphenate according to script (Tamil or Romanized)
-        const lang = txtnode.parentNode.lang;
-        const hyphenlang = ((lang) => {
-            switch(lang) {
-                case 'ta-Taml':
-                    return 'ta';
-                case 'ta':
-                    return 'ta-Latn';
-                case 'sa':
-                    return 'sa';
-                default:
-                    return null;
-            }
-        })(lang);
-
-        if(hyphenlang) {
-            const hyphenated = _state.hyphenator[hyphenlang].hyphenateText(txt);
-            _state.savedtext.set(txtnode,hyphenated);
-            // convert Tamil to Roman
-            if(lang === 'ta-Taml')
-                return to.iast(hyphenated);
-            else return hyphenated;
-        }
-        else {
-            _state.savedtext.set(txtnode,txt);
-            return txt;
-        }
-    };
-    
-    const textWalk = function(func,langcode) {
-        const puncs = _state.parEl.querySelectorAll(`.invisible[lang=${langcode}]`);
-        if(func !== walkers.roman) {
-            for(const p of puncs) {
-
-                if(p.classList.contains('off')) continue;
-                // if switching between brahmic scripts, switch everything back on first?
-                p.classList.add('off');
-                const prev = p.previousSibling;
-                const next = p.nextSibling;
-                if(prev && (prev.nodeType === Node.TEXT_NODE) &&
-                   next && (next.nodeType === Node.TEXT_NODE)) {
-                    next.data = prev.data + next.data;
-                    prev.data = '';
-                    _state.cleanedcache.set(next,next.data);
-                    _state.cleanedcache.set(prev,'');
-                }
-            }
-            // to improve: check for adjacent invisible nodes
-        } else {
-            for(const p of puncs) p.classList.remove('off');
-        }
+    const revertText = () => {
+        const puncs = _state.parEl.getElementsByClassName('invisible');
+        for(const p of puncs) p.classList.remove('off');
          
-        const walker = document.createTreeWalker(_state.parEl,NodeFilter.SHOW_TEXT);
+        const walker = document.createTreeWalker(_state.parEl,NodeFilter.SHOW_ALL);
         var curnode = walker.currentNode;
         while(curnode) {
-            const code = curnode.parentNode.lang.replace(/-\w+$/,'');
-            if(_state.otherlangs.includes(code)) {
-                const result = ( func !== walkers.roman && 
-                    curnode.parentElement.dataset.hasOwnProperty('glyph') ) ? 
-                    curnode.parentElement.dataset.glyph : func(curnode);
-                if(result !== undefined) curnode.data = result;
+            if(curnode.nodeType === Node.ELEMENT_NODE) {
+                const rev = _state.reverselangs.get(curnode.lang);
+                if(rev) curnode.lang = rev;
+            }
+            else if(curnode.nodeType === Node.TEXT_NODE) {
+                // lang attribute has already been reversed (hence take index 1)
+                const fromLatn = curnode.parentNode.lang.split('-')[1];
+                if(fromLatn === 'Latn') {
+                    const result = (() => {
+                        const cached = cache.get(curnode);
+                        if(curnode.parentNode.classList.contains('originalscript'))
+                            //TODO: also do for sa-Beng, sa-Deva, etc.
+                            return to.iast(cached);
+                        else
+                            return cached;
+                    })();
+                    if(result !== undefined) curnode.data = result;
+                }
             }
             curnode = walker.nextNode();
         }
     };
-    
-    const getCached = (txtnode) => _state.cleanedcache.has(txtnode) ? _state.cleanedcache.get(txtnode) : _state.savedtext.has(txtnode) ? _state.savedtext.get(txtnode) : txtnode.data;
 
-    const walkers = {
-        'ta-tamil': function(txtnode) {
-            const cached = getCached(txtnode);
-            if(txtnode.parentNode.lang === 'ta')
-                return to.tamil(cached);
-            else if(txtnode.parentNode.lang === 'sa')
-                return to.grantha(cached);
-            else if(txtnode.parentNode.lang === 'ta-Taml')
-                return cached;
-        },
-        'sa-devanagari': function(txtnode) {
-            const cached = getCached(txtnode);
-            if(txtnode.parentNode.lang === 'sa')
-                return to.devanagari(cached);
-        },
-        'sa-grantha': function(txtnode) {
-            const cached = getCached(txtnode);
-            if(txtnode.parentNode.lang === 'sa')
-                return to.grantha(cached);
-        },
-        'sa-malayalam': function(txtnode) {
-            const cached = getCached(txtnode);
-            if(txtnode.parentNode.lang === 'sa')
-                return to.malayalam(cached);
-        },
-        'sa-telugu': function(txtnode) {
-            const cached = getCached(txtnode);
-            if(txtnode.parentNode.lang === 'sa')
-                return to.telugu(cached);
-        },
-        'sa-bengali': function(txtnode) {
-            const cached = getCached(txtnode);
-            if(txtnode.parentNode.lang === 'sa')
-                return to.bengali(cached);
-        },
-        'sa-newa': function(txtnode) {
-            const cached = getCached(txtnode);
-            if(txtnode.parentNode.lang === 'sa')
-                return to.newa(cached);
-        },
-        'sa-sarada': function(txtnode) {
-            const cached = getCached(txtnode);
-            if(txtnode.parentNode.lang === 'sa')
-                return to.sarada(cached);
-        },
-        'sa-nandinagari': function(txtnode) {
-            const cached = getCached(txtnode);
-            if(txtnode.parentNode.lang === 'sa')
-                return to.nandinagari(cached);
-        },
+    const textWalk = () => {
+        //const puncs = _state.parEl.querySelectorAll(`.invisible[lang=${langcode}]`);
+        const puncs = _state.parEl.getElementsByClassName('invisible');
+        for(const p of puncs) {
 
-        roman: function(txtnode) {
-            if(_state.otherlangs.includes(txtnode.parentNode.lang))
-                //return _state.savedtext.get(txtnode);
-                return getCached(txtnode);
-            else if(txtnode.parentNode.lang === 'ta-Taml')
-                return to.iast(txtnode.data);
-        },
+            if(p.classList.contains('off')) continue;
+            // if switching between brahmic scripts, switch everything back on first?
+            p.classList.add('off');
+            const prev = p.previousSibling;
+            const next = p.nextSibling;
+            if(prev && (prev.nodeType === Node.TEXT_NODE) &&
+               next && (next.nodeType === Node.TEXT_NODE)) {
+                next.data = prev.data + next.data;
+                prev.data = '';
+                _state.cleanedcache.set(next,next.data);
+                _state.cleanedcache.set(prev,'');
+            }
+        }
+         
+        const walker = document.createTreeWalker(_state.parEl,NodeFilter.SHOW_ALL);
+        var curnode = walker.currentNode;
+        while(curnode) {
+            if(curnode.nodeType === Node.ELEMENT_NODE) {
+                const rev = _state.reverselangs.get(curnode.lang);
+                if(rev) curnode.lang = rev;
+            }
+            else if(curnode.nodeType === Node.TEXT_NODE) {
+                const [lang, script] = (() => {
+                    const s = curnode.parentNode.lang.split('-');
+                    return [s[0],s[1]];
+                })();
+                if(_state.otherlangs.includes(lang)) {
+                    const scriptfunc = (() => {
+                        if(to.hasOwnProperty(script))
+                            return to[script];
+                        return null;
+                    })();
+                    const result = (() => {
+                        if(curnode.parentElement.dataset.hasOwnProperty('glyph'))
+                            return curnode.parentElement.dataset.glyph;
+
+                        if(!scriptfunc) return undefined;
+                        const cached = cache.get(curnode);
+                        return scriptfunc(cached);
+                    })();
+                    if(result !== undefined) curnode.data = result;
+                }
+            }
+            curnode = walker.nextNode();
+        }
     };
 
     const to = {
@@ -399,11 +474,14 @@ const Transliterate = (function() {
                     return chillu[p1];
                 });
 	
+            /*
             const replacedtxt = _state.features.has('dotReph') ?
                 // use dot reph
                 newtxt.replace(/(^|[^്])ര്(?=\S)/g,'$1ൎ') :
                 newtxt;
-            
+            */
+            const replacedtxt = newtxt.replace(/(^|[^്])ര്(?=\S)/g,'$1ൎ');
+
             return replacedtxt;
         },
         
@@ -449,8 +527,9 @@ const Transliterate = (function() {
             // FIXME: should be moved to the right of the following consonant
 
             const smushedtext = to.smush(pretext,(placeholder || ''));        
-            const replacedtext = _state.features.has('valapalagilaka') ?
-                smushedtext.replace(/r(?=[kgcjṭḍṇtdnpbmyvlh])/,'ṙ') : smushedtext;
+            //const replacedtext = _state.features.has('valapalagilaka') ?
+            //    smushedtext.replace(/r(?=[kgcjṭḍṇtdnpbmyvlh])/,'ṙ') : smushedtext;
+            const replacedtext = smushedtext.replace(/r(?=[kgcjṭḍṇtdnpbmyvlh])/,'ṙ');
 
             const posttext = replacedtext.replace(/ê/g,'e') // no pṛṣṭhamātrās
                 .replace(/ô/g,'o') // same with o
@@ -507,12 +586,21 @@ const Transliterate = (function() {
         },
     };
     
-    const jiggle = function(node,script,lang) {
+    for(const [key, val] of _state.scriptToIso) {
+        to[val] = to[key];
+    }
+    
+    const jiggle = function(node/*,script,lang*/) {
         if(node.firstChild.nodeType !== 3 && node.lastChild.nodeType !== 3) 
             return;
         
         unjiggle(node);
-
+        
+        const [lang,script] = (() => {
+            const s = node.lang.split('-');
+            return [s[0],s[s.length - 1]];
+        })();
+        
         if(!node.hasOwnProperty('origNode'))
             node.origNode = node.cloneNode(true);
 
@@ -545,7 +633,7 @@ const Transliterate = (function() {
                 // add 'a' if node ends in a consonant
                 const last_txt = findTextNode(kid,true);
                 last_txt.textContent = last_txt.textContent.replace(/\s+$/,'') + 'a';
-                if(script === 'telugu' &&
+                if(script === 'Telu' &&
                telu_cons_headstroke.indexOf(txt) >= 0) {
                 // if there's a vowel mark in the substitution, 
                 // remove the headstroke from any consonants
@@ -566,8 +654,9 @@ const Transliterate = (function() {
                 cap.appendChild(kid.cloneNode(false));
                 node.replaceChild(cap,kid);
                 kid = cap; // redefines 'kid'
-                kid.classList.add('aalt',lang,script);
-                kid.lang = lang;
+                //kid.classList.add('aalt',lang,script);
+                kid.classList.add('aalt');
+                kid.lang = node.lang;
             }
             else if(starts_with_text) {
             // use aalt if node starts with a vowel
@@ -577,7 +666,8 @@ const Transliterate = (function() {
                     kid.classList.add('aalt');
             }
             switch (script) {
-            case 'devanagari':
+            case 'Deva':
+            case 'Nand':
                 if(txt === 'i') 
                     add_at_beginning.unshift(kid);
                 else if(txt === 'ê') {
@@ -610,7 +700,9 @@ const Transliterate = (function() {
                     replaceTextInNode('aû','o',kid);
                 }
                 break;
-            case 'bengali':
+            case 'Beng':
+            case 'Newa':
+            case 'Shrd':
                 if(txt === 'i') 
                     add_at_beginning.unshift(kid);
                 else if(txt === 'e' || txt === 'ai') {
@@ -628,9 +720,9 @@ const Transliterate = (function() {
                     add_at_beginning.unshift(new_e);
                 }
                 break;
-            case 'grantha':
-            case 'tamil':
-            case 'malayalam':
+            case 'Gran':
+            case 'Taml':
+            case 'Mlym':
                 if(txt === 'e' || txt === 'ē' || txt === 'ê' || 
                    txt === 'ai' || txt === 'aî')  {
                     add_at_beginning.unshift(kid);
@@ -648,7 +740,7 @@ const Transliterate = (function() {
                     replaceTextInNode(/ō/,'ā',kid);
                 }
                 break;
-            case 'telugu':
+            case 'Telu':
                 if(!telugu_del_headstroke &&
                    telugu_vowels.indexOf(txt) >= 0)
                     
@@ -666,13 +758,13 @@ const Transliterate = (function() {
             for (const el of telugu_kids) {
                 const lasttxtnode = findTextNode(el,true);
                 lasttxtnode.textContent = lasttxtnode.textContent + '\u200D\u0C4D';
-                cacheText(lasttxtnode);
+                cache.set(lasttxtnode);
             }
         }
         
         // cache text again since elements are moved around
         const walker = document.createTreeWalker(node,NodeFilter.SHOW_TEXT,null,false);
-        while(walker.nextNode()) cacheText(walker.currentNode);
+        while(walker.nextNode()) cache.set(walker.currentNode);
     };
     
     const unjiggle = function(node) {
@@ -704,7 +796,7 @@ const Transliterate = (function() {
     return {
         init: init,
         to: to,
-        scripts: () => new Set(_state.availsanscripts)
+        scripts: function() { return _state.scriptnames},
     };
 }());
 
