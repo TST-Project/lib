@@ -97,19 +97,56 @@ body {
     }
 }
 
-#transbutton:lang('ta-Taml'), #transbutton:lang('sa-Gran') {
-    padding: 0 0.4rem 0.1rem 0.5rem;
+#transbutton:lang(en) {
+    padding: 0.2rem 0.6rem 0 0.6rem;
+}
+
+#transbutton:lang(ta-Taml) {
+    padding: 0.2rem 0.4rem 0.3rem 0.4rem;
     font-size: 1rem;
 }
 
-#transbutton:lang('sa-Deva') {
-    padding: 0 0.5rem 0 0.4rem;
+#transbutton:lang(sa-Gran) {
+    padding: 0.5rem 0.4rem 0.4rem 0.5rem;
+    font-size: 1.2rem;
+    line-height: 1;
+}
+
+#transbutton:lang(sa-Deva) {
+    padding: 0.5rem 0.6rem 0.2rem 0.5rem;
+    line-height: 1;
     font-size: 1.4rem;
 }
 
-#transbutton:lang('sa-Telu') {
-    padding: 0 0.6rem 0 0.6rem;
-    font-size: 1.1rem;
+#transbutton:lang(sa-Beng) {
+    padding: 0.1rem 0.5rem 0 0.6rem;
+    font-size: 1.4rem;
+}
+
+#transbutton:lang(sa-Telu) {
+    padding: 0.3rem 0.6rem 0.3rem 0.5rem;
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+#transbutton:lang(sa-Nand) {
+    font-size: 1.2rem;
+    padding: 0.3rem 0.5rem 0 0.6rem;
+}
+
+#transbutton:lang(sa-Newa) {
+    font-size: 1.3rem;
+    padding: 0 0.6rem 0.2rem 0.7rem;
+}
+
+#transbutton:lang(sa-Shrd) {
+    padding: 0.2rem 0.6rem 0 0.6rem;
+    font-size: 1.4rem;
+}
+
+#transbutton:lang(sa-Mlym) {
+    padding: 0.3rem 0.4rem 0.1rem 0.4rem;
+    font-size: 1.2rem;
 }
 
 #transbutton:hover {
