@@ -27,7 +27,6 @@ const Transliterate = (function() {
         otherlangs: ['ta','sa'],
         //otherscripts: ['ta-Taml'],
         savedtext: new Map(),
-        //cleanedcache: new Map(),
         parEl: null,
         hyphenator: {
             'ta-Taml': new Hypher(hyphenation_ta),
@@ -48,7 +47,7 @@ const Transliterate = (function() {
         _state.reverselangs.set(`sa-Latn-t-sa-${val}`,`sa-${val}-t-sa-Latn`);
     }
 
-    const init = function(par = document.body) {
+    const init = (par = document.body) => {
 
         // reset state
         _state.parEl = par; 
@@ -138,9 +137,7 @@ const Transliterate = (function() {
             }
         },
 
-        get: (txtnode) => //_state.cleanedcache.has(txtnode) ? 
-                          //  _state.cleanedcache.get(txtnode) :
-                            _state.savedtext.has(txtnode) ?
+        get: (txtnode) => _state.savedtext.has(txtnode) ?
                                _state.savedtext.get(txtnode) :
                                txtnode.data,
     };
@@ -193,7 +190,6 @@ const Transliterate = (function() {
     };
     
     const textLangWalker = (walker,scriptcode) => {
-        //TODO: hyphenate the text if scriptcode is undefined
         let curnode = walker.currentNode;
         while(curnode) {
             if(curnode.nodeType === Node.ELEMENT_NODE) {
@@ -246,114 +242,118 @@ const Transliterate = (function() {
     const events = {
         transClick(e) {
             const vpos = viewPos.getVP(_state.parEl);
-            cycleScript();
+            transliterator.toggle();
             viewPos.setVP(_state.parEl,vpos);
         },
     };
 
-    const cycleScript = () => {
-        if(_state.button.lang === 'en') {
-            revertText();
+    const transliterator = {
+        toggle() {
+            if(_state.button.lang === 'en') {
+                this.revert();
 
-            const subst = _state.parEl.querySelectorAll('span.subst, span.choice, span.expan');
-            for(const s of subst)
-                unjiggle(s);
-            button.revert();
-        }
-        else {
-            const subst = _state.parEl.querySelectorAll('span.subst,span.choice,span.expan');
-            //const subst = document.querySelectorAll(`span.subst[lang|="${tolang.lang}"],span.choice[lang|="${tolang.lang}"],span.expan[lang|="${tolang.lang}"`);
-            for(const s of subst)
-                jiggle(s);
-
-            textWalk();
-
-            button.transliterate();
-        }
-    };
-
-    const revertText = () => {
-        const puncs = _state.parEl.getElementsByClassName('invisible');
-        for(const p of puncs) p.classList.remove('off');
-         
-        const walker = document.createTreeWalker(_state.parEl,NodeFilter.SHOW_ALL);
-        var curnode = walker.currentNode;
-        while(curnode) {
-            if(curnode.nodeType === Node.ELEMENT_NODE) {
-                const rev = _state.reverselangs.get(curnode.lang);
-                if(rev) curnode.lang = rev;
+                const subst = _state.parEl.querySelectorAll('span.subst, span.choice, span.expan');
+                for(const s of subst)
+                    unjiggle(s);
+                button.revert();
             }
-            else if(curnode.nodeType === Node.TEXT_NODE) {
-                // lang attribute has already been reversed (hence take index 1)
-                const fromLatn = curnode.parentNode.lang.split('-')[1];
-                if(fromLatn === 'Latn') {
-                    const result = (() => {
-                        // bypass cleanedcache
-                        const cached = cache.get(curnode);
-                        if(curnode.parentNode.classList.contains('originalscript'))
-                            //TODO: also do for sa-Beng, sa-Deva, etc.
-                            return to.iast(cached);
-                        else
-                            return cached;
-                    })();
-                    if(result !== undefined) curnode.data = result;
+            else {
+                const subst = _state.parEl.querySelectorAll('span.subst,span.choice,span.expan');
+                //const subst = document.querySelectorAll(`span.subst[lang|="${tolang.lang}"],span.choice[lang|="${tolang.lang}"],span.expan[lang|="${tolang.lang}"`);
+                for(const s of subst)
+                    jiggle(s);
+
+                this.activate();
+
+                button.transliterate();
+            }
+        },
+        
+        revert() {
+            const puncs = _state.parEl.getElementsByClassName('invisible');
+            for(const p of puncs) p.classList.remove('off');
+             
+            const walker = document.createTreeWalker(_state.parEl,NodeFilter.SHOW_ALL);
+            var curnode = walker.currentNode;
+            while(curnode) {
+                if(curnode.nodeType === Node.ELEMENT_NODE) {
+                    const rev = _state.reverselangs.get(curnode.lang);
+                    if(rev) curnode.lang = rev;
+                }
+                else if(curnode.nodeType === Node.TEXT_NODE) {
+                    // lang attribute has already been reversed (hence take index 1)
+                    const fromLatn = curnode.parentNode.lang.split('-')[1];
+                    if(fromLatn === 'Latn') {
+                        const result = (() => {
+                            const cached = cache.get(curnode);
+                            if(curnode.parentNode.classList.contains('originalscript'))
+                                //TODO: also do for sa-Beng, sa-Deva, etc.
+                                return to.iast(cached);
+                            else
+                                return cached;
+                        })();
+                        if(result !== undefined) curnode.data = result;
+                    }
+                }
+                curnode = walker.nextNode();
+            }
+        },
+
+        activate() {
+            // Go through all <pc>-</pc> tags and make them invisible,
+            // then empty the text node on the left, and add its content
+            // to the text not on the right.
+            // If there are many <pc> tags, the text node on the right
+            // just keeps getting longer.
+            // The original state of each text node was previously cached.
+            //const puncs = _state.parEl.querySelectorAll(`.invisible[lang=${langcode}]`);
+            const puncs = _state.parEl.getElementsByClassName('invisible');
+            for(const p of puncs) {
+
+                //if(p.classList.contains('off')) continue;
+                p.classList.add('off');
+                const prev = p.previousSibling;
+                const next = p.nextSibling;
+                if(prev && (prev.nodeType === Node.TEXT_NODE) &&
+                   next && (next.nodeType === Node.TEXT_NODE)) {
+                    next.data = prev.data + next.data;
+                    prev.data = '';
                 }
             }
-            curnode = walker.nextNode();
-        }
-    };
-
-    const textWalk = () => {
-        //const puncs = _state.parEl.querySelectorAll(`.invisible[lang=${langcode}]`);
-        const puncs = _state.parEl.getElementsByClassName('invisible');
-        for(const p of puncs) {
-
-            if(p.classList.contains('off')) continue;
-            // if switching between brahmic scripts, switch everything back on first?
-            p.classList.add('off');
-            const prev = p.previousSibling;
-            const next = p.nextSibling;
-            if(prev && (prev.nodeType === Node.TEXT_NODE) &&
-               next && (next.nodeType === Node.TEXT_NODE)) {
-                next.data = prev.data + next.data;
-                prev.data = '';
-                //_state.cleanedcache.set(next,next.data);
-                //_state.cleanedcache.set(prev,'');
-            }
-        }
-         
-        const walker = document.createTreeWalker(_state.parEl,NodeFilter.SHOW_ALL);
-        var curnode = walker.currentNode;
-        while(curnode) {
-            if(curnode.nodeType === Node.ELEMENT_NODE) {
-                const rev = _state.reverselangs.get(curnode.lang);
-                if(rev) curnode.lang = rev;
-            }
-            else if(curnode.nodeType === Node.TEXT_NODE) {
-                const [lang, script] = (() => {
-                    const s = curnode.parentNode.lang.split('-');
-                    return [s[0],s[1]];
-                })();
-                if(_state.otherlangs.includes(lang)) {
-                    const scriptfunc = (() => {
-                        if(to.hasOwnProperty(script))
-                            return to[script];
-                        return null;
-                    })();
-                    const result = (() => {
-                        if(curnode.parentElement.dataset.hasOwnProperty('glyph'))
-                            return curnode.parentElement.dataset.glyph;
-                        if(curnode.parentElement.classList.contains('originalscript'))
-                            return cache.get(curnode);
-                        if(!scriptfunc) return undefined;
-                        //const cached = cache.get(curnode);
-                        //return scriptfunc(cached);
-                        return scriptfunc(curnode.data);
-                    })();
-                    if(result !== undefined) curnode.data = result;
+             
+            const walker = document.createTreeWalker(_state.parEl,NodeFilter.SHOW_ALL);
+            var curnode = walker.currentNode;
+            while(curnode) {
+                if(curnode.nodeType === Node.ELEMENT_NODE) {
+                    const rev = _state.reverselangs.get(curnode.lang);
+                    if(rev) curnode.lang = rev;
                 }
+                else if(curnode.nodeType === Node.TEXT_NODE) {
+                    const [lang, script] = (() => {
+                        const s = curnode.parentNode.lang.split('-');
+                        return [s[0],s[1]];
+                    })();
+                    if(_state.otherlangs.includes(lang)) {
+                        const scriptfunc = (() => {
+                            if(to.hasOwnProperty(script))
+                                return to[script];
+                            return null;
+                        })();
+                        const result = (() => {
+                            if(curnode.parentElement.dataset.hasOwnProperty('glyph'))
+                                return curnode.parentElement.dataset.glyph;
+                            if(curnode.parentElement.classList.contains('originalscript'))
+                                return cache.get(curnode);
+                            if(!scriptfunc) return undefined;
+                            //const cached = cache.get(curnode);
+                            //return scriptfunc(cached);
+                            return scriptfunc(curnode.data);
+                        })();
+                        if(result !== undefined) curnode.data = result;
+                    }
+                }
+                curnode = walker.nextNode();
             }
-            curnode = walker.nextNode();
         }
     };
 
