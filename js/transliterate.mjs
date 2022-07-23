@@ -226,7 +226,6 @@ const Transliterate = (function() {
                     }
                     else if(curnode.lang === 'ta-Taml') {
                         curnode.classList.add('originalscript');
-                        console.log(curnode.classList);
                         curnode.lang = 'ta-Latn-t-ta-Taml';
                     }
                 }
@@ -344,7 +343,8 @@ const Transliterate = (function() {
                     const result = (() => {
                         if(curnode.parentElement.dataset.hasOwnProperty('glyph'))
                             return curnode.parentElement.dataset.glyph;
-
+                        if(curnode.parentElement.classList.contains('originalscript'))
+                            return cache.get(curnode);
                         if(!scriptfunc) return undefined;
                         //const cached = cache.get(curnode);
                         //return scriptfunc(cached);
