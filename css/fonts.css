@@ -153,15 +153,15 @@
     font-feature-settings: "trad" 1;
 }
 
-.grantha {
-    line-height: 180%;
+:lang(sa-Gran) {
+    line-height: 2;
 }
 
-.sarada {
+:lang(sa-Shrd) {
     font-feature-settings: "ss01" 1;
 }
 
-[lang='bod'] {
+:lang(bod) {
     font-size: 1.9rem;
     line-height: 4rem;
 }
