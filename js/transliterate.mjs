@@ -59,7 +59,7 @@ const Transliterate = (function() {
         if(!foundTamil && !foundSanskrit) return;
 
         if(foundSanskrit) {
-            const scripttags = [...par.getElementsByClassName('record_scripts')];
+            const scripttags = par.getElementsByClassName('record_scripts');
             const defaultSanscript = getScript(scripttags);
             if(!defaultSanscript && !foundTamil) {
                 // hyphenate text even if no transliteration available
@@ -109,7 +109,7 @@ const Transliterate = (function() {
             const nbsp = String.fromCodePoint('0x0A0');
             const txt = txtnode.data
                 .replace(/\s+\|/g,`${nbsp}|`)
-                .replace(/\|\s+(?=[\d❈꣸৽])/g,`|${nbsp}`);
+                .replace(/\|\s+(?=[\d❈꣸৽৽])/g,`|${nbsp}`);
             
             const getShortLang = (node) => {
                 const s = node.lang.split('-t-');
@@ -144,20 +144,31 @@ const Transliterate = (function() {
    
     const getScript = (handDescs) => {
         if(handDescs.length === 0) return _state.defaultSanscript;
-
+    
+        // just take first script, or Tamil (Grantha) if necessary
+        let maybetamil = false;
+        for(const handDesc of handDescs) {
+            const scripts = handDesc.dataset.script.split(' ');
+            for(const script of scripts) {
+                if(script === 'tamil') maybetamil = true;
+                else if(_state.scriptnames.has(script)) return script;
+            }
+        }
+        return maybetamil ? 'grantha' : false;
+        /*
         const scripts = [...handDescs].reduce((acc,cur) => {
             for(const s of cur.dataset.script.split(' '))
                 acc.add(s);
                 return acc;
         },new Set());
         
-        // just take first script, or Tamil (Grantha) if necessary
         let maybetamil = false;
         for(const s of scripts) {
             if(s === 'tamil') maybetamil = true;
             else if(_state.scriptnames.has(s)) return s;
         }
         return maybetamil ? 'grantha' : false;
+        */
     }
 
     const tagTextLang = () => {
@@ -171,8 +182,10 @@ const Transliterate = (function() {
                 if(synch.classList.contains('record_scripts'))
                     return _state.scriptToIso.get(synch.dataset.script.split(' ')[0]);
                 // otherwise
-                const unitselector = units.map(s => `li.record_scripts[data-synch~='${s}']`);
-                const handDescs = _state.parEl.querySelectorAll(unitselector);
+                //const unitselector = units.map(s => `li.record_scripts[data-synch~='${s}']`);
+                //const handDescs = _state.parEl.querySelectorAll(unitselector);
+                const unitselector = units.map(s => `[data-synch~='${s}']`);
+                const handDescs = [..._state.parEl.getElementsByClassName('record_scripts')].filter(el => el.matches(unitselector));
                 const script = getScript(handDescs) || _state.defaultSanscript;
                 return _state.scriptToIso.get(script);
             })();
@@ -250,22 +263,18 @@ const Transliterate = (function() {
 
     const transliterator = {
         toggle() {
+            const subst = _state.parEl.querySelectorAll('span.subst, span.choice, span.expan');
+            //const subst = document.querySelectorAll(`span.subst[lang|="${tolang.lang}"],span.choice[lang|="${tolang.lang}"],span.expan[lang|="${tolang.lang}"`);
             if(_state.button.lang === 'en') {
                 this.revert();
-
-                const subst = _state.parEl.querySelectorAll('span.subst, span.choice, span.expan');
                 for(const s of subst)
-                    unjiggle(s);
+                    this.unjiggle(s);
                 button.revert();
             }
             else {
-                const subst = _state.parEl.querySelectorAll('span.subst,span.choice,span.expan');
-                //const subst = document.querySelectorAll(`span.subst[lang|="${tolang.lang}"],span.choice[lang|="${tolang.lang}"],span.expan[lang|="${tolang.lang}"`);
                 for(const s of subst)
-                    jiggle(s);
-
+                    this.jiggle(s);
                 this.activate();
-
                 button.transliterate();
             }
         },
@@ -355,7 +364,189 @@ const Transliterate = (function() {
                 }
                 curnode = walker.nextNode();
             }
+        },
+        jiggle(node/*,script,lang*/) {
+            if(node.firstChild.nodeType !== 3 && node.lastChild.nodeType !== 3) 
+                return;
+            
+            this.unjiggle(node);
+            
+            const [lang,script] = (() => {
+                const s = node.lang.split('-');
+                return [s[0],s[s.length - 1]];
+            })();
+            
+            if(!node.hasOwnProperty('origNode'))
+                node.origNode = node.cloneNode(true);
+
+            const kids = node.childNodes;
+            const starts_with_vowel = /^[aāiīuūeoêôṛṝḷṃḥ]/;
+            const ends_with_consonant = /[kgṅcjñṭḍṇtdnpbmyrlvṣśsh]$/;
+
+            const telugu_vowels = ['ā','i','ī','e','o','_','ai','au'];
+            const telu_cons_headstroke = ['h','k','ś','y','g','gh','c','ch','jh','ṭh','ḍ','ḍh','t','th','d','dh','n','p','ph','bh','m','r','ḻ','v','ṣ','s'];
+            var telugu_del_headstroke = false;
+            var telugu_kids = [];
+            var add_at_beginning = [];
+            const starts_with_text = (kids[0].nodeType === 3);
+
+            for (let kid of kids) {
+                if(kid.nodeType > 3) continue;
+
+                const txt = kid.textContent.trim();
+                if(txt === '') continue;
+                if(txt === 'a') { 
+                    kid.textContent = '';
+                    continue;
+                }
+                if(txt === 'aḥ') {
+                    kid.textContent = 'ḥ';
+                    continue;
+                }
+
+                if(txt.match(ends_with_consonant)) {
+                    // add 'a' if node ends in a consonant
+                    const last_txt = findTextNode(kid,true);
+                    last_txt.textContent = last_txt.textContent.replace(/\s+$/,'') + 'a';
+                    if(script === 'Telu' &&
+                   telu_cons_headstroke.indexOf(txt) >= 0) {
+                    // if there's a vowel mark in the substitution, 
+                    // remove the headstroke from any consonants
+                        telugu_kids.push(kid);
+                    }
+                }
+            
+                // case 1, use aalt:
+                // ta<subst>d <del>ip</del><add>it</add>i</subst>
+                // case 2, use aalt:
+                // <subst>d <del>apy </del><add>ity </add>i</subst>va
+                // case 3, no aalt:
+                // <subst><del>apy </del><add>ity </add>i</subst>va
+            
+                // use aalt if node is a text node
+                if(kid === node.lastChild && kid.nodeType === 3) {
+                    const cap = document.createElement('span');
+                    cap.appendChild(kid.cloneNode(false));
+                    node.replaceChild(cap,kid);
+                    kid = cap; // redefines 'kid'
+                    //kid.classList.add('aalt',lang,script);
+                    kid.classList.add('aalt');
+                    kid.lang = node.lang;
+                }
+                else if(starts_with_text) {
+                // use aalt if node starts with a vowel
+                // or if there's a dangling consonant
+                    if( (kid.nodeType === 1 && txt.match(starts_with_vowel)) || 
+                        (kid.nodeType === 1 && ends_with_consonant))
+                        kid.classList.add('aalt');
+                }
+                switch (script) {
+                case 'Deva':
+                case 'Nand':
+                    if(txt === 'i') 
+                        add_at_beginning.unshift(kid);
+                    else if(txt === 'ê') {
+                        kid.classList.remove('aalt');
+                        kid.classList.add('cv01');
+                        add_at_beginning.unshift(kid);
+                    }
+                    else if(txt === 'ô') {
+                        const new_e = kid.cloneNode(true);
+                        replaceTextInNode('ô','ê',new_e);
+                        new_e.classList.remove('aalt');
+                        new_e.classList.add('cv01');
+                        add_at_beginning.unshift(new_e);
+                        replaceTextInNode('ô','ā',kid);
+                    }
+                    else if(txt === 'aî') {
+                        const new_e = kid.cloneNode(true);
+                        replaceTextInNode('aî','ê',new_e);
+                        new_e.classList.remove('aalt');
+                        new_e.classList.add('cv01');
+                        add_at_beginning.unshift(new_e);
+                        replaceTextInNode('aî','e',kid);
+                    }
+                    else if(txt === 'aû') {
+                        const new_e = kid.cloneNode(true);
+                        replaceTextInNode('aû','ê',new_e);
+                        new_e.classList.remove('aalt');
+                        new_e.classList.add('cv01');
+                        add_at_beginning.unshift(new_e);
+                        replaceTextInNode('aû','o',kid);
+                    }
+                    break;
+                case 'Beng':
+                case 'Newa':
+                case 'Shrd':
+                    if(txt === 'i') 
+                        add_at_beginning.unshift(kid);
+                    else if(txt === 'e' || txt === 'ai') {
+                        add_at_beginning.unshift(kid);
+                    }
+                    else if(txt === 'o') {
+                        const new_e = kid.cloneNode(true);
+                        replaceTextInNode('o','e',new_e);
+                        add_at_beginning.unshift(new_e);
+                        replaceTextInNode('o','ā',kid);
+                    }
+                    else if(txt === 'au') {
+                        const new_e = kid.cloneNode(true);
+                        replaceTextInNode('au','e',new_e);
+                        add_at_beginning.unshift(new_e);
+                    }
+                    break;
+                case 'Gran':
+                case 'Taml':
+                case 'Mlym':
+                    if(txt === 'e' || txt === 'ē' || txt === 'ê' || 
+                       txt === 'ai' || txt === 'aî')  {
+                        add_at_beginning.unshift(kid);
+                    }
+                    else if(txt === 'o' || txt === 'ô') {
+                        const new_e = kid.cloneNode(true);
+                        replaceTextInNode(/[oōô]/,'e',new_e);
+                        add_at_beginning.unshift(new_e);
+                        replaceTextInNode(/[oōô]/,'ā',kid);
+                    }
+                    else if(txt === 'ō') {
+                        const new_e = kid.cloneNode(true);
+                        replaceTextInNode(/ō/,'ē',new_e);
+                        add_at_beginning.unshift(new_e);
+                        replaceTextInNode(/ō/,'ā',kid);
+                    }
+                    break;
+                case 'Telu':
+                    if(!telugu_del_headstroke &&
+                       telugu_vowels.indexOf(txt) >= 0)
+                        
+                        telugu_del_headstroke = true;
+                    break;
+
+                }
+            } // end for let kid of kids
+
+            for (const el of add_at_beginning) {
+                node.insertBefore(el,node.firstChild);
+            }
+
+            if(telugu_del_headstroke) {
+                for (const el of telugu_kids) {
+                    const lasttxtnode = findTextNode(el,true);
+                    lasttxtnode.textContent = lasttxtnode.textContent + '\u200D\u0C4D';
+                    cache.set(lasttxtnode);
+                }
+            }
+            
+            // cache text again since elements are moved around
+            const walker = document.createTreeWalker(node,NodeFilter.SHOW_TEXT,null,false);
+            while(walker.nextNode()) cache.set(walker.currentNode);
+        },
+    
+        unjiggle(node) {
+            if(node.hasOwnProperty('origNode'))
+                node.replaceWith(node.origNode);
         }
+
     };
 
     const to = {
@@ -448,7 +639,7 @@ const Transliterate = (function() {
             const smushed = to.smush(txt,true)
                 .replace(/e/g,'ē')
                 .replace(/o(?![ṁḿ])/g,'ō')
-                .replace(/ḿ/g,'ṁ') // no Jaina oṃkāra
+                //.replace(/ḿ/g,'ṁ') // no Jaina oṃkāra
                 .replace(/(\S)·/g,'$1\u200C');
                 //.replace(/ḷ/g,'l̥');
             const pretext = Sanscript.t(smushed,'iast','grantha');
@@ -490,7 +681,7 @@ const Transliterate = (function() {
         
         devanagari: function(txt) {
 
-            const pretext = txt.replace(/ṙ/g, 'r')
+            const pretext = txt//.replace(/ṙ/g, 'r')
                 .replace(/e/g,'ē')
                 .replace(/o(?![ṁḿ])/g,'ō')
                 .replace(/([^aāiīuūeēoōṛṝḷḹ])ṃ/,'$1\'\u200Dṃ') // standalone anusvāra
@@ -509,7 +700,7 @@ const Transliterate = (function() {
 
         bengali: function(txt) {
 
-            const pretext = txt.replace(/ṙ/g, 'r')
+            const pretext = txt//.replace(/ṙ/g, 'r')
                 .replace(/e/g,'ē')
                 .replace(/o(?![ṁḿ])/g,'ō')
                 .replace(/(^|\s)_ā/g,'$1\u093D\u200D\u093E')
@@ -518,7 +709,6 @@ const Transliterate = (function() {
             const smushed = to.smush(pretext);
 
             const text = Sanscript.t(smushed,'iast','bengali')
-                .replace(/¯/g, 'ꣻ')
                 .replace(/ত্(?=\s)|ত্$/g,'ৎ');
             return text;
         },
@@ -534,50 +724,46 @@ const Transliterate = (function() {
             //    smushedtext.replace(/r(?=[kgcjṭḍṇtdnpbmyvlh])/,'ṙ') : smushedtext;
             const replacedtext = smushedtext.replace(/r(?=[kgcjṭḍṇtdnpbmyvlh])/,'ṙ');
 
-            const posttext = replacedtext.replace(/ê/g,'e') // no pṛṣṭhamātrās
-                .replace(/ô/g,'o') // same with o
+            const posttext = replacedtext//.replace(/ê/g,'e') // no pṛṣṭhamātrās
+                //.replace(/ô/g,'o') // same with o
                 .replace(/ṙ/g,'r\u200D') // valapalagilaka
                 //.replace(/ṁ/g,'ṃ') // no telugu oṃkāra sign
-                .replace(/ḿ/g,'ṃ')
-                .replace(/î/g,'i') // no pṛṣṭhamātrās
-                .replace(/û/g,'u');
+                //.replace(/ḿ/g,'ṃ')
+                //.replace(/î/g,'i') // no pṛṣṭhamātrās
+                //.replace(/û/g,'u');
 
             return Sanscript.t(posttext,'iast','telugu');
         },
         
         newa: function(txt) {
 
-            const pretext = txt.replace(/ṙ/g, 'r')
+            const pretext = txt//.replace(/ṙ/g, 'r')
                 .replace(/e/g,'ē')
-                .replace(/o(?![ṁḿ])/g,'ō')
-                .replace(/(^|\s)_ā/g,'$1\u093D\u200D\u093E')
-                .replace(/(^|\s)_r/g,'$1\u093D\u200D\u0930\u094D');
+                .replace(/o(?![ṁḿ])/g,'ō');
 
             const smushed = to.smush(pretext);
 
-            const text = Sanscript.t(smushed,'iast','newa')
-                .replace(/¯/g, 'ꣻ');
+            const text = Sanscript.t(smushed,'iast','newa');
+
             return text;
         },
 
         sarada: function(txt) {
 
-            const pretext = txt.replace(/ṙ/g, 'r')
+            const pretext = txt//.replace(/ṙ/g, 'r')
                 .replace(/e/g,'ē')
-                .replace(/o(?![ṁḿ])/g,'ō')
-                .replace(/(^|\s)_ā/g,'$1\u093D\u200D\u093E')
-                .replace(/(^|\s)_r/g,'$1\u093D\u200D\u0930\u094D');
+                .replace(/o(?![ṁḿ])/g,'ō');
 
             const smushed = to.smush(pretext);
 
             const text = Sanscript.t(smushed,'iast','sarada')
-                .replace(/¯/g, 'ꣻ');
+                .replace(/¯/g, '\u{111DC}');
             return text;
         },
 
         nandinagari: function(txt) {
 
-            const pretext = txt.replace(/ṙ/g, 'r')
+            const pretext = txt//.replace(/ṙ/g, 'r')
                 .replace(/e/g,'ē')
                 .replace(/o(?![ṁḿ])/g,'ō');
 
@@ -593,188 +779,6 @@ const Transliterate = (function() {
         to[val] = to[key];
     }
     
-    const jiggle = function(node/*,script,lang*/) {
-        if(node.firstChild.nodeType !== 3 && node.lastChild.nodeType !== 3) 
-            return;
-        
-        unjiggle(node);
-        
-        const [lang,script] = (() => {
-            const s = node.lang.split('-');
-            return [s[0],s[s.length - 1]];
-        })();
-        
-        if(!node.hasOwnProperty('origNode'))
-            node.origNode = node.cloneNode(true);
-
-        const kids = node.childNodes;
-        const starts_with_vowel = /^[aāiīuūeoêôṛṝḷṃḥ]/;
-        const ends_with_consonant = /[kgṅcjñṭḍṇtdnpbmyrlvṣśsh]$/;
-
-        const telugu_vowels = ['ā','i','ī','e','o','_','ai','au'];
-        const telu_cons_headstroke = ['h','k','ś','y','g','gh','c','ch','jh','ṭh','ḍ','ḍh','t','th','d','dh','n','p','ph','bh','m','r','ḻ','v','ṣ','s'];
-        var telugu_del_headstroke = false;
-        var telugu_kids = [];
-        var add_at_beginning = [];
-        const starts_with_text = (kids[0].nodeType === 3);
-
-        for (let kid of kids) {
-            if(kid.nodeType > 3) continue;
-
-            const txt = kid.textContent.trim();
-            if(txt === '') continue;
-            if(txt === 'a') { 
-                kid.textContent = '';
-                continue;
-            }
-            if(txt === 'aḥ') {
-                kid.textContent = 'ḥ';
-                continue;
-            }
-
-            if(txt.match(ends_with_consonant)) {
-                // add 'a' if node ends in a consonant
-                const last_txt = findTextNode(kid,true);
-                last_txt.textContent = last_txt.textContent.replace(/\s+$/,'') + 'a';
-                if(script === 'Telu' &&
-               telu_cons_headstroke.indexOf(txt) >= 0) {
-                // if there's a vowel mark in the substitution, 
-                // remove the headstroke from any consonants
-                    telugu_kids.push(kid);
-                }
-            }
-        
-            // case 1, use aalt:
-            // ta<subst>d <del>ip</del><add>it</add>i</subst>
-            // case 2, use aalt:
-            // <subst>d <del>apy </del><add>ity </add>i</subst>va
-            // case 3, no aalt:
-            // <subst><del>apy </del><add>ity </add>i</subst>va
-        
-            // use aalt if node is a text node
-            if(kid === node.lastChild && kid.nodeType === 3) {
-                const cap = document.createElement('span');
-                cap.appendChild(kid.cloneNode(false));
-                node.replaceChild(cap,kid);
-                kid = cap; // redefines 'kid'
-                //kid.classList.add('aalt',lang,script);
-                kid.classList.add('aalt');
-                kid.lang = node.lang;
-            }
-            else if(starts_with_text) {
-            // use aalt if node starts with a vowel
-            // or if there's a dangling consonant
-                if( (kid.nodeType === 1 && txt.match(starts_with_vowel)) || 
-                    (kid.nodeType === 1 && ends_with_consonant))
-                    kid.classList.add('aalt');
-            }
-            switch (script) {
-            case 'Deva':
-            case 'Nand':
-                if(txt === 'i') 
-                    add_at_beginning.unshift(kid);
-                else if(txt === 'ê') {
-                    kid.classList.remove('aalt');
-                    kid.classList.add('cv01');
-                    add_at_beginning.unshift(kid);
-                }
-                else if(txt === 'ô') {
-                    const new_e = kid.cloneNode(true);
-                    replaceTextInNode('ô','ê',new_e);
-                    new_e.classList.remove('aalt');
-                    new_e.classList.add('cv01');
-                    add_at_beginning.unshift(new_e);
-                    replaceTextInNode('ô','ā',kid);
-                }
-                else if(txt === 'aî') {
-                    const new_e = kid.cloneNode(true);
-                    replaceTextInNode('aî','ê',new_e);
-                    new_e.classList.remove('aalt');
-                    new_e.classList.add('cv01');
-                    add_at_beginning.unshift(new_e);
-                    replaceTextInNode('aî','e',kid);
-                }
-                else if(txt === 'aû') {
-                    const new_e = kid.cloneNode(true);
-                    replaceTextInNode('aû','ê',new_e);
-                    new_e.classList.remove('aalt');
-                    new_e.classList.add('cv01');
-                    add_at_beginning.unshift(new_e);
-                    replaceTextInNode('aû','o',kid);
-                }
-                break;
-            case 'Beng':
-            case 'Newa':
-            case 'Shrd':
-                if(txt === 'i') 
-                    add_at_beginning.unshift(kid);
-                else if(txt === 'e' || txt === 'ai') {
-                    add_at_beginning.unshift(kid);
-                }
-                else if(txt === 'o') {
-                    const new_e = kid.cloneNode(true);
-                    replaceTextInNode('o','e',new_e);
-                    add_at_beginning.unshift(new_e);
-                    replaceTextInNode('o','ā',kid);
-                }
-                else if(txt === 'au') {
-                    const new_e = kid.cloneNode(true);
-                    replaceTextInNode('au','e',new_e);
-                    add_at_beginning.unshift(new_e);
-                }
-                break;
-            case 'Gran':
-            case 'Taml':
-            case 'Mlym':
-                if(txt === 'e' || txt === 'ē' || txt === 'ê' || 
-                   txt === 'ai' || txt === 'aî')  {
-                    add_at_beginning.unshift(kid);
-                }
-                else if(txt === 'o' || txt === 'ô') {
-                    const new_e = kid.cloneNode(true);
-                    replaceTextInNode(/[oōô]/,'e',new_e);
-                    add_at_beginning.unshift(new_e);
-                    replaceTextInNode(/[oōô]/,'ā',kid);
-                }
-                else if(txt === 'ō') {
-                    const new_e = kid.cloneNode(true);
-                    replaceTextInNode(/ō/,'ē',new_e);
-                    add_at_beginning.unshift(new_e);
-                    replaceTextInNode(/ō/,'ā',kid);
-                }
-                break;
-            case 'Telu':
-                if(!telugu_del_headstroke &&
-                   telugu_vowels.indexOf(txt) >= 0)
-                    
-                    telugu_del_headstroke = true;
-                break;
-
-            }
-        } // end for let kid of kids
-
-        for (const el of add_at_beginning) {
-            node.insertBefore(el,node.firstChild);
-        }
-
-        if(telugu_del_headstroke) {
-            for (const el of telugu_kids) {
-                const lasttxtnode = findTextNode(el,true);
-                lasttxtnode.textContent = lasttxtnode.textContent + '\u200D\u0C4D';
-                cache.set(lasttxtnode);
-            }
-        }
-        
-        // cache text again since elements are moved around
-        const walker = document.createTreeWalker(node,NodeFilter.SHOW_TEXT,null,false);
-        while(walker.nextNode()) cache.set(walker.currentNode);
-    };
-    
-    const unjiggle = function(node) {
-        if(node.hasOwnProperty('origNode'))
-            node.replaceWith(node.origNode);
-    };
-
     const findTextNode  = function(node,last = false) {
         if(node.nodeType === 3) return node;
         const walker = document.createTreeWalker(node,NodeFilter.SHOW_TEXT,null,false);
