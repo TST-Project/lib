@@ -155,7 +155,7 @@ const Transliterate = (function() {
         let maybetamil = false;
         for(const s of scripts) {
             if(s === 'tamil') maybetamil = true;
-            if(_state.scriptnames.has(s)) return s;
+            else if(_state.scriptnames.has(s)) return s;
         }
         return maybetamil ? 'grantha' : false;
     }
@@ -213,6 +213,7 @@ const Transliterate = (function() {
                         if(curnode.parentNode.lang.startsWith('sa-'))
                             // script is specified by parent
                             curnode.lang = curnode.parentNode.lang;
+                        else
                             curnode.lang = scriptcode ? 
                                 `sa-Latn-t-sa-${scriptcode}` : 'sa-Latn';
                     }
@@ -359,20 +360,20 @@ const Transliterate = (function() {
 
     const to = {
 
-        smush: function(text,placeholder,d_conv = false) {
+        smush: function(text,d_conv = false) {
             // d_conv is DHARMA convention
             if(!d_conv) text = text.toLowerCase();
         
             // remove space between a word that ends in a consonant and a word that begins with a vowel
-            text = text.replace(/([ḍdrmvynhs]) ([aāiīuūṛeēoōêô])/g, '$1$2'+placeholder);
+            text = text.replace(/([ḍdrmvynhs]) ([aāiīuūṛeēoōêô])/g, '$1$2');
         
             if(d_conv) text = text.toLowerCase();
         
             // remove space between a word that ends in a consonant and a word that begins with a consonant
-            text = text.replace(/([kgcjñḍtdnpbmrlyẏvśṣsṙ]) ([kgcjṭḍtdnpbmyẏrlvśṣshḻ])/g, '$1'+placeholder+'$2');
+            text = text.replace(/([kgcjñḍtdnpbmrlyẏvśṣsṙ]) ([kgcjṭḍtdnpbmyẏrlvśṣshḻ])/g, '$1$2');
 
             // join final o/e/ā and avagraha/anusvāra
-            text = text.replace(/([oōeēā]) ([ṃ'])/g,'$1'+placeholder+'$2');
+            text = text.replace(/([oōeēā]) ([ṃ'])/g,'$1$2');
 
             text = text.replace(/ü/g,'\u200Cu');
             text = text.replace(/ï/g,'\u200Ci');
@@ -392,10 +393,8 @@ const Transliterate = (function() {
                 .replace(/l̥/g,'ḷ');
         },
         
-        tamil: function(text/*,placeholder*/) {
-            /*const pl = placeholder || '';
-            const txt = to.smush(text,pl);
-            return Sanscript.t(txt,'iast','tamil');*/
+        tamil: function(text) {
+            const txt = to.smush(text);
             const grv = new Map([
                 ['\u0B82','\u{11300}'],
                 ['\u0BBE','\u{1133E}'],
@@ -446,7 +445,7 @@ const Transliterate = (function() {
             //const smushed = txt
             //    .replace(/([kṅcñṭṇtnpmyrlvḻ])\s+([aāiīuūeēoō])/g, '$1$2')
             //    .toLowerCase()
-            const smushed = to.smush(txt,'',true)
+            const smushed = to.smush(txt,true)
                 .replace(/e/g,'ē')
                 .replace(/o(?![ṁḿ])/g,'ō')
                 .replace(/ḿ/g,'ṁ') // no Jaina oṃkāra
@@ -466,7 +465,7 @@ const Transliterate = (function() {
                 'ര':'ർ',
             };
 
-            const smushed = to.smush(txt,'',true)
+            const smushed = to.smush(txt,true)
                 .replace(/(^|\s)_ā/,'$1\u0D3D\u200D\u0D3E')
                 //.replace(/(^|\s)_r/,"$1\u0D3D\u200D\u0D30\u0D4D");
                 //FIXME (replaced by chillu r right now)
@@ -489,7 +488,7 @@ const Transliterate = (function() {
             return replacedtxt;
         },
         
-        devanagari: function(txt,placeholder) {
+        devanagari: function(txt) {
 
             const pretext = txt.replace(/ṙ/g, 'r')
                 .replace(/e/g,'ē')
@@ -500,7 +499,7 @@ const Transliterate = (function() {
                 .replace(/(^|\s)_ā/g,'$1\u093D\u200D\u093E')
                 .replace(/(^|\s)_r/g,'$1\u093D\u200D\u0930\u094D');
 
-            const smushed = to.smush(pretext, (placeholder || '') );
+            const smushed = to.smush(pretext);
 
             const text = Sanscript.t(smushed,'iast','devanagari')
                 .replace(/¯/g, 'ꣻ');
@@ -508,7 +507,7 @@ const Transliterate = (function() {
             return text;
         },
 
-        bengali: function(txt,placeholder) {
+        bengali: function(txt) {
 
             const pretext = txt.replace(/ṙ/g, 'r')
                 .replace(/e/g,'ē')
@@ -516,7 +515,7 @@ const Transliterate = (function() {
                 .replace(/(^|\s)_ā/g,'$1\u093D\u200D\u093E')
                 .replace(/(^|\s)_r/g,'$1\u093D\u200D\u0930\u094D');
 
-            const smushed = to.smush(pretext, (placeholder || '') );
+            const smushed = to.smush(pretext);
 
             const text = Sanscript.t(smushed,'iast','bengali')
                 .replace(/¯/g, 'ꣻ')
@@ -524,13 +523,13 @@ const Transliterate = (function() {
             return text;
         },
 
-        telugu: function(txt,placeholder) {
+        telugu: function(txt) {
 
             const pretext = txt.replace(/(^|\s)_ā/,'$1\u0C3D\u200D\u0C3E')
                 .replace(/(^|\s)_r/,'$1\u0C3D\u200D\u0C30\u0C4D');
-            // FIXME: should be moved to the right of the following consonant
+            // FIXME: should be moved to the right of the following consonant cluster
 
-            const smushedtext = to.smush(pretext,(placeholder || ''));        
+            const smushedtext = to.smush(pretext);
             //const replacedtext = _state.features.has('valapalagilaka') ?
             //    smushedtext.replace(/r(?=[kgcjṭḍṇtdnpbmyvlh])/,'ṙ') : smushedtext;
             const replacedtext = smushedtext.replace(/r(?=[kgcjṭḍṇtdnpbmyvlh])/,'ṙ');
@@ -546,7 +545,7 @@ const Transliterate = (function() {
             return Sanscript.t(posttext,'iast','telugu');
         },
         
-        newa: function(txt,placeholder) {
+        newa: function(txt) {
 
             const pretext = txt.replace(/ṙ/g, 'r')
                 .replace(/e/g,'ē')
@@ -554,14 +553,14 @@ const Transliterate = (function() {
                 .replace(/(^|\s)_ā/g,'$1\u093D\u200D\u093E')
                 .replace(/(^|\s)_r/g,'$1\u093D\u200D\u0930\u094D');
 
-            const smushed = to.smush(pretext, (placeholder || '') );
+            const smushed = to.smush(pretext);
 
             const text = Sanscript.t(smushed,'iast','newa')
                 .replace(/¯/g, 'ꣻ');
             return text;
         },
 
-        sarada: function(txt,placeholder) {
+        sarada: function(txt) {
 
             const pretext = txt.replace(/ṙ/g, 'r')
                 .replace(/e/g,'ē')
@@ -569,20 +568,20 @@ const Transliterate = (function() {
                 .replace(/(^|\s)_ā/g,'$1\u093D\u200D\u093E')
                 .replace(/(^|\s)_r/g,'$1\u093D\u200D\u0930\u094D');
 
-            const smushed = to.smush(pretext, (placeholder || '') );
+            const smushed = to.smush(pretext);
 
             const text = Sanscript.t(smushed,'iast','sarada')
                 .replace(/¯/g, 'ꣻ');
             return text;
         },
 
-        nandinagari: function(txt,placeholder) {
+        nandinagari: function(txt) {
 
             const pretext = txt.replace(/ṙ/g, 'r')
                 .replace(/e/g,'ē')
                 .replace(/o(?![ṁḿ])/g,'ō');
 
-            const smushed = to.smush(pretext, (placeholder || '') );
+            const smushed = to.smush(pretext);
 
             const text = Sanscript.t(smushed,'iast','nandinagari')
                 .replace(/¯/g, '\u{119E3}');
