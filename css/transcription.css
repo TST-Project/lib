@@ -537,16 +537,24 @@ span.caesura.diplo {
 
 .over {
     ruby-position: over;
+    /*
     display: inline-block;
     margin-top: 0.6rem;
+    */
 }
 .under {
     ruby-position: under;
+    /*
     display: inline-block;
     margin-bottom: 0.6rem;
+    */
 }
 
 rt {
     color: #CC0000;
     font-size: 1.1rem;
+}
+
+rb {
+    text-decoration: #CC0000 dotted underline 1px;
 }
