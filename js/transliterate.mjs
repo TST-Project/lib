@@ -8,8 +8,7 @@ import { hyphenation_sa } from './sa.mjs';
 
 const Transliterate = (function() {
     const _state = {
-        //curlang: 'en',
-        //availlangs: ['en'],
+        availlangs: ['ta','sa','mr'],
         scriptToIso: new Map([
             ['tamil','Taml'],
             ['bengali','Beng'],
@@ -21,12 +20,7 @@ const Transliterate = (function() {
             ['telugu','Telu'],
             ['nandinagari','Nand']
         ]),
-        //scriptnames: new Set(['bengali','devanagari','grantha','malayalam','newa','sarada','telugu','nandinagari']),
-        //features: new Set(),
-        //langselector: '[lang|="ta"],[lang|="sa"]',
-        otherlangs: ['ta','sa'],
-        //otherscripts: ['ta-Taml'],
-        savedtext: new Map(),
+        cachedtext: new Map(),
         parEl: null,
         hyphenator: {
             'ta-Taml': new Hypher(hyphenation_ta),
@@ -36,7 +30,9 @@ const Transliterate = (function() {
         defaultSanscript: null,
         reverselangs: new Map([
             ['ta-Latn-t-ta-Taml','ta-Taml-t-ta-Latn'],
-            ['ta-Taml-t-ta-Latn','ta-Latn-t-ta-Taml']
+            ['ta-Taml-t-ta-Latn','ta-Latn-t-ta-Taml'],
+            ['mr-Latn-t-mr-Deva','mr-Deva-t-mr-Latn'],
+            ['mr-Deva-t-mr-Latn','mr-Latn-t-mr-Deva']
         ]),
     };
     
@@ -47,31 +43,39 @@ const Transliterate = (function() {
         _state.reverselangs.set(`sa-Latn-t-sa-${val}`,`sa-${val}-t-sa-Latn`);
     }
 
+    const events = {
+        transClick(e) {
+            const vpos = viewPos.getVP(_state.parEl);
+            transliterator.toggle();
+            viewPos.setVP(_state.parEl,vpos);
+        },
+    };
+
     const init = (par = document.body) => {
 
         // reset state
         _state.parEl = par; 
         if(!_state.parEl.lang) _state.parEl.lang = 'en';
 
-        // prepare transliteration functions
+        // find if there are any Tamil or Sanskrit passages
         const foundTamil = par.querySelector('[lang|="ta"]');
         const foundSanskrit = par.querySelector('[lang|="sa"]');
         if(!foundTamil && !foundSanskrit) return;
 
         if(foundSanskrit) {
             const scripttags = par.getElementsByClassName('record_scripts');
-            const defaultSanscript = getScript(scripttags);
+            const defaultSanscript = getSanscript(scripttags);
             if(!defaultSanscript && !foundTamil) {
                 // hyphenate text even if no transliteration available
                 const walker = document.createTreeWalker(par,NodeFilter.SHOW_ALL);
-                textLangWalker(walker);
+                prepTextWalker(walker);
                 return;
             }
             else _state.defaultSanscript = defaultSanscript;
         }
-       
-        // use BCP47 RFC6497: https://datatracker.ietf.org/doc/html/rfc6497
-        tagTextLang();
+      
+        // prepare the text for transliteration
+        prepText();
 
         // initialize button
         _state.button = document.getElementById('transbutton');
@@ -104,6 +108,13 @@ const Transliterate = (function() {
     };
 
     const cache = {
+        /** Caches the text of a text node, after having applied some transformations:
+         *      1. Add appropriate non-breaking spaces,
+         *      2. Hyphenate the text
+         *      3. Transliterate the text if not in Latin script
+         *  @param  {Node}   txtnode
+         *  @return {String}         Hyphenated (and transliterated) text
+         */
         set(txtnode) {
             // don't break before daṇḍa, or between daṇḍa and numeral/puṣpikā
             const nbsp = String.fromCodePoint('0x0A0');
@@ -119,11 +130,10 @@ const Transliterate = (function() {
                     return s[0];
             };
             // hyphenate according to script (Tamil or Romanized)
-            const lang = txtnode.parentNode.lang;
             const shortlang = getShortLang(txtnode.parentNode);
             if(_state.hyphenator.hasOwnProperty(shortlang)) {
                 const hyphenated = _state.hyphenator[shortlang].hyphenateText(txt);
-                _state.savedtext.set(txtnode,hyphenated);
+                _state.cachedtext.set(txtnode,hyphenated);
                 // convert Tamil (and others) to Roman
                 if(shortlang === 'ta-Taml') {
                     // TODO: also deal with 'sa-Beng', 'sa-Deva', etc.
@@ -132,17 +142,21 @@ const Transliterate = (function() {
                 else return hyphenated;
             }
             else {
-                _state.savedtext.set(txtnode,txt);
+                _state.cachedtext.set(txtnode,txt);
                 return txt;
             }
         },
-
-        get: (txtnode) => _state.savedtext.has(txtnode) ?
-                               _state.savedtext.get(txtnode) :
+        
+        /** Retrieves cached text, based on the supplied node.
+         *  @param {Node} txtnode
+         *  @return       string
+         */
+        get: (txtnode) => _state.cachedtext.has(txtnode) ?
+                               _state.cachedtext.get(txtnode) :
                                txtnode.data,
     };
    
-    const getScript = (handDescs) => {
+    const getSanscript = (handDescs) => {
         if(handDescs.length === 0) return _state.defaultSanscript;
     
         // just take first script, or Tamil (Grantha) if necessary
@@ -170,65 +184,73 @@ const Transliterate = (function() {
         return maybetamil ? 'grantha' : false;
         */
     }
-
-    const tagTextLang = () => {
+    const prepText = () => {
         // tag codicological units associated with a script first
         const synchs = _state.parEl.querySelectorAll('[data-synch]');
         for(const synch of synchs) {
             synch.lang = synch.lang ? synch.lang : 'en';
             const units = synch.dataset.synch.split(' ');
+            // decide on a script for Sanskrit
             const scriptcode = (() => {
                 // if this is a handDesc element
                 if(synch.classList.contains('record_scripts'))
-                    return _state.scriptToIso.get(synch.dataset.script.split(' ')[0]);
+                    return _state.scriptToIso.get(getSanscript([synch]));
                 // otherwise
-                //const unitselector = units.map(s => `li.record_scripts[data-synch~='${s}']`);
-                //const handDescs = _state.parEl.querySelectorAll(unitselector);
                 const unitselector = units.map(s => `[data-synch~='${s}']`);
                 const handDescs = [..._state.parEl.getElementsByClassName('record_scripts')].filter(el => el.matches(unitselector));
-                const script = getScript(handDescs) || _state.defaultSanscript;
+                const script = getSanscript(handDescs) || _state.defaultSanscript;
                 return _state.scriptToIso.get(script);
             })();
             
             const walker = document.createTreeWalker(synch,NodeFilter.SHOW_ALL);
-            textLangWalker(walker,scriptcode);
+            prepTextWalker(walker,scriptcode);
         }
 
-        // tag rest of the document
+        // tag rest of the document; use default script for Sanskrit
         const isodefault = _state.scriptToIso.get(_state.defaultSanscript);
         const walker = document.createTreeWalker(_state.parEl,NodeFilter.SHOW_ALL, 
             { acceptNode(node) { return node.nodeType === Node.ELEMENT_NODE && node.hasAttribute('data-synch') ?
                 NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT} });
-        textLangWalker(walker,isodefault);
+        prepTextWalker(walker,isodefault);
     };
     
-    const textLangWalker = (walker,scriptcode) => {
+    /**
+     * Prepares the text for transliteration:
+     * 1. Tags every element with a lang attribute, 
+     * 2. Caches Sanskrit and Tamil text nodes,
+     *   a. Hyphenates text,
+     *   b. Transliterates ta-Taml text into Latin script.
+     *   @param {TreeWalker} walker
+     *   @param {String}     scriptcode Sanskrit script in use, e.g. Beng, Deva, etc. If undefined, the default 'sa-Latn' tag is used.
+     */
+    const prepTextWalker = (walker,scriptcode) => {
         let curnode = walker.currentNode;
         while(curnode) {
             if(curnode.nodeType === Node.ELEMENT_NODE) {
                 if(curnode.parentNode.classList.contains('originalscript'))
                     curnode.classList.add('originalscript');
-                if(curnode.lang) {
+                const curlang = curnode.lang;
+                if(curlang) {
                 // case 1: sa-Latn[-t-XXXX]
                 // case 2: sa-XXXX
                 // case 3: sa
                 // case 4: undefined
                 // what about script features? (e.g. valapalagilaka)
-                    if(curnode.lang.startsWith('sa-')) {
-                        if(!curnode.lang.startsWith('sa-Latn')) {
+                    if(curlang.startsWith('sa-')) {
+                        if(!curlang.startsWith('sa-Latn')) {
                             // Sanskrit written in a specific script
-                            curnode.lang = curnode.lang + '-t-sa-Latn';
+                            curnode.lang = curlang + '-t-sa-Latn';
                             curnode.classList.add('originalscript');
                         }
                     }
-                    else if(curnode.lang === 'sa') {
+                    else if(curlang === 'sa' || curlang === 'mr') {
                         // assume transliterated in IAST
                         if(curnode.parentNode.lang.startsWith('sa-'))
                             // script is specified by parent
                             curnode.lang = curnode.parentNode.lang;
                         else
                             curnode.lang = scriptcode ? 
-                                `sa-Latn-t-sa-${scriptcode}` : 'sa-Latn';
+                                `${curlang}-Latn-t-${curlang}-${scriptcode}` : 'sa-Latn';
                     }
                     // what about Tamil in other scripts?
                     else if(curnode.lang === 'ta') {
@@ -245,20 +267,12 @@ const Transliterate = (function() {
             }
             else if(curnode.nodeType === Node.TEXT_NODE) {
                 const curlang = curnode.parentNode.lang.split('-')[0];
-                if(_state.otherlangs.includes(curlang)) {
+                if(_state.availlangs.includes(curlang)) {
                     curnode.data = cache.set(curnode);
                 }
             }
             curnode = walker.nextNode();
         }
-    };
-
-    const events = {
-        transClick(e) {
-            const vpos = viewPos.getVP(_state.parEl);
-            transliterator.toggle();
-            viewPos.setVP(_state.parEl,vpos);
-        },
     };
 
     const transliterator = {
@@ -316,8 +330,8 @@ const Transliterate = (function() {
             // If there are many <pc> tags, the text node on the right
             // just keeps getting longer.
             // The original state of each text node was previously cached.
-            //const puncs = _state.parEl.querySelectorAll(`.invisible[lang=${langcode}]`);
             const puncs = _state.parEl.getElementsByClassName('invisible');
+            //const puncs = _state.parEl.querySelectorAll(`.invisible[lang=${langcode}]`);
             for(const p of puncs) {
 
                 //if(p.classList.contains('off')) continue;
@@ -343,7 +357,7 @@ const Transliterate = (function() {
                         const s = curnode.parentNode.lang.split('-');
                         return [s[0],s[1]];
                     })();
-                    if(_state.otherlangs.includes(lang)) {
+                    if(_state.availlangs.includes(lang)) {
                         const scriptfunc = (() => {
                             if(to.hasOwnProperty(script))
                                 return to[script];
@@ -355,8 +369,6 @@ const Transliterate = (function() {
                             if(curnode.parentElement.classList.contains('originalscript'))
                                 return cache.get(curnode);
                             if(!scriptfunc) return undefined;
-                            //const cached = cache.get(curnode);
-                            //return scriptfunc(cached);
                             return scriptfunc(curnode.data);
                         })();
                         if(result !== undefined) curnode.data = result;
@@ -533,13 +545,14 @@ const Transliterate = (function() {
                 for (const el of telugu_kids) {
                     const lasttxtnode = findTextNode(el,true);
                     lasttxtnode.textContent = lasttxtnode.textContent + '\u200D\u0C4D';
-                    cache.set(lasttxtnode);
+                    //cache.set(lasttxtnode);
                 }
             }
-            
+            /*
             // cache text again since elements are moved around
             const walker = document.createTreeWalker(node,NodeFilter.SHOW_TEXT,null,false);
             while(walker.nextNode()) cache.set(walker.currentNode);
+            */
         },
     
         unjiggle(node) {
