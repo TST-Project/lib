@@ -36,9 +36,11 @@ const Transliterate = (function() {
         ]),
     };
     
+    _state.hyphenator['mr-Latn'] = _state.hyphenator['sa-Latn'];
     _state.scriptnames = new Set(_state.scriptToIso.keys());
     _state.isonames = new Set(_state.scriptToIso.values());
     for(const val of _state.isonames) {
+        if(val === 'tamil') continue;
         _state.reverselangs.set(`sa-${val}-t-sa-Latn`,`sa-Latn-t-sa-${val}`);
         _state.reverselangs.set(`sa-Latn-t-sa-${val}`,`sa-${val}-t-sa-Latn`);
     }
