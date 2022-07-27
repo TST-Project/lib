@@ -108,6 +108,7 @@
 <tst:script>
     <tst:entry key="arabic">arabic</tst:entry>
     <tst:entry key="bengali">bengali</tst:entry>
+    <tst:entry key="bhujimol">bhujimol</tst:entry>
     <tst:entry key="devanagari">devanagari</tst:entry>
     <tst:entry key="grantha">grantha</tst:entry>
     <tst:entry key="latin">latin</tst:entry>
