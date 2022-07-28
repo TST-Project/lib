@@ -431,6 +431,7 @@
         <tst:entry key="total-chapters">total chapters</tst:entry>
         <tst:entry key="total-leaves">total leaves</tst:entry>
         <tst:entry key="total-stanzas">total stanzas</tst:entry>
+        <tst:entry key="total-sutras">total sūtras</tst:entry>
         <tst:entry key="total-works">total works</tst:entry>
         <tst:entry key="documenting-note">documenting note</tst:entry>
         <tst:entry key="user-related-note">user-related note</tst:entry>
