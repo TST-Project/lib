@@ -1001,114 +1001,148 @@
 </xsl:template-->
 
 <xsl:template match="x:msDesc/x:physDesc/x:additions">
-  <xsl:variable name="ps" select="ancestor::x:TEI/x:text//x:seg[@function != 'rubric' and 
+  <xsl:variable name="ps" select="ancestor::x:TEI/x:text//x:seg[
+                                @function != 'rubric' and 
                                 @function != 'incipit' and
                                 @function != 'explicit' and
                                 @function != 'completion-statement' and
                                 @function != 'colophon' and 
-                                not(ancestor::x:seg)]"/>
+                                not(ancestor::x:seg)] |
+                                ancestor::x:TEI/x:text//x:seg[@function = 'rubric']/x:seg |
+                                ancestor::x:TEI/x:text//x:seg[@function = 'incipit']/x:seg |
+                                ancestor::x:TEI/x:text//x:seg[@function = 'explicit']/x:seg |
+                                ancestor::x:TEI/x:text//x:seg[@function = 'completion-statement']/x:seg |
+                                ancestor::x:TEI/x:text//x:seg[@function = 'colophon']/x:seg"/>
   <xsl:if test="node()[not(self::text())] or $ps">
       <tr>
         <th>Paratexts</th>
         <td>
             <ul>
               <xsl:apply-templates />
-              <xsl:for-each select="$ps">
-                <li>
-                    <span>
-                        <xsl:attribute name="class">type</xsl:attribute>
-                        <xsl:variable name="type" select="@function"/>
-                        <xsl:variable name="cu">
-                            <xsl:call-template name="search-and-replace">
-                                <xsl:with-param name="input" select="ancestor::x:text/@synch"/>
-                                <xsl:with-param name="search-string">#</xsl:with-param>
-                            </xsl:call-template>
-                        </xsl:variable>
-                        <xsl:variable name="tu">
-                            <xsl:call-template name="search-and-replace">
-                                <xsl:with-param name="input" select="ancestor::x:text/@corresp"/>
-                                <xsl:with-param name="search-string">#</xsl:with-param>
-                            </xsl:call-template>
-                        </xsl:variable>
-                        <xsl:if test="$cu or $tu">
-                            <span class="lihead">
-                                <xsl:value-of select="$cu"/>
-                                <xsl:if test="$cu and $tu">
-                                    <xsl:text>, </xsl:text>
-                                </xsl:if>
-                                <xsl:if test="$tu">
-                                    <xsl:element name="a">
-                                        <xsl:attribute name="class">local</xsl:attribute>
-                                        <xsl:attribute name="href">
-                                            <xsl:text>#text-</xsl:text>
-                                            <xsl:value-of select="$tu"/>
-                                        </xsl:attribute>
-                                        <xsl:attribute name="data-scroll"/>
-                                        <xsl:value-of select="$tu"/>
-                                    </xsl:element>
-                                </xsl:if>
-                                <xsl:text> </xsl:text>
-                            </span>
-                        </xsl:if>
-                        <span>
-                            <xsl:if test="@cert">
-                                <xsl:attribute name="class"><xsl:call-template name="certainty"/></xsl:attribute>
-                            </xsl:if>
-                            <xsl:if test="$type">
-                                <xsl:call-template name="splitlist">
-                                    <xsl:with-param name="list" select="$type"/>
-                                    <xsl:with-param name="nocapitalize">true</xsl:with-param>
-                                    <xsl:with-param name="map">tst:additiontype</xsl:with-param>
-                                </xsl:call-template>
-                            </xsl:if>
-                            <xsl:variable name="moretypes" select=".//x:seg"/>
-                            <xsl:if test="$moretypes/@function">
-                                <xsl:text>: </xsl:text>
-                                <xsl:variable name="uniquetypes">
-                                    <xsl:for-each select="$moretypes">
-                                        <xsl:sort select="@function"/>
-                                        <xsl:copy-of select="."/>
-                                    </xsl:for-each>
-                                </xsl:variable>
-                                <xsl:for-each select="exsl:node-set($uniquetypes)/x:seg">
-                                    <xsl:variable name="pos" select="position()"/>
-                                    <xsl:variable name="notdup" select="not(@function=following-sibling::x:seg/@function)"/>
-                                    <xsl:if test="$pos = last() or $notdup">
-                                        <xsl:variable name="func" select="@function"/>
-                                        <xsl:variable name="addname" select="$TST/tst:additiontype//tst:entry[@key=$func]"/>
-                                        <xsl:choose>
-                                            <xsl:when test="$addname"><xsl:value-of select="$addname"/></xsl:when>
-                                            <xsl:otherwise><xsl:value-of select="$func"/></xsl:otherwise>
-                                        </xsl:choose>
-                                        <xsl:if test="not($pos = last()) and $func">
-                                            <xsl:text>, </xsl:text>
-                                        </xsl:if>
-                                    </xsl:if>
-                                </xsl:for-each>
-                            </xsl:if>
-                        </span>
-                    </span>
-                    <ul class="imported-paratext">
-                        <li>
-                            <xsl:attribute name="lang">
-                                <xsl:value-of select="ancestor-or-self::*[@xml:lang][1]/@xml:lang"/>
-                            </xsl:attribute>
-                            <xsl:if test="not(./*[1]/@facs)">
-                                <xsl:variable name="milestone" select="preceding::*[(local-name() = 'milestone' and (@unit = 'folio' or @unit = 'page') ) or local-name() = 'pb'][1]"/>
-                                <xsl:if test="$milestone">
-                                    <xsl:apply-templates select="$milestone">
-                                        <xsl:with-param name="excerpt">yes</xsl:with-param>
-                                    </xsl:apply-templates>
-                                </xsl:if>
-                            </xsl:if>
-                            <xsl:apply-templates/>
-                        </li>
-                    </ul>
-                </li>
-              </xsl:for-each>
+              <xsl:call-template name="more-additions">
+                <xsl:with-param name="nodes" select="$ps"/>
+              </xsl:call-template>
             </ul>
         </td>
       </tr>
+    </xsl:if>
+</xsl:template>
+
+<xsl:template name="more-additions">
+    <xsl:param name="nodes"/>
+    <xsl:for-each select="$nodes">
+        <li>
+            <span>
+                <xsl:attribute name="class">type</xsl:attribute>
+                <xsl:variable name="type" select="@function"/>
+                <xsl:variable name="cu">
+                    <xsl:call-template name="search-and-replace">
+                        <xsl:with-param name="input" select="ancestor::x:text/@synch"/>
+                        <xsl:with-param name="search-string">#</xsl:with-param>
+                    </xsl:call-template>
+                </xsl:variable>
+                <xsl:variable name="tu">
+                    <xsl:call-template name="search-and-replace">
+                        <xsl:with-param name="input" select="ancestor::x:text/@corresp"/>
+                        <xsl:with-param name="search-string">#</xsl:with-param>
+                    </xsl:call-template>
+                </xsl:variable>
+                <xsl:if test="$cu or $tu">
+                    <span class="lihead">
+                        <xsl:value-of select="$cu"/>
+                        <xsl:if test="$cu and $tu">
+                            <xsl:text>, </xsl:text>
+                        </xsl:if>
+                        <xsl:if test="$tu">
+                            <xsl:element name="a">
+                                <xsl:attribute name="class">local</xsl:attribute>
+                                <xsl:attribute name="href">
+                                    <xsl:text>#text-</xsl:text>
+                                    <xsl:value-of select="$tu"/>
+                                </xsl:attribute>
+                                <xsl:attribute name="data-scroll"/>
+                                <xsl:value-of select="$tu"/>
+                            </xsl:element>
+                        </xsl:if>
+                        <xsl:text> </xsl:text>
+                    </span>
+                </xsl:if>
+                <span>
+                    <xsl:if test="@cert">
+                        <xsl:attribute name="class"><xsl:call-template name="certainty"/></xsl:attribute>
+                    </xsl:if>
+                    <xsl:if test="$type">
+                        <xsl:call-template name="splitlist">
+                            <xsl:with-param name="list" select="$type"/>
+                            <xsl:with-param name="nocapitalize">true</xsl:with-param>
+                            <xsl:with-param name="map">tst:additiontype</xsl:with-param>
+                        </xsl:call-template>
+                    </xsl:if>
+                    <xsl:call-template name="moretypes">
+                        <xsl:with-param name="node" select="."/>
+                    </xsl:call-template>
+                </span>
+            </span>
+            <ul class="imported-paratext">
+                <li>
+                    <xsl:attribute name="lang">
+                        <xsl:value-of select="ancestor-or-self::*[@xml:lang][1]/@xml:lang"/>
+                    </xsl:attribute>
+                    <xsl:if test="not(./*[1]/@facs)">
+                        <xsl:variable name="milestone" select="preceding::*[(local-name() = 'milestone' and (@unit = 'folio' or @unit = 'page') ) or local-name() = 'pb'][1]"/>
+                        <xsl:if test="$milestone">
+                            <xsl:apply-templates select="$milestone">
+                                <xsl:with-param name="excerpt">yes</xsl:with-param>
+                            </xsl:apply-templates>
+                        </xsl:if>
+                    </xsl:if>
+                    <xsl:if test="not(./*[1][local-name() = 'lb' or local-name() = 'pb' or local-name() = 'milestone' or local-name() = 'cb'] or ./*[1]/x:lb or ./*[1]/x:pb or ./*[1]/x:cb or ./*[1]/x:milestone)">
+                        <xsl:variable name="lb" select="preceding::*[(local-name() = 'lb')][1]"/>
+                        <xsl:if test="$lb">
+                            <xsl:apply-templates select="$lb"/>
+                        </xsl:if>
+                    </xsl:if>
+                    <xsl:apply-templates/>
+                </li>
+            </ul>
+        </li>
+    </xsl:for-each>
+</xsl:template>
+
+<xsl:template name="moretypes">
+    <xsl:param name="node"/>
+    <xsl:variable name="moretypes" select="$node//x:seg"/>
+    <xsl:if test="$moretypes/@function">
+        <xsl:text>: </xsl:text>
+        <xsl:for-each select="$moretypes/@function">
+            <xsl:call-template name="splitlist">
+                <xsl:with-param name="list" select="."/>
+                <xsl:with-param name="nocapitalize">true</xsl:with-param>
+                <xsl:with-param name="map">tst:additiontype</xsl:with-param>
+            </xsl:call-template>
+            <xsl:if test="position() != last()"><xsl:text>, </xsl:text></xsl:if>
+        </xsl:for-each>
+        <!--xsl:variable name="uniquetypes">
+            <xsl:for-each select="$moretypes">
+                <xsl:sort select="@function"/>
+                <xsl:copy-of select="."/>
+            </xsl:for-each>
+        </xsl:variable>
+        <xsl:for-each select="exsl:node-set($uniquetypes)/x:seg">
+            <xsl:variable name="pos" select="position()"/>
+            <xsl:variable name="notdup" select="not(@function=following-sibling::x:seg/@function)"/>
+            <xsl:if test="$pos = last() or $notdup">
+                <xsl:variable name="func" select="@function"/>
+                <xsl:variable name="addname" select="$TST/tst:additiontype//tst:entry[@key=$func]"/>
+                <xsl:choose>
+                    <xsl:when test="$addname"><xsl:value-of select="$addname"/></xsl:when>
+                    <xsl:otherwise><xsl:value-of select="$func"/></xsl:otherwise>
+                </xsl:choose>
+                <xsl:if test="not($pos = last()) and $func">
+                    <xsl:text>, </xsl:text>
+                </xsl:if>
+            </xsl:if>
+        </xsl:for-each-->
     </xsl:if>
 </xsl:template>
 
@@ -1129,6 +1163,9 @@
                         <xsl:with-param name="map">tst:additiontype</xsl:with-param>
                 </xsl:call-template>
             </xsl:if>
+            <xsl:call-template name="moretypes">
+                <xsl:with-param name="node" select="."/>
+            </xsl:call-template>
             <xsl:if test="@subtype">
                 <xsl:text> (</xsl:text>
                 <xsl:call-template name="splitlist">
