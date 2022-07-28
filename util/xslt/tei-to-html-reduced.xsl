@@ -131,6 +131,7 @@
 <xsl:template match="x:note">
     <xsl:element name="span">
         <xsl:attribute name="class">invisinote</xsl:attribute>
+        <xsl:attribute name="data-anno">note</xsl:attribute>
         <xsl:call-template name="lang"/>
         <xsl:attribute name="data-content"><xsl:value-of select="."/></xsl:attribute>
     </xsl:element>
