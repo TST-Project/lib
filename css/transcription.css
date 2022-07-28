@@ -466,7 +466,7 @@ span.quote::after {
 }
 */
 span.locus {
-    font-size: 0.9em;
+    /*font-size: 0.9em;*/
     color: #A85110;
 }
 
@@ -476,7 +476,7 @@ span.locus {
 }
 
 a.locus:link, a.locus:visited {
-    font-size: 70%;
+    /*font-size: 70%;*/
     color: #A85110;
 }
 a.locus:hover {
