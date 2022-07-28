@@ -84,7 +84,7 @@ const util = {
         if(pp && pp.nodeType === 1 && pp.nodeName === 'milestone') {
             const attr = pp.getAttribute('unit');
             if(!check.isFolio(attr))
-                return attr + ' ' + (pp.getAttribute('n') || '');
+                return attr.replace(/-/g,'') + ' ' + (pp.getAttribute('n') || '');
         }
 
         var p = util.prev(el);
