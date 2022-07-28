@@ -99,6 +99,7 @@
     <tst:group label="position">
         <tst:entry key="top">top</tst:entry>
         <tst:entry key="bottom">bottom</tst:entry>
+        <tst:entry key="middle">middle</tst:entry>
         <tst:entry key="left">left</tst:entry>
         <tst:entry key="right">right</tst:entry>
     </tst:group>
