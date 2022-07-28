@@ -30,7 +30,7 @@
     <xsl:element name="div">
         <xsl:attribute name="class">editionStmt</xsl:attribute>
         <p>
-            <xsl:text>Record edited by </xsl:text>
+            <xsl:text>Catalogue description by </xsl:text>
             <xsl:for-each select="x:editor">
                 <xsl:choose>
                     <xsl:when test="position() = last() and position() != 1">
