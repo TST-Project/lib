@@ -346,7 +346,7 @@
                 </xsl:choose>
             </xsl:attribute>
             <xsl:if test="local-name() = 'seg' and not(./*[1]/@facs)">
-                <xsl:variable name="milestone" select="preceding::*[local-name() = 'milestone' or local-name() = 'pb'][1]"/>
+                <xsl:variable name="milestone" select="preceding::*[(local-name() = 'milestone' and (@unit = 'folio' or @unit = 'page') ) or local-name() = 'pb'][1]"/>
                 <xsl:if test="$milestone">
                     <xsl:apply-templates select="$milestone">
                         <xsl:with-param name="excerpt">yes</xsl:with-param>
@@ -1094,7 +1094,7 @@
                                 <xsl:value-of select="ancestor-or-self::*[@xml:lang][1]/@xml:lang"/>
                             </xsl:attribute>
                             <xsl:if test="not(./*[1]/@facs)">
-                                <xsl:variable name="milestone" select="preceding::*[local-name() = 'milestone' or local-name() = 'pb'][1]"/>
+                                <xsl:variable name="milestone" select="preceding::*[(local-name() = 'milestone' and (@unit = 'folio' or @unit = 'page') ) or local-name() = 'pb'][1]"/>
                                 <xsl:if test="$milestone">
                                     <xsl:apply-templates select="$milestone">
                                         <xsl:with-param name="excerpt">yes</xsl:with-param>
