@@ -128,6 +128,14 @@
     </xsl:element>
 </xsl:template>
 
+<xsl:template match="x:note">
+    <xsl:element name="span">
+        <xsl:attribute name="class">invisinote</xsl:attribute>
+        <xsl:call-template name="lang"/>
+        <xsl:attribute name="data-content"><xsl:value-of select="."/></xsl:attribute>
+    </xsl:element>
+</xsl:template>
+
 <xsl:template match="x:milestone"/>
 
 <xsl:template match="x:seg[@function='copy-statement']">

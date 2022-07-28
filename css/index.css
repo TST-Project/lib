@@ -217,6 +217,14 @@ div.lg {
     padding-left: 0;
 }
 
+span.invisinote {
+          font-size:80%;
+}
+
+span.invisinote::after {
+    content: '[' attr(data-content) ']';
+}
+
 @media (max-width: 1200px) {
     .dataTable-container {
         overflow-x: auto;
