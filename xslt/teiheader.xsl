@@ -545,11 +545,11 @@
       </xsl:if>
       <xsl:apply-templates select="x:objectDesc/x:supportDesc/x:condition"/>
       <xsl:apply-templates select="x:objectDesc/x:layoutDesc"/>
+      <xsl:apply-templates select="x:bindingDesc"/>
       <xsl:apply-templates select="x:handDesc"/>
       <xsl:apply-templates select="x:typeDesc"/>
       <xsl:apply-templates select="x:decoDesc"/>
       <xsl:apply-templates select="x:additions"/>
-      <xsl:apply-templates select="x:bindingDesc"/>
       </table>
   </section>
 </xsl:template>
