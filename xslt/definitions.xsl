@@ -278,6 +278,7 @@
     <tst:entry key="#newa-siddhi">&#x1144A;</tst:entry>
     <tst:entry key="#newa-gap-filler">&#x1144E;</tst:entry>
     <tst:entry key="#newa-old-gap-filler">&#x1144E;</tst:entry>
+    <tst:entry key="#newa-abbreviation">&#x1144F;</tst:entry>
 
     <tst:entry key="#sarada-ekam">&#x11DA;</tst:entry>
     <tst:entry key="#sarada-siddhi">&#x11DB;</tst:entry>
@@ -446,16 +447,19 @@
 </tst:segtype>
 
 <tst:genres>
+    <tst:entry key="#antati">Antāti</tst:entry>
     <tst:entry key="#ammanai">Ammāṉai</tst:entry>
     <tst:entry key="#illakkanam">Ilakkaṇam</tst:entry>
     <tst:entry key="#katai">Katai</tst:entry>
-    <tst:entry key="#kappiyam">Kāppiyam/epics</tst:entry>
+    <tst:entry key="#kalampakam">Kalampakam</tst:entry>
+    <tst:entry key="#kappiyam">Kāppiyam</tst:entry>
     <tst:entry key="#kilkkanakku">Kīḻkkaṇakku</tst:entry>
     <tst:entry key="#cankam">Caṅkam</tst:entry>
     <tst:entry key="#talapuranam">Talapurāṇam</tst:entry>
     <tst:entry key="#tirumurai">Tirumuṟai</tst:entry>
     <tst:entry key="#nikantu">Nikaṇṭu</tst:entry>
     <tst:entry key="#natakam">Nāṭakam</tst:entry>
+    <tst:entry key="#niti">Nīti</tst:entry>
     <tst:entry key="#pirapantam">Pirapantam</tst:entry>
     <tst:entry key="#puranam">Purāṇam</tst:entry>
 </tst:genres>
