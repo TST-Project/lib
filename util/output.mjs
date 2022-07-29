@@ -296,10 +296,11 @@ const output = {
                 `<a href="${cur1.fname}?facs=${ret.facs}">${ret.milestone}</a>` :
                 ret.milestone;
             const synch = ret.synch;
-            const types = new Set(
-                cur.getAttribute('function').split(' ').concat(
-                    cur.getAttribute('type').split(' ') )
-                );
+            const types = (() => {
+                    const func = cur.getAttribute('function') || '';
+                    const type = cur.getAttribute('type') || '';
+                    return new Set( func.split(' ').concat(type.split(' ')) );
+                })();
 
             const is_satellite = types.has('satellite-stanza') ? '✓' : '';
             const unit = synch ? synch.replace(/#/g,'') : '';
@@ -371,10 +372,11 @@ const output = {
                 `<a href="${cur1.fname}?facs=${ret.facs}">${ret.milestone}</a>` :
                 ret.milestone;
             const synch = ret.synch;
-            const types = new Set(
-                cur.getAttribute('function').split(' ').concat(
-                    cur.getAttribute('type').split(' ') )
-                );
+            const types = (() => {
+                    const func = cur.getAttribute('function') || '';
+                    const type = cur.getAttribute('type') || '';
+                    return new Set( func.split(' ').concat(type.split(' ')) );
+                })();
             const is_invocation = types.has('invocation') ? '✓' : '';
 
             const unit = synch ? synch.replace(/#/g,'') : '';
