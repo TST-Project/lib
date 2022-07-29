@@ -103,6 +103,70 @@ const output = {
     fs.writeFileSync(`../${fname}`,template.documentElement.outerHTML,{encoding: 'utf8'});
     },
 
+    ariel: (data) => {
+        const isMSPart = (str) => {
+            const dot = /\d\.\d/.test(str);
+            const letter = /\d[a-z]$/.test(str);
+            if(dot && letter) return ' class="subsubpart"';
+            if(dot || letter) return ' class="subpart"';
+            else return '';
+        };
+        const template = make.html(templatestr);
+        const title = template.querySelector('title');
+        const ptitle = opts && opts.name ? opts.name[0].toUpperCase() + opts.name.slice(1) : 'Manuscripts';
+        title.textContent = `${title.textContent}: ${ptitle}`;
+        const table = template.getElementById('index');
+        const thead = make.header(['Old Shelfmark','Older Shelfmark','New Shelfmark','Repository','Title','Languages','Material','Extent','Date','Images']) :
+
+        const tstr = data.reduce((acc, cur) => {
+
+            const poststr = 
+`  <td>${cur.repo}</td>
+  <td>${cur.title}</td>
+  <td>${cur.languages}</td>
+  <td>${cur.material}</td>
+  <td data-content="${cur.extent[0]}">${cur.extent[1]}</td>
+  <td data-content="${cur.date[1]}">${cur.date[0]}</td>
+  <td class="smallcaps">${cur.images}</td>
+</tr>`;
+
+            const [oldcote,oldercote] = ((idnos) => {
+                var old1 = '';
+                var old2 = '';
+                for(const idno of idnos) {
+                    const txt = idno.textContent;
+                    if(txt.startsWith('Ariel'))
+                        old1 = txt;
+                    else if(txt.match(/^\w\/\d+$/))
+                        old2 = txt;
+                }
+                return [old1,old2];
+            })(cur.altcotes);
+
+            const hascollector = (() => {
+                for(const key of ['Édouard Ariel','Ariel, Édouard'])
+                    if(cur.collectors.has(key)) return true;
+                return false;
+            })();
+
+            if(!oldcote && !hascollector) return acc;
+
+            const oldsort = oldcote.replace(/\d+/g,((match) => {
+                return match.padStart(4,'0');
+            }));
+ 
+            return acc +
+`<tr>
+  <th data-content="${oldsort}"${isMSPart(cur.cote.text)}>${oldcote}</th>
+  <td>${oldercote}</td>
+  <td data-content="${cur.cote.sort}"${isMSPart(cur.cote.text)}><a href="${cur.fname}">${cur.cote.text}</a></td>` + poststr;
+        },'');
+
+    table.innerHTML = `${thead}<tbody>${tstr}</tbody>`;
+
+    fs.writeFileSync('../ariel.html',template.documentElement.outerHTML,{encoding: 'utf8'});
+    },
+
     paratexts: (data, opts) => {
         
         const ptitle = opts.name ? opts.name[0].toUpperCase() + opts.name.slice(1) : 'Paratexts';
