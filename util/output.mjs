@@ -348,7 +348,7 @@ const output = {
 
         const table = template.getElementById('index');
         const tstr = data.reduce((acc, cur) => {
-            const props = [...cur.invocations,...cur.satellites];
+            const props = [...cur.invocations];
             if(props.length > 0) {
                 const lines = props.reduce((acc2,cur2) => predux(acc2,cur2,cur),'');
                 return acc + lines;
@@ -424,7 +424,7 @@ const output = {
 
         const table = template.getElementById('index');
         const tstr = data.reduce((acc, cur) => {
-            const props = cur.satellites;
+            const props = [...cur.satellites];
             if(props.length > 0) {
                 const lines = props.reduce((acc2,cur2) => predux(acc2,cur2,cur),'');
                 return acc + lines;
