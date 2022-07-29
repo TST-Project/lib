@@ -296,14 +296,10 @@ const output = {
                 `<a href="${cur1.fname}?facs=${ret.facs}">${ret.milestone}</a>` :
                 ret.milestone;
             const synch = ret.synch;
-            const types = (() => {
-                    const func = cur.getAttribute('function') || '';
-                    const type = cur.getAttribute('type') || '';
-                    return new Set( func.split(' ').concat(type.split(' ')) );
-                })();
-
-            const is_satellite = types.has('satellite-stanza') ? '✓' : '';
             const unit = synch ? synch.replace(/#/g,'') : '';
+            const types = utils.functions(cur);
+            const is_satellite = types.has('satellite-stanza') ? '✓' : '';
+
             const processed = SaxonJS.transform({
                 stylesheetText: xsltSheet,
                 sourceText: '<TEI xmlns="http://www.tei-c.org/ns/1.0">'+inner+'</TEI>',
@@ -372,14 +368,10 @@ const output = {
                 `<a href="${cur1.fname}?facs=${ret.facs}">${ret.milestone}</a>` :
                 ret.milestone;
             const synch = ret.synch;
-            const types = (() => {
-                    const func = cur.getAttribute('function') || '';
-                    const type = cur.getAttribute('type') || '';
-                    return new Set( func.split(' ').concat(type.split(' ')) );
-                })();
+            const unit = synch ? synch.replace(/#/g,'') : '';
+            const types = utils.functions(cur);
             const is_invocation = types.has('invocation') ? '✓' : '';
 
-            const unit = synch ? synch.replace(/#/g,'') : '';
             const processed = SaxonJS.transform({
                 stylesheetText: xsltSheet,
                 sourceText: '<TEI xmlns="http://www.tei-c.org/ns/1.0">'+inner+'</TEI>',
@@ -434,8 +426,73 @@ const output = {
         const thead = make.header(['Satellite stanza','Shelfmark','Repository','Title','Unit','Page/folio','Placement','Invocation']);
         table.innerHTML = `${thead}<tbody>${tstr}</tbody>`;
         table.querySelector('thead th').dataset.sort = 'sortTamil';
-        //table.querySelectorAll('th')[1].classList.add('sorttable_alphanum');
         fs.writeFileSync('../satellite-stanzas.html',template.documentElement.outerHTML,{encoding: 'utf8'});
+    },
+    titles: (data) => {
+        
+        const predux = function(acc,cur,cur1) {
+            
+            const ret = util.innertext(cur);
+            const inner = ret.inner;
+            const placement = ret.placement;
+            const milestone = ret.facs ?
+                `<a href="${cur1.fname}?facs=${ret.facs}">${ret.milestone}</a>` :
+                ret.milestone;
+            const synch = ret.synch;
+            const unit = synch ? synch.replace(/#/g,'') : '';
+
+            const processed = SaxonJS.transform({
+                stylesheetText: xsltSheet,
+                sourceText: '<TEI xmlns="http://www.tei-c.org/ns/1.0">'+inner+'</TEI>',
+                destination: 'serialized'},'sync');
+            const res = processed.principalResult || '';
+            const txt = transliterate(res);
+            const clean = make.html(`<html>${txt}</html>`).documentElement.textContent.trim();
+            return acc + 
+                `<tr>
+                <td data-content="${clean}">
+                ${txt}
+                </td>
+                <td><a href="${cur1.fname}">${cur1.cote.text}</a></td>
+                <td>
+                ${cur1.repo}
+                </td>
+                <td>
+                ${cur1.title}
+                </td>
+                <td>
+                ${unit}
+                </td>
+                <td>
+                ${milestone}
+                </td>
+                <td>
+                ${placement}
+                </td>
+                </tr>\n`;
+        };
+        
+        const template = make.html(templatestr);
+
+        const title = template.querySelector('title');
+        title.textContent = `${title.textContent}: Titles`;
+
+        const pdesc = descriptions.getElementById('titles');
+        if(pdesc) template.querySelector('article').prepend(pdesc);
+
+        const table = template.getElementById('index');
+        const tstr = data.reduce((acc, cur) => {
+            const props = [...cur.satellites];
+            if(props.length > 0) {
+                const lines = props.reduce((acc2,cur2) => predux(acc2,cur2,cur),'');
+                return acc + lines;
+            }
+            else return acc;
+        },'');
+        const thead = make.header(['Titles','Shelfmark','Repository','Title','Unit','Page/folio','Placement']);
+        table.innerHTML = `${thead}<tbody>${tstr}</tbody>`;
+        table.querySelector('thead th').dataset.sort = 'sortTamil';
+        fs.writeFileSync('../titles.html',template.documentElement.outerHTML,{encoding: 'utf8'});
     },
     persons: (data) => {
 

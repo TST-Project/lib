@@ -125,6 +125,11 @@ const util = {
         if(result) return getStandard(result);
         else return false;
     },
+    functions(el) {
+        const func = el.getAttribute('function') || '';
+        const type = el.getAttribute('type') || '';
+        return new Set( func.split(' ').concat(type.split(' ')) );
+    },
 };
 
 const check = {
