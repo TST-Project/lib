@@ -296,9 +296,12 @@ const output = {
                 `<a href="${cur1.fname}?facs=${ret.facs}">${ret.milestone}</a>` :
                 ret.milestone;
             const synch = ret.synch;
-            const is_satellite = 
-                'satellite-stanza' === (cur.getAttribute('function') || cur.getAttribute('type')) ?
-                '✓' : '';
+            const types = new Set(
+                cur.getAttribute('function').split(' ').concat(
+                    cur.getAttribute('type').split(' ') )
+                );
+
+            const is_satellite = types.has('satellite-stanza') ? '✓' : '';
             const unit = synch ? synch.replace(/#/g,'') : '';
             const processed = SaxonJS.transform({
                 stylesheetText: xsltSheet,
@@ -356,6 +359,81 @@ const output = {
         table.querySelector('thead th').dataset.sort = 'sortTamil';
         //table.querySelectorAll('th')[1].classList.add('sorttable_alphanum');
         fs.writeFileSync('../invocations.html',template.documentElement.outerHTML,{encoding: 'utf8'});
+    },
+    satellite: (data) => {
+        
+        const predux = function(acc,cur,cur1) {
+            
+            const ret = util.innertext(cur);
+            const inner = ret.inner;
+            const placement = ret.placement;
+            const milestone = ret.facs ?
+                `<a href="${cur1.fname}?facs=${ret.facs}">${ret.milestone}</a>` :
+                ret.milestone;
+            const synch = ret.synch;
+            const types = new Set(
+                cur.getAttribute('function').split(' ').concat(
+                    cur.getAttribute('type').split(' ') )
+                );
+            const is_invocation = types.has('invocation') ? '✓' : '';
+
+            const unit = synch ? synch.replace(/#/g,'') : '';
+            const processed = SaxonJS.transform({
+                stylesheetText: xsltSheet,
+                sourceText: '<TEI xmlns="http://www.tei-c.org/ns/1.0">'+inner+'</TEI>',
+                destination: 'serialized'},'sync');
+            const res = processed.principalResult || '';
+            const txt = transliterate(res);
+            const clean = make.html(`<html>${txt}</html>`).documentElement.textContent.trim();
+            return acc + 
+                `<tr>
+                <td data-content="${clean}">
+                ${txt}
+                </td>
+                <td><a href="${cur1.fname}">${cur1.cote.text}</a></td>
+                <td>
+                ${cur1.repo}
+                </td>
+                <td>
+                ${cur1.title}
+                </td>
+                <td>
+                ${unit}
+                </td>
+                <td>
+                ${milestone}
+                </td>
+                <td>
+                ${placement}
+                </td>
+                <td>
+                ${is_invocation}
+                </td>
+                </tr>\n`;
+        };
+        
+        const template = make.html(templatestr);
+
+        const title = template.querySelector('title');
+        title.textContent = `${title.textContent}: Satellite Stanzas`;
+
+        const pdesc = descriptions.getElementById('satellite-stanzas');
+        if(pdesc) template.querySelector('article').prepend(pdesc);
+
+        const table = template.getElementById('index');
+        const tstr = data.reduce((acc, cur) => {
+            const props = cur.satellites;
+            if(props.length > 0) {
+                const lines = props.reduce((acc2,cur2) => predux(acc2,cur2,cur),'');
+                return acc + lines;
+            }
+            else return acc;
+        },'');
+        const thead = make.header(['Satellite stanza','Shelfmark','Repository','Title','Unit','Page/folio','Placement','Invocation']);
+        table.innerHTML = `${thead}<tbody>${tstr}</tbody>`;
+        table.querySelector('thead th').dataset.sort = 'sortTamil';
+        //table.querySelectorAll('th')[1].classList.add('sorttable_alphanum');
+        fs.writeFileSync('../satellite-stanzas.html',template.documentElement.outerHTML,{encoding: 'utf8'});
     },
     persons: (data) => {
 
