@@ -431,7 +431,6 @@ const output = {
     titles: (data) => {
         
         const predux = function(acc,cur,cur1) {
-            
             const ret = util.innertext(cur);
             const inner = ret.inner;
             const placement = ret.placement;
@@ -440,6 +439,8 @@ const output = {
                 ret.milestone;
             const synch = ret.synch;
             const unit = synch ? synch.replace(/#/g,'') : '';
+            const title = cur.querySelector('title')?.textContent || '';
+            const author = cur.querySelector('persName[role="author"]')?.textContent || '';
 
             const processed = SaxonJS.transform({
                 stylesheetText: xsltSheet,
@@ -452,6 +453,12 @@ const output = {
                 `<tr>
                 <td data-content="${clean}">
                 ${txt}
+                </td>
+                <td>
+                ${title}
+                </td>
+                <td>
+                ${author}
                 </td>
                 <td><a href="${cur1.fname}">${cur1.cote.text}</a></td>
                 <td>
@@ -471,9 +478,7 @@ const output = {
                 </td>
                 </tr>\n`;
         };
-        
         const template = make.html(templatestr);
-
         const title = template.querySelector('title');
         title.textContent = `${title.textContent}: Titles`;
 
@@ -482,14 +487,14 @@ const output = {
 
         const table = template.getElementById('index');
         const tstr = data.reduce((acc, cur) => {
-            const props = [...cur.satellites];
+            const props = [...cur.titles];
             if(props.length > 0) {
                 const lines = props.reduce((acc2,cur2) => predux(acc2,cur2,cur),'');
                 return acc + lines;
             }
             else return acc;
         },'');
-        const thead = make.header(['Titles','Shelfmark','Repository','Title','Unit','Page/folio','Placement']);
+        const thead = make.header(['Title phrase','Title','Author','Shelfmark','Repository','Manuscript title','Unit','Page/folio','Placement']);
         table.innerHTML = `${thead}<tbody>${tstr}</tbody>`;
         table.querySelector('thead th').dataset.sort = 'sortTamil';
         fs.writeFileSync('../titles.html',template.documentElement.outerHTML,{encoding: 'utf8'});
