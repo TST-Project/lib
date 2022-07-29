@@ -113,7 +113,7 @@ const output = {
         };
         const template = make.html(templatestr);
         const title = template.querySelector('title');
-        const ptitle = opts && opts.name ? opts.name[0].toUpperCase() + opts.name.slice(1) : 'Manuscripts';
+        const ptitle = 'Ariel collection';
         title.textContent = `${title.textContent}: ${ptitle}`;
         const table = template.getElementById('index');
         const thead = make.header(['Old Shelfmark','Older Shelfmark','New Shelfmark','Repository','Title','Languages','Material','Extent','Date','Images']);
