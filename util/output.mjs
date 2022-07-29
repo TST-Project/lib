@@ -82,7 +82,10 @@ const output = {
             const oldsort = oldcote.replace(/\d+/g,((match) => {
                 return match.padStart(4,'0');
             }));
- 
+            const oldersort = oldercote.replace(/\d+/g,((match) => {
+                return match.padStart(4,'0');
+            }));
+
             return acc +
 `<tr>
   <th data-content="${oldsort}"${isMSPart(cur.cote.text)}>${oldcote}</th>
@@ -158,7 +161,7 @@ const output = {
             return acc +
 `<tr>
   <th data-content="${oldsort}"${isMSPart(cur.cote.text)}>${oldcote}</th>
-  <td>${oldercote}</td>
+  <td data-content="${oldersort}">${oldercote}</td>
   <td data-content="${cur.cote.sort}"${isMSPart(cur.cote.text)}><a href="${cur.fname}">${cur.cote.text}</a></td>` + poststr;
         },'');
 
