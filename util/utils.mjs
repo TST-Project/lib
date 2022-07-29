@@ -40,7 +40,7 @@ const util = {
         else {
             const subtype = el.getAttribute('subtype') || '';
             milestone = el.querySelector('locus, milestone, pb');
-            placement = subtype.replace(/\s/g,', ').replace(/-/g,' ');
+            placement = subtype.replace(/\s/g,', ').replaceAll('-',' ');
             synch = el.getAttribute('synch') || el.closest('msItem')?.getAttribute('synch');
             inner = el.querySelector('q,quote')?.innerHTML || el.innerHTML;
         }
@@ -84,7 +84,7 @@ const util = {
         if(pp && pp.nodeType === 1 && pp.nodeName === 'milestone') {
             const attr = pp.getAttribute('unit');
             if(!check.isFolio(attr))
-                return attr.replace(/-/g,'') + ' ' + (pp.getAttribute('n') || '');
+                return attr + ' ' + (pp.getAttribute('n') || '');
         }
 
         var p = util.prev(el);
