@@ -297,7 +297,7 @@ const output = {
                 ret.milestone;
             const synch = ret.synch;
             const unit = synch ? synch.replace(/#/g,'') : '';
-            const types = utils.functions(cur);
+            const types = util.functions(cur);
             const is_satellite = types.has('satellite-stanza') ? '✓' : '';
 
             const processed = SaxonJS.transform({
@@ -369,7 +369,7 @@ const output = {
                 ret.milestone;
             const synch = ret.synch;
             const unit = synch ? synch.replace(/#/g,'') : '';
-            const types = utils.functions(cur);
+            const types = util.functions(cur);
             const is_invocation = types.has('invocation') ? '✓' : '';
 
             const processed = SaxonJS.transform({
