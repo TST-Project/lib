@@ -116,7 +116,7 @@ const output = {
         const ptitle = opts && opts.name ? opts.name[0].toUpperCase() + opts.name.slice(1) : 'Manuscripts';
         title.textContent = `${title.textContent}: ${ptitle}`;
         const table = template.getElementById('index');
-        const thead = make.header(['Old Shelfmark','Older Shelfmark','New Shelfmark','Repository','Title','Languages','Material','Extent','Date','Images']) :
+        const thead = make.header(['Old Shelfmark','Older Shelfmark','New Shelfmark','Repository','Title','Languages','Material','Extent','Date','Images']);
 
         const tstr = data.reduce((acc, cur) => {
 
