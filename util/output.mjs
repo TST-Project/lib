@@ -37,7 +37,7 @@ const output = {
         const title = template.querySelector('title');
         const ptitle = opts && opts.name ? opts.name[0].toUpperCase() + opts.name.slice(1) : 'Manuscripts';
         title.textContent = `${title.textContent}: ${ptitle}`;
-        const pdesc = opts.prefix ? descriptions.getElementById(opts.prefix) : null;
+        const pdesc = opts?.prefix ? descriptions.getElementById(opts.prefix) : null;
         if(pdesc) template.querySelector('article').prepend(pdesc);
         const table = template.getElementById('index');
         const thead = opts && opts.prefix ? 
