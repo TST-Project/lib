@@ -27,7 +27,7 @@ const util = {
             milestone = util.milestone(el) || 
                 el.closest('desc')?.querySelector('locus');
             placement = util.placement(el) || 
-                el.closest('desc')?.getAttribute('subtype') ||
+                el.closest('desc')?.getAttribute('subtype')?.replaceAll('-',' ') ||
                 util.line(el) ||
                 '';
             const text = el.closest('text');
