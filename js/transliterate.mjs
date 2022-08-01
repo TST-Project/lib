@@ -233,7 +233,7 @@ const Transliterate = (function() {
                     curnode.classList.add('originalscript');
                 const curlang = curnode.lang;
                 if(curlang) {
-                // case 1: sa-Latn[-t-XXXX]
+                // case 1: sa-Latn[-t-sa-XXXX]
                 // case 2: sa-XXXX
                 // case 3: sa
                 // case 4: undefined
@@ -570,12 +570,12 @@ const Transliterate = (function() {
             // d_conv is DHARMA convention
             if(!d_conv) text = text.toLowerCase();
         
-            // remove space between a word that ends in a consonant and a word that begins with a vowel
+            // remove space between word-final consonant and word-initial vowel
             text = text.replace(/([ḍdrmvynhs]) ([aāiīuūṛeēoōêô])/g, '$1$2');
         
             if(d_conv) text = text.toLowerCase();
         
-            // remove space between a word that ends in a consonant and a word that begins with a consonant
+            // remove space between word-final consonant and word-intial consonant
             text = text.replace(/([kgcjñḍtdnpbmrlyẏvśṣsṙ]) ([kgcjṭḍtdnpbmyẏrlvśṣshḻ])/g, '$1$2');
 
             // join final o/e/ā and avagraha/anusvāra

@@ -1,8 +1,8 @@
 import { Transliterate } from '../../js/transliterate.mjs';
 
-const replaceEl = function(newdoc,par,parname,kidname,inplace = false) {
+const replaceEl = function(newdoc,par,kidname,inplace = false) {
     const oldel = par.querySelector(`:scope > ${kidname}`);
-    const newel = newdoc.querySelector(`${parname} > ${kidname}`);
+    const newel = newdoc.querySelector(`${par.nodeName} > ${kidname}`);
     if(!newel) return;
     if(oldel) {
         if(inplace) par.replaceChild(newel,oldel);
@@ -69,23 +69,33 @@ const transliterateTitle = function(doc) {
 const convertFile = (indoc,outdoc) => {
     const eadheader = outdoc.querySelector('eadheader');
     if(eadheader) {
-        replaceEl(indoc, eadheader,'eadheader','filedesc',true);
-        replaceEl(indoc, eadheader,'eadheader','profiledesc',true);
+        replaceEl(indoc,eadheader,'filedesc',true);
+        replaceEl(indoc,eadheader,'profiledesc',true);
     }
+
     const level = indoc.querySelector('archdesc[level="otherlevel"]') ? 'otherlevel' : 'item';
-    const archname = `archdesc[level="${level}"]`;
-    var archdesc = outdoc.querySelector(archname) || outdoc.querySelector('c');
-    if(!archdesc && level === 'otherlevel') { // wasn't a collection before, change to collection
-        archdesc = outdoc.querySelector('archdesc');
+    //const archname = `archdesc[level="${level}"]`;
+    //var archdesc = outdoc.querySelector(archname) || outdoc.querySelector('c');
+    const archdesc = outdoc.querySelector('archdesc') || outdoc.querySelector('c');
+    //if(!archdesc && level === 'otherlevel') { // wasn't a collection before, change to collection
+    //    archdesc = outdoc.querySelector('archdesc');
+    //    archdesc.setAttribute('level','otherlevel');
+    //}
+    if(level === 'otherlevel' && 
+       archdesc.nodeName === 'archdesc' &&
+       archdesc.getAttribute('level') === 'item' ) {
+        // wasn't a collection before, change to collection
         archdesc.setAttribute('level','otherlevel');
+        archdesc.setAttribute('otherlevel','recueil');
     }
-    replaceEl(indoc, archdesc,archname,'did',true);
-    replaceEl(indoc, archdesc,archname,'scopecontent');
-    replaceEl(indoc, archdesc,archname,'dsc');
-    replaceEl(indoc, archdesc,archname,'bibliography');
-    replaceEl(indoc, archdesc,archname,'custodhist');
-    replaceEl(indoc, archdesc,archname,'acqinfo');
-    replaceEl(indoc, archdesc,archname,'processinfo');
+
+    replaceEl(indoc,archdesc,'did',true);
+    replaceEl(indoc,archdesc,'scopecontent');
+    replaceEl(indoc,archdesc,'dsc');
+    replaceEl(indoc,archdesc,'bibliography');
+    replaceEl(indoc,archdesc,'custodhist');
+    replaceEl(indoc,archdesc,'acqinfo');
+    replaceEl(indoc,archdesc,'processinfo');
 
     return outdoc;
 };

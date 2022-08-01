@@ -558,3 +558,7 @@ rt {
 rb {
     text-decoration: #CC0000 dotted underline 1px;
 }
+
+.teitext em.title, .imported-paratext em.title {
+    font-style: normal;
+}
