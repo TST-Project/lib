@@ -116,7 +116,7 @@ const output = {
         const title = template.querySelector('title');
         const ptitle = 'Ariel collection';
         title.textContent = `${title.textContent}: ${ptitle}`;
-        const pdesc = descriptions.getElementById('Ariel') : null;
+        const pdesc = descriptions.getElementById('Ariel');
         if(pdesc) template.querySelector('article').prepend(pdesc);
         const table = template.getElementById('index');
         const thead = make.header(['Old Shelfmark','Older Shelfmark','New Shelfmark','Repository','Title','Languages','Material','Extent','Date','Images']);
