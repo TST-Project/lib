@@ -496,7 +496,7 @@ const output = {
         const thead = make.header(['Satellite stanza','Shelfmark','Repository','Title','Unit','Page/folio','Placement','Invocation']);
         table.innerHTML = `${thead}<tbody>${tstr}</tbody>`;
         table.querySelector('thead th').dataset.sort = 'sortTamil';
-        fs.writeFileSync('../satellite-stanzas.html',template.documentElement.outerHTML,{encoding: 'utf8'});
+        fs.writeFileSync('../satellite_stanzas.html',template.documentElement.outerHTML,{encoding: 'utf8'});
     },
     titles: (data) => {
         
