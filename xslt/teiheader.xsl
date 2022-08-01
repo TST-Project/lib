@@ -1099,7 +1099,16 @@
                     <xsl:if test="not(./*[1][local-name() = 'lb' or local-name() = 'pb' or local-name() = 'milestone' or local-name() = 'cb'] or ./*[1]/x:lb or ./*[1]/x:pb or ./*[1]/x:cb or ./*[1]/x:milestone)">
                         <xsl:variable name="lb" select="preceding::*[(local-name() = 'lb')][1]"/>
                         <xsl:if test="$lb">
-                            <xsl:apply-templates select="$lb"/>
+                            <xsl:apply-templates select="$lb">
+                                <xsl:with-param name="hyphen">no</xsl:with-param>
+                            </xsl:apply-templates>
+                            <xsl:element name="span">
+                                <xsl:attribute name="lang">en</xsl:attribute>
+                                <xsl:attribute name="class">gap ellipsis</xsl:attribute>
+                                <xsl:attribute name="data-anno">gap (ellipsis)</xsl:attribute>
+                                <xsl:text>…</xsl:text>
+                            </xsl:element>
+                            <xsl:text> </xsl:text>
                         </xsl:if>
                     </xsl:if>
                     <xsl:apply-templates/>
