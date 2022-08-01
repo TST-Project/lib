@@ -36,7 +36,9 @@ const output = {
         const template = make.html(templatestr);
         const title = template.querySelector('title');
         const ptitle = opts && opts.name ? opts.name[0].toUpperCase() + opts.name.slice(1) : 'Manuscripts';
+        const pdesc = opts.name ? descriptions.getElementById(opts.name) : null;
         title.textContent = `${title.textContent}: ${ptitle}`;
+        if(pdesc) template.querySelector('article').prepend(pdesc);
         const table = template.getElementById('index');
         const thead = opts && opts.prefix ? 
             make.header(['Old Shelfmark','New Shelfmark','Repository','Title','Languages','Material','Extent','Date','Images']) :
