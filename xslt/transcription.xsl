@@ -769,7 +769,10 @@
                 <xsl:attribute name="class">bold</xsl:attribute>
                 <xsl:attribute name="lang">sa</xsl:attribute>
             </xsl:when>
-            <xsl:otherwise><xsl:call-template name="lang"/></xsl:otherwise>
+            <xsl:otherwise>
+                <xsl:attribute name="class">paratext</xsl:attribute>
+                <xsl:call-template name="lang"/>
+            </xsl:otherwise>
         </xsl:choose>
         <xsl:apply-templates/>
     </xsl:element>

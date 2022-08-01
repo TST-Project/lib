@@ -197,13 +197,14 @@ const TSTViewer = (function() {
             else {
                 tBox = document.createElement('div');
                 tBox.id = 'tooltip';
-                tBox.style.top = (e.clientY + 10) + 'px';
-                tBox.style.left = e.clientX + 'px';
                 tBox.style.opacity = 0;
                 tBox.style.transition = 'opacity 0.2s ease-in';
                 document.body.appendChild(tBox);
                 tBoxDiv.myTarget = targ;
             }
+
+            tBox.style.top = (e.clientY + 10) + 'px';
+            tBox.style.left = e.clientX + 'px';
 
             tBoxDiv.appendChild(document.createTextNode(toolText));
             tBoxDiv.myTarget = targ;

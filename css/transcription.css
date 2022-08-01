@@ -562,3 +562,7 @@ rb {
 .teitext em.title, .imported-paratext em.title {
     font-style: normal;
 }
+
+.paratext:hover {
+    background: rgba(239,239,61,0.5);
+}
