@@ -416,10 +416,10 @@
             </xsl:choose>
             <xsl:if test="@n"><xsl:text> </xsl:text></xsl:if>
         </xsl:when>
-        <xsl:when test="/x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:physDesc/x:objectDesc[@form = 'pothi']">
+        <xsl:when test="ancestor::x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:physDesc/x:objectDesc[@form = 'pothi']">
             <xsl:text>folio </xsl:text>
         </xsl:when>
-<xsl:when test="/x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:physDesc/x:objectDesc[@form = 'book']">
+<xsl:when test="ancestor::x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:physDesc/x:objectDesc[@form = 'book']">
             <xsl:text>page </xsl:text>
         </xsl:when>
         </xsl:choose>
@@ -760,6 +760,12 @@
                         <xsl:value-of select="$func"/>
                     </xsl:otherwise>
                 </xsl:choose>
+            </xsl:if>
+            <xsl:if test="@corresp">
+                <xsl:variable name="cleanid" select="substring-after(@corresp,'#')"/>
+                <xsl:text> (</xsl:text>
+                <xsl:value-of select="ancestor::x:TEI//x:msItem[@xml:id = $cleanid]/x:title"/>
+                <xsl:text>)</xsl:text>
             </xsl:if>
             <xsl:if test="@cert">
                 <xsl:text> (</xsl:text><xsl:value-of select="@cert"/><xsl:text> certainty)</xsl:text>

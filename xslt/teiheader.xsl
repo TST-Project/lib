@@ -361,7 +361,7 @@
 <xsl:template match="x:msItem">
   <table class="msItem">
     <xsl:attribute name="data-synch"><xsl:value-of select="@synch"/></xsl:attribute>
-    <xsl:variable name="thisid" select="@xml:id"/>
+    <xsl:variable name="thisid" select="concat('#',@xml:id)"/>
     <xsl:variable name="source" select="@source"/>
     <xsl:call-template name="msItemHeader"/>
     <!--xsl:apply-templates/-->
@@ -379,31 +379,31 @@
     </xsl:for-each>
     <xsl:apply-templates select="x:textLang"/>
     <xsl:apply-templates select="x:filiation"/>
-    <xsl:for-each select="x:rubric | //x:text[@corresp=concat('#',$thisid)]//x:seg[@function='rubric']">
+    <xsl:for-each select="x:rubric | //x:text[@corresp=$thisid]//x:seg[@function='rubric']">
          <xsl:call-template name="excerpt">
             <xsl:with-param name="header">Rubric / Namaskāra</xsl:with-param>
             <xsl:with-param name="xmllang" select="@xml:lang"/>
         </xsl:call-template>
     </xsl:for-each>
-    <xsl:for-each select="x:incipit | //x:text[@corresp=concat('#',$thisid)]//x:seg[@function='incipit']">
+    <xsl:for-each select="x:incipit | //x:text[@corresp=$thisid]//x:seg[@function='incipit' and not(@corresp)] | //x:text//x:seg[@function='incipit' and @corresp=$thisid]">
          <xsl:call-template name="excerpt">
             <xsl:with-param name="header">Incipit</xsl:with-param>
             <xsl:with-param name="xmllang" select="@xml:lang"/>
         </xsl:call-template>
     </xsl:for-each>
-    <xsl:for-each select="x:explicit | //x:text[@corresp=concat('#',$thisid)]//x:seg[@function='explicit']">
+    <xsl:for-each select="x:explicit | //x:text[@corresp=$thisid]//x:seg[@function='explicit' and not(@corresp)] | //x:text//x:seg[@function='explicit' and @corresp=$thisid]">
          <xsl:call-template name="excerpt">
             <xsl:with-param name="header">Explicit</xsl:with-param>
             <xsl:with-param name="xmllang" select="@xml:lang"/>
         </xsl:call-template>
     </xsl:for-each>
-    <xsl:for-each select="x:finalRubric | //x:text[@corresp=concat('#',$thisid)]//x:seg[@function='completion-statement']">
+    <xsl:for-each select="x:finalRubric | //x:text[@corresp=$thisid]//x:seg[@function='completion-statement' and not(@corresp)] | //x:text//x:seg[@function='completion-statement' and @corresp=$thisid]">
          <xsl:call-template name="excerpt">
             <xsl:with-param name="header">Completion statement</xsl:with-param>
             <xsl:with-param name="xmllang" select="@xml:lang"/>
          </xsl:call-template>
     </xsl:for-each>
-    <xsl:for-each select="x:colophon | //x:text[@corresp=concat('#',$thisid)]//x:seg[@function='colophon']">
+    <xsl:for-each select="x:colophon | //x:text[@corresp=$thisid]//x:seg[@function='colophon' and not(@corresp)] | //x:text//x:seg[@function='colophon' and @corresp=$thisid]">
          <xsl:call-template name="excerpt">
             <xsl:with-param name="header">Colophon</xsl:with-param>
             <xsl:with-param name="xmllang" select="@xml:lang"/>
