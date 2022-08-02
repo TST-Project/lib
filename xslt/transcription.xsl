@@ -22,7 +22,7 @@
             <xsl:attribute name="class">texttitle</xsl:attribute>
             <xsl:element name="tr">
                 <xsl:element name="td">
-                    <xsl:variable name="title" select="//x:msItem[@xml:id=$textid]/x:title"/>
+                    <xsl:variable name="title" select="ancestor::x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msContents/x:msItem[@xml:id=$textid]/x:title"/>
                     <xsl:attribute name="lang"><xsl:value-of select="$title/@xml:lang"/></xsl:attribute>
                     <span class="line-view-icon" title="diplomatic display">
                         <svg height='25px' width='25px' fill="#000000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 512 512"><g id="#hamburger"><g><g><path d="M486,493H26c-3.866,0-7-3.134-7-7V26c0-3.866,3.134-7,7-7h460c3.866,0,7,3.134,7,7v460C493,489.866,489.866,493,486,493z      M33,479h446V33H33V479z"></path></g><g><path d="M436,133H86c-3.866,0-7-3.134-7-7s3.134-7,7-7h350c3.866,0,7,3.134,7,7S439.866,133,436,133z"></path></g><g><path d="M436,263H86c-3.866,0-7-3.134-7-7s3.134-7,7-7h350c3.866,0,7,3.134,7,7S439.866,263,436,263z"></path></g><g><path d="M436,393H86c-3.866,0-7-3.134-7-7s3.134-7,7-7h350c3.866,0,7,3.134,7,7S439.866,393,436,393z"></path></g></g></g></svg>
@@ -558,7 +558,7 @@
         </xsl:attribute>
         <xsl:attribute name="lang">en</xsl:attribute>
         <xsl:variable name="facs" select="@facs"/>
-        <xsl:variable name="unit" select="//x:extent/x:measure/@unit"/>
+        <xsl:variable name="unit" select="ancestor::x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:physDesc/x:objectDesc/x:supportDesc/x:extent/x:measure/@unit"/>
         <!--xsl:if test="$excerpt = 'no' and @break = 'no'">
             <xsl:attribute name="data-nobreak"/>
         </xsl:if-->
@@ -764,7 +764,7 @@
             <xsl:if test="@corresp">
                 <xsl:variable name="cleanid" select="substring-after(@corresp,'#')"/>
                 <xsl:text> (</xsl:text>
-                <xsl:value-of select="ancestor::x:TEI//x:msItem[@xml:id = $cleanid]/x:title"/>
+                <xsl:value-of select="ancestor::x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msContents/x:msItem[@xml:id = $cleanid]/x:title"/>
                 <xsl:text>)</xsl:text>
             </xsl:if>
             <xsl:if test="@cert">
