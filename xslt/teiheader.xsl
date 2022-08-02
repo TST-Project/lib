@@ -345,14 +345,8 @@
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:attribute>
-            <xsl:if test="local-name() = 'seg' and not(./*[1]/@facs)">
-                <xsl:variable name="milestone" select="preceding::*[(local-name() = 'milestone' and (@unit = 'folio' or @unit = 'page') ) or local-name() = 'pb'][1]"/>
-                <xsl:if test="$milestone">
-                    <xsl:apply-templates select="$milestone">
-                        <xsl:with-param name="excerpt">yes</xsl:with-param>
-                    </xsl:apply-templates>
-                </xsl:if>
-            </xsl:if>
+            <xsl:call-template name="import-milestone"/>
+            <xsl:call-template name="import-lb"/>
             <xsl:apply-templates/>
         </td>
      </tr>
@@ -1088,29 +1082,8 @@
                     <xsl:attribute name="lang">
                         <xsl:value-of select="ancestor-or-self::*[@xml:lang][1]/@xml:lang"/>
                     </xsl:attribute>
-                    <xsl:if test="not(./*[1]/@facs)">
-                        <xsl:variable name="milestone" select="preceding::*[(local-name() = 'milestone' and (@unit = 'folio' or @unit = 'page') ) or local-name() = 'pb'][1]"/>
-                        <xsl:if test="$milestone">
-                            <xsl:apply-templates select="$milestone">
-                                <xsl:with-param name="excerpt">yes</xsl:with-param>
-                            </xsl:apply-templates>
-                        </xsl:if>
-                    </xsl:if>
-                    <xsl:if test="not(./*[1][local-name() = 'lb' or local-name() = 'pb' or local-name() = 'milestone' or local-name() = 'cb'] or ./*[1]/x:lb or ./*[1]/x:pb or ./*[1]/x:cb or ./*[1]/x:milestone)">
-                        <xsl:variable name="lb" select="preceding::*[(local-name() = 'lb')][1]"/>
-                        <xsl:if test="$lb">
-                            <xsl:apply-templates select="$lb">
-                                <xsl:with-param name="hyphen">no</xsl:with-param>
-                            </xsl:apply-templates>
-                            <xsl:element name="span">
-                                <xsl:attribute name="lang">en</xsl:attribute>
-                                <xsl:attribute name="class">gap ellipsis</xsl:attribute>
-                                <xsl:attribute name="data-anno">gap (ellipsis)</xsl:attribute>
-                                <xsl:text>…</xsl:text>
-                            </xsl:element>
-                            <xsl:text> </xsl:text>
-                        </xsl:if>
-                    </xsl:if>
+                    <xsl:call-template name="import-milestone"/>
+                    <xsl:call-template name="import-lb"/>
                     <xsl:apply-templates/>
                 </li>
             </ul>
@@ -1377,4 +1350,32 @@
 
 <xsl:template match="x:sourceDoc"/>
 
+<xsl:template name="import-milestone">
+    <xsl:if test="self::x:seg and not(./*[1]/@facs)">
+        <xsl:variable name="milestone" select="preceding::*[(self::x:milestone and (@unit = 'folio' or @unit = 'page') ) or self::x:pb][1]"/>
+        <xsl:if test="$milestone">
+            <xsl:apply-templates select="$milestone">
+                <xsl:with-param name="excerpt">yes</xsl:with-param>
+            </xsl:apply-templates>
+        </xsl:if>
+    </xsl:if>
+</xsl:template>
+
+<xsl:template name="import-lb">
+    <xsl:if test="self::x:seg and not(./*[1][self::x:lb or self::x:pb or self::x:milestone or self::x:cb] or ./*[1]/x:lb or ./*[1]/x:pb or ./*[1]/x:cb or ./*[1]/x:milestone)">
+        <xsl:variable name="lb" select="preceding::*[self::x:lb][1]"/>
+        <xsl:if test="$lb">
+            <xsl:apply-templates select="$lb">
+                <xsl:with-param name="hyphen">no</xsl:with-param>
+            </xsl:apply-templates>
+            <xsl:element name="span">
+                <xsl:attribute name="lang">en</xsl:attribute>
+                <xsl:attribute name="class">gap ellipsis</xsl:attribute>
+                <xsl:attribute name="data-anno">gap (ellipsis)</xsl:attribute>
+                <xsl:text>…</xsl:text>
+            </xsl:element>
+            <xsl:text> </xsl:text>
+        </xsl:if>
+    </xsl:if>
+</xsl:template>
 </xsl:stylesheet>
