@@ -37,7 +37,8 @@ const output = {
         const title = template.querySelector('title');
         const ptitle = opts && opts.name ? opts.name[0].toUpperCase() + opts.name.slice(1) : 'Manuscripts';
         title.textContent = `${title.textContent}: ${ptitle}`;
-        const pdesc = opts?.prefix ? descriptions.getElementById(opts.prefix) : null;
+        const prefix_sanitized = opts?.prefix?.replace(/\s/g,'_');
+        const pdesc = prefix_sanitized ? descriptions.getElementById(prefix_sanitized) : null;
         if(pdesc) template.querySelector('article').prepend(pdesc);
         const table = template.getElementById('index');
         const thead = opts && opts.prefix ? 
@@ -98,8 +99,8 @@ const output = {
     if(opts && opts.prefix) ths[1].classList.add('sorttable_alphanum');
     */
 
-    const fname = opts && opts.prefix ?
-        opts.prefix.toLowerCase() + '.html' :
+    const fname = prefix_sanitized ?
+        prefix_sanitized.toLowerCase() + '.html' :
         'index.html';
     fs.writeFileSync(`../${fname}`,template.documentElement.outerHTML,{encoding: 'utf8'});
     },
