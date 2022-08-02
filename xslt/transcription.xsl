@@ -58,6 +58,7 @@
 
 <xsl:template match="x:body/x:ab">
     <xsl:element name="div">
+        <xsl:attribute name="class">ab</xsl:attribute>
         <xsl:call-template name="lang"/>
         <xsl:apply-templates/>
     </xsl:element>
