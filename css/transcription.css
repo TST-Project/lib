@@ -566,3 +566,7 @@ rb {
 .paratext:hover {
     background: rgba(239,239,61,0.5);
 }
+
+.paratext:hover .lg:not(.diplo) {
+    background: rgba(239,239,61,0.5);
+}
