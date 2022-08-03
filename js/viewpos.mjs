@@ -9,7 +9,8 @@ const viewPos = (function() {
     };
 
     const get = function(par) {
-        const els = par.querySelectorAll('#summary,tr,span.milestone,span.lb,span.locus');
+        const els = par.querySelectorAll('div');
+        //const els = par.querySelectorAll('#summary,tr,span.milestone,span.lb,span.locus');
         var midEl = null;
         var lastDist;
         var currDist = null;
