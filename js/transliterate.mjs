@@ -290,6 +290,7 @@ const Transliterate = (function() {
             else {
                 for(const s of subst)
                     this.jiggle(s);
+                this.convertNums();
                 this.activate();
                 button.transliterate();
             }
@@ -322,6 +323,19 @@ const Transliterate = (function() {
                     }
                 }
                 curnode = walker.nextNode();
+            }
+        },
+        
+        convertNums() {
+            const nums = _state.parEl.querySelectorAll('span.num.trad[lang="ta-Latn-t-ta-Taml"], span.num.trad[lang="sa-Latn-t-sa-Gran"], span.num.trad[lang="sa-Latn-t-sa-Mlym"]');
+            for(const num of nums) {
+                const walker = document.createTreeWalker(num,NodeFilter.SHOW_TEXT,
+                    {acceptNode() {return NodeFilter.FILTER_ACCEPT;} });
+                var curnode = walker.currentNode;
+                while(walker.nextNode()) {
+                    const curnode = walker.currentNode;
+                    curnode.data = to.nums(curnode.data);
+                }
             }
         },
 
@@ -590,6 +604,28 @@ const Transliterate = (function() {
             });
 
             return text;
+        },
+        
+        nums: function(text) {
+            const newarr = [];
+            const rev = text.split('').reverse();
+            let offset = 0;
+            for(let i=0; i < rev.length; i++) {
+                const num = rev[i];
+                const reps = i - offset;
+                if(/[23456789]/.test(num))
+                    newarr.unshift(num + '⁰'.repeat(reps));
+                else if(num === '1') {
+                    if(reps === 0) newarr.unshift('1');
+                    else newarr.unshift('\u200c'+'⁰'.repeat(reps));
+                }
+                else if(num !== '0') {
+                    newarr.unshift(num);
+                    offset = i+1;
+                }
+                if(reps === 3) offset = i+1; // only goes up to 1000
+            }
+            return newarr.join('');
         },
 
         iast: function(text,from) {

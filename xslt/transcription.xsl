@@ -895,4 +895,22 @@
         <xsl:apply-templates/>
     </xsl:element>
 </xsl:template>
+
+<xsl:template match="x:num">
+    <xsl:element name="span">
+        <xsl:call-template name="lang"/>
+        <xsl:choose>
+            <xsl:when test="@rend='traditional'">
+                <xsl:attribute name="class">num trad</xsl:attribute>
+                <xsl:attribute name="data-anno">traditional numerals</xsl:attribute>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:attribute name="class">num</xsl:attribute>
+                <xsl:attribute name="data-anno">number</xsl:attribute>
+            </xsl:otherwise>
+        </xsl:choose>
+        <xsl:apply-templates/>
+    </xsl:element>
+</xsl:template>
+
 </xsl:stylesheet>

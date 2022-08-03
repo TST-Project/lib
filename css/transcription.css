@@ -418,6 +418,14 @@ span.gaiji {
     */
 }
 
+span.num.trad {
+    display: inline;
+    position: relative;
+    background-image: url('../img/squiggle-blue.png');
+    background-position: bottom 0.1em right 0;
+    background-repeat: repeat-x;
+}
+
 span.pointer {
     opacity: 0.6;
 }
@@ -483,7 +491,7 @@ a.locus:hover {
     color: #0C5083;
 }
 
-span.metamark, span.num {
+span.metamark {
      color: #0000CC;
 }
 
