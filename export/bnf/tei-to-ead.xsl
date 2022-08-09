@@ -381,23 +381,32 @@
         <p><xsl:text>This catalogue entry has been adapted from:</xsl:text></p>
         <p>
             <bibref>
-                <xsl:variable name="name" select="x:teiHeader/x:fileDesc/x:titleStmt/x:editor/x:persName"/>
-                <xsl:variable name="surname" select="$name/x:surname"/>
-                <xsl:variable name="forename" select="$name/x:forename"/>
-                <xsl:choose>
-                    <xsl:when test="$surname">
-                        <xsl:value-of select="$surname"/>
-                        <xsl:text>, </xsl:text>
-                        <xsl:value-of select="$forename"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:variable name="first" select="substring-before($name,' ')"/>
-                        <xsl:variable name="last" select="substring-after($name,' ')"/>
-                        <xsl:value-of select="$last"/>
-                        <xsl:text>, </xsl:text>
-                        <xsl:value-of select="$first"/>
-                    </xsl:otherwise>
-                </xsl:choose>
+                <xsl:for-each select="x:teiHeader/x:fileDesc/x:titleStmt/x:editor/x:persName">
+                    <xsl:choose>
+                        <xsl:when test="position() = last() and not(position() = 1)">
+                            <xsl:text> &amp; </xsl:text>
+                        </xsl:when>
+                        <!-- TODO more than two authors -->
+                        <xsl:otherwise/>
+                    </xsl:choose>
+                    <xsl:variable name="name" select="."/>
+                    <xsl:variable name="surname" select="$name/x:surname"/>
+                    <xsl:variable name="forename" select="$name/x:forename"/>
+                    <xsl:choose>
+                        <xsl:when test="$surname">
+                            <xsl:value-of select="$surname"/>
+                            <xsl:text>, </xsl:text>
+                            <xsl:value-of select="$forename"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:variable name="first" select="substring-before($name,' ')"/>
+                            <xsl:variable name="last" select="substring-after($name,' ')"/>
+                            <xsl:value-of select="$last"/>
+                            <xsl:text>, </xsl:text>
+                            <xsl:value-of select="$first"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:for-each>
                 <xsl:text>. </xsl:text>
                 <xsl:value-of select="x:teiHeader/x:fileDesc/x:publicationStmt/x:date"/>
                 <xsl:text>. </xsl:text>
