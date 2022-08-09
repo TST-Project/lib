@@ -335,10 +335,10 @@
             <emph render="bold"><xsl:text>{}</xsl:text></emph><xsl:text> indicates a note. </xsl:text>
         </xsl:if>
         <xsl:if test="//x:space[not(@type='vacat')]">
-            <emph render="bold">[_]</emph><xsl:text> indicates spaces. </xsl:text>
+            <emph render="bold">[</emph>_<emph render="bold">]</emph><xsl:text> indicates spaces. </xsl:text>
         </xsl:if>
         <xsl:if test="//x:space[@type='vacat']">
-            <emph render="bold">[vacat]</emph><xsl:text> indicates the scribe deliberately left a space. </xsl:text>
+            <emph render="bold">[</emph>vacat<emph render="bold">]</emph><xsl:text> indicates the scribe deliberately left a space. </xsl:text>
         </xsl:if>
         <xsl:if test="//x:gap[@reason='ellipsis']">
             <xsl:text>[…] indicates an ellipsis. </xsl:text>
@@ -668,11 +668,12 @@
         <xsl:text>]</xsl:text>
 </xsl:template>
 <xsl:template match="x:space">
+    <emph render="bold">[</emph>
     <xsl:choose>
         <xsl:when test="count(./*) &gt; 0">
             <xsl:apply-templates/>
         </xsl:when>
-        <xsl:when test="@type='vacat'"><xsl:text>[vacat]</xsl:text></xsl:when>
+        <xsl:when test="@type='vacat'"><xsl:text>vacat</xsl:text></xsl:when>
         <xsl:otherwise>
             <xsl:text>_</xsl:text>
             <xsl:choose>
@@ -695,6 +696,7 @@
             </xsl:choose>
         </xsl:otherwise>
     </xsl:choose>
+    <emph render="bold">]</emph>
 </xsl:template>
 
 <xsl:template match="x:sic | x:surplus">
