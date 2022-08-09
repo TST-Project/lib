@@ -9,6 +9,7 @@
 <xsl:variable name="bnfDefs">
 
 <tst:roles>
+    <tst:entry key="addressee">0290</tst:entry>
     <tst:entry key="author">0070</tst:entry>
     <tst:entry key="binder">4140</tst:entry>
     <tst:entry key="collector">4010</tst:entry>

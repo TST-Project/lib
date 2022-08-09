@@ -1121,6 +1121,7 @@
         </xsl:call-template>
         <xsl:text>. </xsl:text>
     </xsl:if>
+    <xsl:apply-templates/>
 </xsl:template>
 
 <xsl:template match="x:handNote/@scribeRef | x:typeNote/@scribeRef">
@@ -1129,6 +1130,10 @@
         <xsl:value-of select="$TST/tst:scribes/tst:entry[@key=$scribe]"/>
         <xsl:text>. </xsl:text>
     </xsl:if>
+</xsl:template>
+
+<xsl:template match="x:handNote/x:desc | x:typeNote/x:desc">
+    <xsl:apply-templates/>
 </xsl:template>
 
 <xsl:template match="x:origPlace">
