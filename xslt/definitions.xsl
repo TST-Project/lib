@@ -471,6 +471,7 @@
 </tst:milestones>
 
 <tst:persroles>
+    <tst:entry key="addressee">addressee</tst:entry>
     <tst:entry key="annotator">annotator</tst:entry>
     <tst:entry key="author">author</tst:entry>
     <tst:entry key="binder">binder</tst:entry>
