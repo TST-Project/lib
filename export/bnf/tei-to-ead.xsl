@@ -23,7 +23,7 @@
 </xsl:template>
 
 <xsl:template name="shelfmark">
-    <xsl:value-of select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msIdentifier/x:idno[@type='shelfmark']"/>
+    <xsl:value-of select="ancestor-or-self::x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msIdentifier/x:idno[@type='shelfmark']"/>
 </xsl:template>
 
 <xsl:template name="tsturl">
@@ -126,7 +126,22 @@
         <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msIdentifier/x:idno[@type='alternate']/x:idno"/>
         <unittitle><xsl:apply-templates select="x:teiHeader/x:fileDesc/x:titleStmt/x:title"/></unittitle>
         <unittitle type="non-latin originel"><xsl:copy-of select="x:teiHeader/x:fileDesc/x:titleStmt/x:title"/></unittitle>
-        <langmaterial>Manuscript in <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msContents/x:msItem[1]/x:textLang"/>.</langmaterial>
+        <langmaterial>
+            <xsl:variable name="tech" select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:physDesc/x:objectDesc/rend"/>
+            <xsl:choose>
+                <xsl:when test="$tech">
+                    <xsl:call-template name="capitalize">
+                        <xsl:with-param name="str"><xsl:value-of select="$tech"/></xsl:with-param>
+                    </xsl:call-template>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:text>Manuscript</xsl:text>
+                </xsl:otherwise>
+            </xsl:choose>
+            <xsl:text> in </xsl:text>
+            <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msContents/x:msItem[1]/x:textLang"/>
+            <xsl:text>.</xsl:text>
+        </langmaterial>
         <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:history/x:origin/x:origDate[1]"/>
         <physdesc>
             <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:history/x:origin/x:origPlace"/>
@@ -157,10 +172,11 @@
         </p>
         <xsl:for-each select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msContents/x:msItem">
             <xsl:choose>
-                <xsl:when test="not[@source]">
-                    <xsl:apply-templates/>
+                <xsl:when test="not(@source)">
+                    <xsl:apply-templates select="."/>
                 </xsl:when>
                 <xsl:otherwise>
+                    <xsl:text>YES</xsl:text>
                     <p> 
                         <xsl:call-template name="msItemHeader"/>
                     </p>
@@ -222,11 +238,18 @@
     </item>
 </xsl:template>
 <xsl:template name="more-additions">
-    <xsl:variable name="ps" select="ancestor::x:TEI/x:text//x:seg[@function != 'rubric' and 
-                                    @function != 'incipit' and
-                                    @function != 'explicit' and
-                                    @function != 'completion-statement' and
-                                    @function != 'colophon' and not(ancestor::x:seg)]"/>
+    <xsl:variable name="ps" select="ancestor::x:TEI/x:text//x:seg[
+                                @function != 'rubric' and 
+                                @function != 'incipit' and
+                                @function != 'explicit' and
+                                @function != 'completion-statement' and
+                                @function != 'colophon' and 
+                                not(ancestor::x:seg)] |
+                                ancestor::x:TEI/x:text//x:seg[@function = 'rubric']/x:seg |
+                                ancestor::x:TEI/x:text//x:seg[@function = 'incipit']/x:seg |
+                                ancestor::x:TEI/x:text//x:seg[@function = 'explicit']/x:seg |
+                                ancestor::x:TEI/x:text//x:seg[@function = 'completion-statement']/x:seg |
+                                ancestor::x:TEI/x:text//x:seg[@function = 'colophon']/x:seg"/>
     <xsl:if test="node()[not(self::text())] or $ps">
         <xsl:for-each select="$ps">
             <item>
@@ -463,33 +486,33 @@
 </xsl:template>
 
 <xsl:template match="x:msItem">
-    <xsl:variable name="thisid" select="@xml:id"/>
+    <xsl:variable name="thisid" select="concat('#',@xml:id)"/>
     <p> 
         <xsl:call-template name="msItemHeader"/>
-        <xsl:variable name="items" select="x:rubric or x:incipit or x:explicit or x:finalRubric or x:colophon or ancestor::x:TEI/x:text[@corresp=concat('#',$thisid)]//x:seg[@function='rubric' or @function='incipit' or @function='explicit' or @function='finalRubric' or @function='colophon']"/>
+        <xsl:variable name="items" select="x:rubric or x:incipit or x:explicit or x:finalRubric or x:colophon or ancestor::x:TEI/x:text[@corresp=$thisid]//x:seg[@function='rubric' or @function='incipit' or @function='explicit' or @function='finalRubric' or @function='colophon']"/>
         <xsl:if test="$items">
             <list>
-                <xsl:for-each select="x:rubric | ancestor::x:TEI/x:text[@corresp=concat('#',$thisid)]//x:seg[@function='rubric']">
+                <xsl:for-each select="x:rubric | ancestor::x:TEI/x:text[@corresp=$thisid]//x:seg[@function='rubric' and not(@corresp)] | ancestor::x:TEI/x:text//x:seg[@function='rubric' and @corresp=$thisid]">
                      <xsl:call-template name="excerpt">
                         <xsl:with-param name="header">Rubric</xsl:with-param>
                     </xsl:call-template>
                 </xsl:for-each>
-                <xsl:for-each select="x:incipit | ancestor::x:TEI/x:text[@corresp=concat('#',$thisid)]//x:seg[@function='incipit']">
+                <xsl:for-each select="x:incipit | ancestor::x:TEI/x:text[@corresp=$thisid]//x:seg[@function='incipit' and not(@corresp)] | ancestor::x:TEI/x:text//x:seg[@function='incipit' and @corresp=$thisid]">
                      <xsl:call-template name="excerpt">
                         <xsl:with-param name="header">Incipit</xsl:with-param>
                     </xsl:call-template>
                 </xsl:for-each>
-                <xsl:for-each select="x:explicit | ancestor::x:TEI/x:text[@corresp=concat('#',$thisid)]//x:seg[@function='explicit']">
+                <xsl:for-each select="x:explicit | ancestor::x:TEI/x:text[@corresp=$thisid]//x:seg[@function='explicit' and not(@corresp)] | ancestor::x:TEI/x:text//x:seg[@function='explicit' and @corresp=$thisid]">
                      <xsl:call-template name="excerpt">
                         <xsl:with-param name="header">Explicit</xsl:with-param>
                     </xsl:call-template>
                 </xsl:for-each>
-                <xsl:for-each select="x:finalRubric | ancestor::x:TEI/x:text[@corresp=concat('#',$thisid)]//x:seg[@function='completion-statement']">
+                <xsl:for-each select="x:finalRubric | ancestor::x:TEI/x:text[@corresp=$thisid]//x:seg[@function='completion-statement' and not(@corresp)] | ancestor::x:TEI/x:text//x:seg[@function='completion-statement' and @corresp=$thisid]">
                      <xsl:call-template name="excerpt">
                         <xsl:with-param name="header">Completion statement</xsl:with-param>
                      </xsl:call-template>
                 </xsl:for-each>
-                <xsl:for-each select="x:colophon | ancestor::x:TEI/x:text[@corresp=concat('#',$thisid)]//x:seg[@function='colophon']">
+                <xsl:for-each select="x:colophon | ancestor::x:TEI/x:text[@corresp=$thisid]//x:seg[@function='colophon' and not(@corresp)] | ancestor::x:TEI/x:text//x:seg[@function='colophon' and @corresp=$thisid]">
                      <xsl:call-template name="excerpt">
                         <xsl:with-param name="header">Colophon</xsl:with-param>
                      </xsl:call-template>
@@ -713,6 +736,10 @@
 <xsl:template match="x:binding/x:p |x:binding//x:material">
     <xsl:apply-templates/>
 </xsl:template>
+<xsl:template match="x:binding/x:decoNote">
+    <xsl:text> </xsl:text>
+    <xsl:apply-templates/>
+</xsl:template>
 <xsl:template match="x:binding">
     <physfacet type="reliure">
         <xsl:apply-templates select="./node()[not(self::text())]"/>
@@ -895,11 +922,12 @@
 <!-- EAD doesn't allow persname in emph -->
 <xsl:template match="x:persName">
     <xsl:variable name="txt" select="text()"/>
+    <xsl:variable name="norm" select="@key"/>
     <xsl:choose>
         <xsl:when test="@role">
             <xsl:variable name="tstrole" select="@role"/>
             <xsl:variable name="role" select="$BnF/tst:roles/tst:entry[@key=$tstrole]"/>
-            <xsl:variable name="found" select="$personnames//x:person/x:persName[text() = $txt]"/>
+            <xsl:variable name="found" select="$personnames//x:person/x:persName[text() = $norm] | $personnames//x:person/x:persName[text() = $txt]"/>
             <xsl:element name="persname">
                 <xsl:if test="$role">
                     <xsl:attribute name="role"><xsl:value-of select="$role"/></xsl:attribute>
