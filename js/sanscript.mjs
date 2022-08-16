@@ -226,7 +226,7 @@ var schemes = Sanscript.schemes = {
         devanagari: {
             // "Independent" forms of the vowels. These are used whenever the
             // vowel does not immediately follow a consonant.
-            vowels: 'अ आ इ ई उ ऊ ऋ ॠ ऌ ॡ ऎ ए ऐ ऒ ओ औ ए ऐ ओ औ'.split(' '),
+            vowels: 'अ आ इ ई उ ऊ ऋ ॠ ऌ ॡ ऎ ए ऐ ऒ ओ औ'.split(' '),
 
             // "Dependent" forms of the vowels. These are used whenever the
             // vowel immediately follows a consonant. If a letter is not
@@ -243,7 +243,7 @@ var schemes = Sanscript.schemes = {
 
             // Various Sanskrit consonants and consonant clusters. Every token
             // here has an explicit vowel. Thus "क" is "ka" instead of "k".
-            consonants: ['क','ख','ग','घ','ङ','च','छ','ज','झ','ञ','ट','ठ','ड','ढ','ण','त','थ','द','ध','न','प','फ','ब','भ','म', 'य','र','ल','व','श','ष','स','ह','ळ','ऴ','ऱ','ऩ','य़'],
+            consonants: ['क','ख','ग','घ','ङ','च','छ','ज','झ','ञ','ट','ठ','ड','ढ','ण','त','थ','द','ध','न','प','फ','ब','भ','म', 'य','र','ल','व','श','ष','स','ह','ळ','ऴ','ऱ','ऩ','य़','क़','ख़','ग़','ज़','झ़','फ़','ड़','ढ़','थ़','ध़','व़'],
 
             // Numbers and punctuation
             symbols: '० १ २ ३ ४ ५ ६ ७ ८ ९ ॐ ꣽ ऽ । ॥'.split(' '),
@@ -291,7 +291,7 @@ var schemes = Sanscript.schemes = {
             //skip: ['_'],
             //consonants: 'k kh g gh ṅ c ch j jh ñ ṭ ṭh ḍ ḍh ṇ t th d dh n p ph b bh m y r l v ś ṣ s h ḻ kṣ jñ'.split(' '),
             //symbols: "0 1 2 3 4 5 6 7 8 9 oṁ ' | ||".split(' '),
-            consonants: 'k kh g gh ṅ c ch j jh ñ ṭ ṭh ḍ ḍh ṇ t th d dh n p ph b bh m y r l v ś ṣ s h ḻ l̥ ṟ ṉ ẏ'.split(' '),
+            consonants: 'k kh g gh ṅ c ch j jh ñ ṭ ṭh ḍ ḍh ṇ t th d dh n p ph b bh m y r l v ś ṣ s h ḻ l̥ ṟ ṉ ẏ q qh ġ z zh f ṙ ṙh ṫh ḋh w'.split(' '),
             symbols: '0 1 2 3 4 5 6 7 8 9 oṁ oḿ \' | || ⁰ ⁰⁰ ⁰⁰⁰'.split(' '),
         }
     },
