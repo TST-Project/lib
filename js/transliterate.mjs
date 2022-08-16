@@ -657,7 +657,7 @@ const Transliterate = (function() {
             if(f !== 'tamil')
                 return literated.replace(/e/g,'ĕ')
                                 .replace(/ē/g,'e')
-                                .replace(/o(?!=ṁ)/g,'ǒ')
+                                .replace(/o(?!ṁ)/g,'ǒ')
                                 .replace(/ō/,'o');
             else return literated;
         },
