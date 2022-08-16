@@ -132,7 +132,7 @@ const Transliterate = (function() {
             const nbsp = String.fromCodePoint('0x0A0');
             const txt = txtnode.data
                 .replace(/\s+([\|।॥])/g,`${nbsp}$1`)
-                .replace(/([\|।॥])\s+(?=[\d❈꣸৽৽])/g,`$1${nbsp}`);
+                .replace(/([\|।॥])\s+(?=[\d०१२३४५६७८९❈꣸৽৽])/g,`$1${nbsp}`);
             
             const getShortLang = (node) => {
                 const s = node.lang.split('-t-');
