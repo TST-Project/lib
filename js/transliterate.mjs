@@ -658,7 +658,7 @@ const Transliterate = (function() {
                 return literated.replace(/e/g,'ĕ')
                                 .replace(/ē/g,'e')
                                 .replace(/o(?!ṁ)/g,'ǒ')
-                                .replace(/ō/,'o');
+                                .replace(/ō/g,'o');
             else return literated;
         },
         
