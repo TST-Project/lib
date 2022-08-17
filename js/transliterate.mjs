@@ -41,6 +41,7 @@ const Transliterate = (function() {
     };
 
     _state.hyphenator['mr-Latn'] = _state.hyphenator['sa-Latn'];
+    _state.hyphenator['mr-Deva'] = _state.hyphenator['hi-Deva'];
     _state.hyphenator['hi-Latn'] = _state.hyphenator['sa-Latn'];
     
     _state.isoToScript = new Map();
@@ -151,7 +152,7 @@ const Transliterate = (function() {
                     // TODO: also deal with 'sa-Beng', 'sa-Deva', etc.
                     return to.iast(hyphenated);
                 }
-                else if(shortlang === 'hi-Deva') {
+                else if(shortlang === 'hi-Deva' || shortlang === 'mr-Deva') {
                     return to.iast(hyphenated,'devanagari');
                 }
                 else return hyphenated;
@@ -276,6 +277,10 @@ const Transliterate = (function() {
                     else if(curnode.lang === 'hi-Deva') {
                         curnode.classList.add('originalscript');
                         curnode.lang = 'hi-Latn-t-hi-Deva';
+                    }
+                    else if(curnode.lang === 'mr-Deva') {
+                        curnode.classList.add('originalscript');
+                        curnode.lang = 'mr-Latn-t-mr-Deva';
                     }
                 }
                 else {
