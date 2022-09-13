@@ -121,6 +121,7 @@
     <tst:entry key="telugu">telugu</tst:entry>
     <tst:entry key="tamil">tamil</tst:entry>
     <tst:entry key="dbucan">uchen</tst:entry>
+    <tst:entry key="dbumed">ume</tst:entry>
 </tst:script>
 
 <tst:scriptRef>
