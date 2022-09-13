@@ -171,6 +171,10 @@ body {
     font-family: Brill, et-book, "Noto Serif Tamil", "TST Grantha", "Bangla", "PedanticDevanagari", "PedanticMalayalam", "PedanticTelugu", "Noto Sans Newa", "Satisar Sharada", "Tibetan Machine Uni", "Noto Sans Nandinagari", Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
     hyphens: auto;
 }
+
+p:lang(bo), p:lang(bod) {
+    line-height: 3rem;
+}
 /*
 .teitext :lang(sa-Beng) {
     font-size: 1.8rem;
