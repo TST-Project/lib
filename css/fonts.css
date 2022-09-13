@@ -125,6 +125,7 @@
 @font-face {
     font-family: 'Tibetan Machine Uni';
     src: url('../fonts/TibMachUni-1.901b.ttf');
+    size-adjust: 120%;
     unicode-range: U+0F00-0FFF;
 }
 
@@ -160,12 +161,12 @@
 :lang(sa-Shrd) {
     font-feature-settings: "ss01" 1;
 }
-
-:lang(bod) {
+/*
+:lang(bod), :lang(bo) {
     font-size: 1.9rem;
     line-height: 4rem;
 }
-
+*/
 body {
     font-family: Brill, et-book, "Noto Serif Tamil", "TST Grantha", "Bangla", "PedanticDevanagari", "PedanticMalayalam", "PedanticTelugu", "Noto Sans Newa", "Satisar Sharada", "Tibetan Machine Uni", "Noto Sans Nandinagari", Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
     hyphens: auto;
