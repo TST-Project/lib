@@ -145,7 +145,7 @@
         <tst:entry key="#prsthamatra"><x:foreign xml:lang="sa">pṛṣṭhamātrā</x:foreign></tst:entry>
         <tst:entry key="#vaba"><x:foreign xml:lang="sa">ba</x:foreign> not distinguished</tst:entry>
         <tst:entry key="#sthascha"><x:foreign xml:lang="sa">stha</x:foreign> written as <x:foreign xml:lang="sa">scha</x:foreign></tst:entry>
-        <tst:entry key="#jainaNagari"><x:foreign xml:lang="sa">Jaina</x:foreign> nāgarī</tst:entry>
+        <tst:entry key="#jainaNagari"><x:term xml:lang="sa">Jaina</x:term> nāgarī</tst:entry>
     </tst:group>
     <tst:group label="Malayalam">
         <tst:entry key="#dotReph">dot reph</tst:entry>
