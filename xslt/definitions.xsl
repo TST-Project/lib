@@ -62,6 +62,7 @@
 
 <tst:style>
     <tst:entry key="inline-commentary">inline commentary</tst:entry>
+    <tst:entry key="interlinear-commentary">interlinear commentary</tst:entry>
     <tst:entry key="tripāṭha">tripāṭha</tst:entry>
     <tst:entry key="pañcapāṭha">pañcapāṭha</tst:entry>
 </tst:style>
@@ -144,6 +145,7 @@
         <tst:entry key="#prsthamatra"><x:foreign xml:lang="sa">pṛṣṭhamātrā</x:foreign></tst:entry>
         <tst:entry key="#vaba"><x:foreign xml:lang="sa">ba</x:foreign> not distinguished</tst:entry>
         <tst:entry key="#sthascha"><x:foreign xml:lang="sa">stha</x:foreign> written as <x:foreign xml:lang="sa">scha</x:foreign></tst:entry>
+        <tst:entry key="#jainaNagari"><x:foreign xml:lang="sa">Jaina</x:foreign> nāgarī</tst:entry>
     </tst:group>
     <tst:group label="Malayalam">
         <tst:entry key="#dotReph">dot reph</tst:entry>
@@ -188,9 +190,11 @@
 
 <tst:langs>
     <tst:entry key="ara">Arabic</tst:entry>
+    <tst:entry key="bra">Brajbhasa</tst:entry>
     <tst:entry key="eng">English</tst:entry>
     <tst:entry key="fra">French</tst:entry>
     <tst:entry key="deu">German</tst:entry>
+    <tst:entry key="guj">Gujarati</tst:entry>
     <tst:entry key="hin">Hindi</tst:entry>
     <tst:entry key="lat">Latin</tst:entry>
     <tst:entry key="mal">Malayalam</tst:entry>
@@ -198,6 +202,7 @@
     <tst:entry key="pal">Pali</tst:entry>
     <tst:entry key="por">Portuguese</tst:entry>
     <tst:entry key="pra">Prakrit</tst:entry>
+    <tst:entry key="raj">Rajasthani</tst:entry>
     <tst:entry key="san">Sanskrit</tst:entry>
     <tst:entry key="sin">Sinhalese</tst:entry>
     <tst:entry key="tam">Tamil</tst:entry>
