@@ -291,6 +291,7 @@
 
     <tst:entry key="#bhale_hook">&#x11B03;</tst:entry>
     <tst:entry key="#mindu">&#x11B09;</tst:entry>
+    <tst:entry key="#jain_omkara">&#xA8FD;</tst:entry>
 
     <tst:entry key="#latin_cross">✝</tst:entry>
 </tst:entities>
@@ -395,6 +396,7 @@
 
     <tst:entry key="#bhale_hook">bhale with hook</tst:entry>
     <tst:entry key="#mindu">mīṇḍu</tst:entry>
+    <tst:entry key="#jain_omkara">Jaina oṃkāra</tst:entry>
 
     <tst:entry key="#latin_cross">latin cross</tst:entry>
 </tst:entitynames>
