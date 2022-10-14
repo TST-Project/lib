@@ -9,7 +9,7 @@ import { hyphenation_hi } from './hi.mjs';
 
 const Transliterate = (function() {
     const _state = {
-        availlangs: ['ta','sa','mr','hi'],
+        hindic: ['mr','hi','gu','raj','bra'],
         scriptToIso: new Map([
             ['tamil','Taml'],
             ['bengali','Beng'],
@@ -33,17 +33,30 @@ const Transliterate = (function() {
         reverselangs: new Map([
             ['ta-Latn-t-ta-Taml','ta-Taml-t-ta-Latn'],
             ['ta-Taml-t-ta-Latn','ta-Latn-t-ta-Taml'],
+            /*
             ['mr-Latn-t-mr-Deva','mr-Deva-t-mr-Latn'],
             ['mr-Deva-t-mr-Latn','mr-Latn-t-mr-Deva'],
             ['hi-Latn-t-hi-Deva','hi-Deva-t-hi-Latn'],
             ['hi-Deva-t-hi-Latn','hi-Latn-t-hi-Deva']
+            */
         ]),
     };
+    
+    _state.availlangs = ['ta','sa',..._state.hindic];
 
+    _state.hindic.forEach(code => {
+        _state.hyphenator[`${code}-Latn`] = _state.hyphenator['sa-Latn'];
+        if(code !== 'hi')
+            _state.hyphenator[`${code}-Deva`] = _state.hyphenator['hi-Deva'];
+        _state.reverselangs.set(`${code}-Latn-t-${code}-Deva`,`${code}-Deva-t-${code}-Latn`);
+        _state.reverselangs.set(`${code}-Deva-t-${code}-Latn`,`${code}-Latn-t-${code}-Deva`);
+    });
+    /*
     _state.hyphenator['mr-Latn'] = _state.hyphenator['sa-Latn'];
     _state.hyphenator['mr-Deva'] = _state.hyphenator['hi-Deva'];
     _state.hyphenator['hi-Latn'] = _state.hyphenator['sa-Latn'];
-    
+    */
+
     _state.isoToScript = new Map();
     _state.scriptToIso.forEach((val,key) => _state.isoToScript.set(val,key));
 
@@ -149,10 +162,11 @@ const Transliterate = (function() {
                 _state.cachedtext.set(txtnode,hyphenated);
                 // convert Tamil (and others) to Roman
                 if(shortlang === 'ta-Taml') {
-                    // TODO: also deal with 'sa-Beng', 'sa-Deva', etc.
                     return to.iast(hyphenated);
                 }
-                else if(shortlang === 'hi-Deva' || shortlang === 'mr-Deva') {
+                //else if(shortlang === 'hi-Deva' || shortlang === 'mr-Deva') {
+                else if(shortlang.split('-')[1] === 'Deva') {
+                    // TODO: also deal with 'sa-Beng', 'sa-Shar', etc.
                     return to.iast(hyphenated,'devanagari');
                 }
                 else return hyphenated;
@@ -244,50 +258,52 @@ const Transliterate = (function() {
         while(curnode) {
             if(curnode.nodeType === Node.ELEMENT_NODE) {
                 // what about script features? (e.g. valapalagilaka)
-                const curlang = curnode.lang;
-                if(curlang) {
-                    // assume Madras Lexicon transliteration
-                    if(curnode.lang === 'ta') {
-                        curnode.lang = 'ta-Latn-t-ta-Taml';
-                    }
-                    // Tamil in Tamil script
-                    else if(curnode.lang === 'ta-Taml') {
-                        curnode.classList.add('originalscript');
-                        curnode.lang = 'ta-Latn-t-ta-Taml';
-                    }
-                    else if(curlang.startsWith('sa-')) {
-                        // case 1: sa-Latn[-t-sa-XXXX]
-                        // case 2: sa-XXXX
-                        if(!curlang.startsWith('sa-Latn')) {
-                            // Sanskrit written in a specific script
-                            curnode.lang = curlang + '-t-sa-Latn';
-                            curnode.classList.add('originalscript');
-                        }
-                    }
-                    else if(curlang === 'sa' || curlang === 'mr') {
-                        // case 3: sa/mr
-                        // assume IAST transliteration
-                        if(curnode.parentNode.lang.startsWith('sa-'))
-                            // script is specified by parent
-                            curnode.lang = curnode.parentNode.lang;
-                        else
-                            curnode.lang = scriptcode ? 
-                                `${curlang}-Latn-t-${curlang}-${scriptcode}` : 'sa-Latn';
-                    }
-                    else if(curnode.lang === 'hi-Deva') {
-                        curnode.classList.add('originalscript');
-                        curnode.lang = 'hi-Latn-t-hi-Deva';
-                    }
-                    else if(curnode.lang === 'mr-Deva') {
-                        curnode.classList.add('originalscript');
-                        curnode.lang = 'mr-Latn-t-mr-Deva';
-                    }
-                }
-                else {
-                    // default case: lang undefined
+                const curnodelang = curnode.lang;
+                if(!curnodelang) {
+                    // lang undefined; copy from parent
                     curnode.lang = curnode.parentNode.lang;
                     if(curnode.parentNode.classList.contains('originalscript'))
                         curnode.classList.add('originalscript');
+                }
+                else {
+                    const [curlang,curscript] = curnodelang.split('-');
+
+                    if(curlang === 'ta') {
+                        if(!curscript) {
+                            // assume Madras Lexicon transliteration
+                            curnode.lang = 'ta-Latn-t-ta-Taml';
+                        }
+                        // Tamil in Tamil script
+                        else if(curscript === 'Taml') {
+                            curnode.classList.add('originalscript');
+                            curnode.lang = 'ta-Latn-t-ta-Taml';
+                        }
+                        // Tamil in other scripts?
+                    }
+
+                    else if(curlang === 'sa' || _state.hindic.indexOf(curlang) !== -1) {
+                        // case 1: sa-XXXX
+                        // case 2: sa
+                        // case 3: sa-Latn[-t-sa-XXXX]
+                        if(curscript && curscript !== 'Latn') {
+                            // Sanskrit(/Hindi/Marathi/etc.) written in a specific script
+                            curnode.lang = `${curlang}-Latn-t-${curlang}-${curscript}`;
+                            curnode.classList.add('originalscript');
+                        }
+                        else if(curnodelang === curlang) {
+                            // no script specified, assume IAST transliteration
+                            const [parlang, parscript] = curnode.parentNode.lang.split('-');
+                            // script is specified by parent
+                            // could be a 'hi-Deva' parent, with 'sa' child === 'sa-Deva'
+                            if(parscript)
+                                curnode.lang = curnode.parentNode.lang;
+                            else
+                                curnode.lang = scriptcode ? 
+                                    `${curlang}-Latn-t-${curlang}-${scriptcode}` : 'sa-Latn';
+                        }
+                        // case 3: no change
+                    }
+                    // unknown language (not ta, sa, hi, mr, etc.)
                 }
             }
             else if(curnode.nodeType === Node.TEXT_NODE) {
