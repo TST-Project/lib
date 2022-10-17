@@ -289,7 +289,13 @@
     <tst:entry key="#sarada-ekam">&#x11DA;</tst:entry>
     <tst:entry key="#sarada-siddhi">&#x11DB;</tst:entry>
 
+    <tst:entry key="#headmark">&#x11B00;</tst:entry>
+    <tst:entry key="#headmark_with_headstroke">&#x11B01;</tst:entry>
+    <tst:entry key="#bhale">&#x11B02;</tst:entry>
     <tst:entry key="#bhale_hook">&#x11B03;</tst:entry>
+    <tst:entry key="#bhale_five">&#x11B06;</tst:entry>
+    <tst:entry key="#bhale_nine">&#x11B07;</tst:entry>
+    <tst:entry key="#bhale_nine_reversed">&#x11B08;</tst:entry>
     <tst:entry key="#mindu">&#x11B09;</tst:entry>
     <tst:entry key="#jain_omkara">&#xA8FD;</tst:entry>
 
@@ -394,7 +400,13 @@
     <tst:entry key="#sarada-ekam">Śāradā ekam</tst:entry>
     <tst:entry key="#sarada-siddhi">śāradā siddhi</tst:entry>
 
+    <tst:entry key="#headmark">head mark</tst:entry>
+    <tst:entry key="#headmark_with_headstroke">head mark with headstroke`</tst:entry>
+    <tst:entry key="#bhale">bhale</tst:entry>
     <tst:entry key="#bhale_hook">bhale with hook</tst:entry>
+    <tst:entry key="#bhale_five">five-like bhale</tst:entry>
+    <tst:entry key="#bhale_nine">nine-like bhale</tst:entry>
+    <tst:entry key="#bhale_nine_reversed">reversed nine-like bhale</tst:entry>
     <tst:entry key="#mindu">mīṇḍu</tst:entry>
     <tst:entry key="#jain_omkara">Jaina oṃkāra</tst:entry>
 
