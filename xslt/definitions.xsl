@@ -286,8 +286,8 @@
     <tst:entry key="#newa-old-gap-filler">&#x1144E;</tst:entry>
     <tst:entry key="#newa-abbreviation">&#x1144F;</tst:entry>
 
-    <tst:entry key="#sarada-ekam">&#x11DA;</tst:entry>
-    <tst:entry key="#sarada-siddhi">&#x11DB;</tst:entry>
+    <tst:entry key="#sarada-ekam">&#x111DA;</tst:entry>
+    <tst:entry key="#sarada-siddhi">&#x111DB;</tst:entry>
 
     <tst:entry key="#headmark">&#x11B00;</tst:entry>
     <tst:entry key="#headmark_with_headstroke">&#x11B01;</tst:entry>
