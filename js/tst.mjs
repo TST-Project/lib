@@ -279,7 +279,7 @@ const TSTViewer = (function() {
         else {
             icon.classList.add('diplo');
             par.classList.add('diplo');
-            const els = par.querySelectorAll('p,div.lg,div.l,div.ab,.pb,.lb,.caesura,.milestone');
+            const els = par.querySelectorAll('p,div.lg,div.l,div.ab,.pb,.lb,.cb,.caesura,.milestone');
             for(const el of els)
                 el.classList.add('diplo');
             icon.title = 'paragraph view';
