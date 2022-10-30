@@ -4,11 +4,13 @@
                 xmlns:tst="https://github.com/tst-project"
                 exclude-result-prefixes="x tst">
 
+<xsl:import href="copy.xsl"/>
 <xsl:import href="functions.xsl"/>
 <xsl:import href="definitions.xsl"/>
 <xsl:import href="common.xsl"/>
 <xsl:import href="teiheader.xsl"/>
 <xsl:import href="transcription.xsl"/>
+<xsl:import href="apparatus.xsl"/>
 
 <xsl:output method="html" encoding="UTF-8" omit-xml-declaration="yes"/>
 
@@ -49,6 +51,10 @@
             <xsl:element name="link">
                 <xsl:attribute name="rel">stylesheet</xsl:attribute>
                 <xsl:attribute name="href">../lib/css/transcription.css</xsl:attribute>
+            </xsl:element>
+            <xsl:element name="link">
+                <xsl:attribute name="rel">stylesheet</xsl:attribute>
+                <xsl:attribute name="href">../lib/css/apparatus.css</xsl:attribute>
             </xsl:element>
             <!--xsl:element name="script">
                 <xsl:attribute name="type">text/javascript</xsl:attribute>

@@ -56,6 +56,13 @@
     <xsl:apply-templates/>
 </xsl:template>
 
+<xsl:template match="x:ab">
+    <xsl:element name="span">
+        <xsl:call-template name="lang"/>
+        <xsl:apply-templates/>
+    </xsl:element>
+</xsl:template>
+
 <xsl:template match="x:body/x:ab">
     <xsl:element name="div">
         <xsl:attribute name="class">ab</xsl:attribute>
@@ -605,8 +612,21 @@
                 <xsl:value-of select="@n"/>
             </xsl:if>
             <xsl:if test="$facs and $facs != ''">
-                <xsl:text> image </xsl:text>
-                <xsl:value-of select="$facs"/>
+                <xsl:variable name="imgno" select="substring-before($facs,':')"/>
+                <xsl:variable name="annono" select="substring-after($facs,':')"/>
+                <xsl:attribute name="data-anno">
+                    <xsl:text>image </xsl:text>
+                    <xsl:choose>
+                        <xsl:when test="$annono">
+                            <xsl:value-of select="$imgno"/>
+                            <xsl:text>, annotation </xsl:text>
+                            <xsl:value-of select="$annono"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="$facs"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:attribute>
             </xsl:if>
         </xsl:attribute>
         <!--xsl:text>&#x23A1;</xsl:text-->
@@ -711,9 +731,14 @@
 
 <xsl:template match="x:note[@place='foot']">
     <xsl:element name="span">
-        <xsl:attribute name="data-anno"><xsl:value-of select="."/></xsl:attribute>
+        <xsl:attribute name="data-anno"/>
         <xsl:attribute name="class">footnote</xsl:attribute>
         <xsl:text>†</xsl:text>
+        <xsl:element name="span">
+            <xsl:attribute name="class">anno-inline</xsl:attribute>
+            <xsl:call-template name="lang"/>
+            <xsl:apply-templates/>
+        </xsl:element>
     </xsl:element>
 </xsl:template>
 

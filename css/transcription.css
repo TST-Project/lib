@@ -239,6 +239,10 @@ blockquote > .cb.diplo:first-child::after {
       text-decoration: none !important;
 }
 
+[data-anno] .anno-inline {
+    display: none;
+}
+
 span.gap {background-color: rgba(132,132,10,0.3);
           font-size: 85%;
           color: rgb(84,84,84);

@@ -1,0 +1,58 @@
+.app-inline {
+}
+
+.lem-inline {
+    /*display: inline-block;*/
+    text-decoration: underline wavy rgb(180,184,196);
+    text-decoration-thickness: from-font;
+}
+
+.app-inline:hover .lem-inline {
+    text-decoration: none;
+    background: rgba(255,255,128,1);
+}
+
+/*
+.app-inline:hover .rdgs-inline, .app-inline:hover .lem-wit {
+    display: inline;
+}
+*/
+
+.lem {
+    font-weight: bold;
+    margin-right: 0.5em;
+}
+
+.lem::after {
+    content: ']';
+}
+
+.rdg-text {
+}
+
+.rdg {
+}
+
+.rdg:not(:last-child)::after, .lem-wit::after {
+    content: ';';
+}
+
+.rdg:last-child::after {
+    content: '.';
+}
+
+.lem-wit {
+    word-break: break-all;
+    margin-right: 0.5em;
+}
+
+.msid {
+    font-variant: small-caps;
+    font-size: 0.8em;
+    margin-right: 0.2rem;
+    word-break: normal;
+}
+
+.msid a:after {
+    content: '';
+}
