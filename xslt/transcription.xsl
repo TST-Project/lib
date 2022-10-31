@@ -468,6 +468,7 @@
         </xsl:attribute>
     </xsl:if>
 </xsl:template>
+
 <xsl:template match="x:lb">
     <xsl:param name="hyphen">yes</xsl:param>
     <xsl:call-template name="lb">
@@ -614,8 +615,7 @@
             <xsl:if test="$facs and $facs != ''">
                 <xsl:variable name="imgno" select="substring-before($facs,':')"/>
                 <xsl:variable name="annono" select="substring-after($facs,':')"/>
-                <xsl:attribute name="data-anno">
-                    <xsl:text>image </xsl:text>
+                    <xsl:text>, image </xsl:text>
                     <xsl:choose>
                         <xsl:when test="$annono">
                             <xsl:value-of select="$imgno"/>
@@ -626,7 +626,6 @@
                             <xsl:value-of select="$facs"/>
                         </xsl:otherwise>
                     </xsl:choose>
-                </xsl:attribute>
             </xsl:if>
         </xsl:attribute>
         <!--xsl:text>&#x23A1;</xsl:text-->
