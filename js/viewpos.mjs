@@ -29,10 +29,10 @@ const viewPos = (function() {
         return [midEl,currDist];
     };
 
-    return {
+    return Object.freeze({
         getVP: get,
         setVP: set
-    };
+    });
 
 }());
 

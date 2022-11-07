@@ -9,11 +9,12 @@ const miradorAnnotations = MiradorModule.miradorAnnotationPlugin;
 'use strict';
 
 const TSTViewer = (function() {
-    const _state = {
+    const _state = Object.seal({
         manifest: null,
         winname: 'win1',
+        mirador: null,
         annoMap: new Map()
-    };
+    });
     
     //const Mirador = window.Mirador || null;
 
@@ -181,7 +182,7 @@ const TSTViewer = (function() {
 
     const toolTip = {
         make: function(e,targ) {
-            const toolText = targ.dataset.anno;
+            const toolText = targ.dataset.anno || targ.querySelector('.anno-inline')?.cloneNode(true);
             if(!toolText) return;
 
             var tBox = document.getElementById('tooltip');
@@ -205,8 +206,7 @@ const TSTViewer = (function() {
 
             tBox.style.top = (e.clientY + 10) + 'px';
             tBox.style.left = e.clientX + 'px';
-
-            tBoxDiv.appendChild(document.createTextNode(toolText));
+            tBoxDiv.append(toolText);
             tBoxDiv.myTarget = targ;
             tBox.appendChild(tBoxDiv);
             targ.addEventListener('mouseleave',toolTip.remove,{once: true});
@@ -289,7 +289,7 @@ const TSTViewer = (function() {
 
     //window.addEventListener('load',init);
 
-    return {
+    return Object.freeze({
         init: init,
         newMirador: newMirador,
         killMirador: killMirador,
@@ -299,7 +299,7 @@ const TSTViewer = (function() {
         jumpToId: jumpToId,
         annotateMirador: annotateMirador,
         setAnnotations: setAnnotations
-    };
+    });
 }());
 
 export { TSTViewer };

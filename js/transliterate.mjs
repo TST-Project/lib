@@ -8,8 +8,8 @@ import { hyphenation_hi } from './hi.mjs';
 'use strict';
 
 const Transliterate = (function() {
-    const _state = {
-        hindic: ['mr','hi','gu','raj','bra'],
+    const _state = Object.seal({
+        hindic: Object.freeze(['mr','hi','gu','raj','bra']),
         scriptToIso: new Map([
             ['tamil','Taml'],
             ['bengali','Beng'],
@@ -40,9 +40,14 @@ const Transliterate = (function() {
             ['hi-Deva-t-hi-Latn','hi-Latn-t-hi-Deva']
             */
         ]),
-    };
+        isoToScript: new Map(),
+        availlangs: null,
+        scriptnames: null,
+        isonames: null,
+        button: null
+    });
     
-    _state.availlangs = ['ta','sa',..._state.hindic];
+    _state.availlangs = Object.freeze(['ta','sa',..._state.hindic]);
 
     _state.hindic.forEach(code => {
         _state.hyphenator[`${code}-Latn`] = _state.hyphenator['sa-Latn'];
@@ -57,7 +62,6 @@ const Transliterate = (function() {
     _state.hyphenator['hi-Latn'] = _state.hyphenator['sa-Latn'];
     */
 
-    _state.isoToScript = new Map();
     _state.scriptToIso.forEach((val,key) => _state.isoToScript.set(val,key));
 
     _state.scriptnames = new Set(_state.scriptToIso.keys());
@@ -899,11 +903,11 @@ const Transliterate = (function() {
         }
     };
     
-    return {
+    return Object.freeze({
         init: init,
         to: to,
         scripts: function() { return _state.scriptnames},
-    };
+    });
 }());
 
 export { Transliterate };
