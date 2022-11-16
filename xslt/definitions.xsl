@@ -14,7 +14,7 @@
 <xsl:variable name="defRoot">
 <tst:mstypes>
     <tst:entry key="#STM" selected="true">Single-text</tst:entry>
-    <tst:entry key="#MTM">Multi-text</tst:entry>
+    <tst:entry key="#MTM">Multiple-text</tst:entry>
     <tst:entry key="#CM">Composite</tst:entry>
     <tst:entry key="#MVM">Multi-volume</tst:entry>
 </tst:mstypes>
