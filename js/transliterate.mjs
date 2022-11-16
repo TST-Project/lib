@@ -296,14 +296,20 @@ const Transliterate = (function() {
                         }
                         else if(curnodelang === curlang) {
                             // no script specified, assume IAST transliteration
-                            const [parlang, parscript] = curnode.parentNode.lang.split('-');
+                            const parlang = curnode.parentNode.lang.split('-');
                             // script is specified by parent
                             // could be a 'hi-Deva' parent, with 'sa' child === 'sa-Deva'
-                            if(parscript)
+                            // but if it's a 'ta-Latn-t-ta-Taml' parent, this should become 'sa-Latn-t-sa-Gran'
+                            const parlength = parlang.length;
+                            if(parlength > 1 && parlang[parlength-1] !== 'Taml') {
                                 curnode.lang = curnode.parentNode.lang;
-                            else
-                                curnode.lang = scriptcode ? 
-                                    `${curlang}-Latn-t-${curlang}-${scriptcode}` : 'sa-Latn';
+                            }
+                            else {
+                                const sascriptcode = scriptcode === 'Taml' ? 
+                                    'Gran' : scriptcode; 
+                                curnode.lang = sascriptcode ? 
+                                    `${curlang}-Latn-t-${curlang}-${sascriptcode}` : 'sa-Latn';
+                            }
                         }
                         // case 3: no change
                     }
