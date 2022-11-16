@@ -1262,7 +1262,7 @@
 </xsl:template>
 
 <xsl:template match="x:encodingDesc">
-    <h3>Transcription conventions</h3>
+    <h3>Editorial conventions</h3>
     <xsl:apply-templates/>
 </xsl:template>
 
