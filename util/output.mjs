@@ -177,7 +177,8 @@ const output = {
     paratexts: (data, opts) => {
         
         const ptitle = opts.name ? opts.name[0].toUpperCase() + opts.name.slice(1) : 'Paratexts';
-        const pdesc = opts.name ? descriptions.getElementById(opts.name) : null;
+        const prefix_sanitized = opts?.name?.replace(/\s/g,'_');
+        const pdesc = prefix_sanitized ? descriptions.getElementById(prefix_sanitized) : null;
         const pprop = opts.prop;
         const pfilename = opts.name.replace(/\s+/g, '_') + '.html';
     
@@ -482,7 +483,7 @@ const output = {
         const title = template.querySelector('title');
         title.textContent = `${title.textContent}: Satellite Stanzas`;
 
-        const pdesc = descriptions.getElementById('satellite-stanzas');
+        const pdesc = descriptions.getElementById('satellite_stanzas');
         if(pdesc) template.querySelector('article').prepend(pdesc);
 
         const table = template.getElementById('index');
