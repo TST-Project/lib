@@ -262,15 +262,15 @@ const Transliterate = (function() {
         while(curnode) {
             if(curnode.nodeType === Node.ELEMENT_NODE) {
                 // what about script features? (e.g. valapalagilaka)
-                const curnodelang = curnode.lang;
-                if(!curnodelang) {
+                const curlangattr = curnode.lang;
+                if(!curlangattr) {
                     // lang undefined; copy from parent
                     curnode.lang = curnode.parentNode.lang;
                     if(curnode.parentNode.classList.contains('originalscript'))
                         curnode.classList.add('originalscript');
                 }
                 else {
-                    const [curlang,curscript] = curnodelang.split('-');
+                    const [curlang,curscript] = curlangattr.split('-');
 
                     if(curlang === 'ta') {
                         if(!curscript) {
@@ -294,22 +294,38 @@ const Transliterate = (function() {
                             curnode.lang = `${curlang}-Latn-t-${curlang}-${curscript}`;
                             curnode.classList.add('originalscript');
                         }
-                        else if(curnodelang === curlang) {
+                        else if(curlangattr === curlang) {
                             // no script specified, assume IAST transliteration
-                            const parlang = curnode.parentNode.lang.split('-');
-                            // script is specified by parent
-                            // could be a 'hi-Deva' parent, with 'sa' child === 'sa-Deva'
-                            // but if it's a 'ta-Latn-t-ta-Taml' parent, this should become 'sa-Latn-t-sa-Gran'
+                            // case 1: script is specified by parent or parameter
+                                // could be a 'hi-Deva' parent, with 'sa' child === 'sa-Deva'
+                            const parscript = (() => {
+                                const scriptsplit = curnode.parentNode.lang.split('-');
+                                return scriptsplit.pop();
+                            })();
+                            let scriptappend = parscript || scriptcode;
+
+                            // if language is unqualified 'sa' and script is 'Taml', 
+                            // switch to 'Gran'
+                            if(curlang === 'sa' && scriptappend.endsWith('Taml'))
+                                scriptappend = 'Gran';
+
+                            curnode.lang = scriptappend ? 
+                                `${curlang}-Latn-t-${curlang}-${scriptappend}`:
+                            // case 2: script not specified at all
+                                `${curlang}-Latn`;
+                            /*
                             const parlength = parlang.length;
-                            if(parlength > 1 && parlang[parlength-1] !== 'Taml') {
-                                curnode.lang = curnode.parentNode.lang;
+                            if(parlength > 0 && parlang[parlength-1] !== 'Taml') {
+                                curnode.lang = parlangcode + curnode.parentNode.lang;
                             }
                             else {
                                 const sascriptcode = scriptcode === 'Taml' ? 
                                     'Gran' : scriptcode; 
                                 curnode.lang = sascriptcode ? 
                                     `${curlang}-Latn-t-${curlang}-${sascriptcode}` : 'sa-Latn';
+                            
                             }
+                            */
                         }
                         // case 3: no change
                     }
