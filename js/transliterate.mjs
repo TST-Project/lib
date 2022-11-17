@@ -271,7 +271,6 @@ const Transliterate = (function() {
                 }
                 else {
                     const [curlang,curscript] = curlangattr.split('-');
-
                     if(curlang === 'ta') {
                         if(!curscript) {
                             // assume Madras Lexicon transliteration
@@ -300,7 +299,9 @@ const Transliterate = (function() {
                                 // could be a 'hi-Deva' parent, with 'sa' child === 'sa-Deva'
                             const parscript = (() => {
                                 const scriptsplit = curnode.parentNode.lang.split('-');
-                                return scriptsplit.pop();
+                                if(scriptsplit.length > 1)
+                                    return scriptsplit.pop();
+                                else return null;
                             })();
                             let scriptappend = parscript || scriptcode;
 
