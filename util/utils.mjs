@@ -101,14 +101,19 @@ const util = {
     },
 
     prev: (e)  => {
-        const prevEl = e.previousElementSibling;
-        if(prevEl)
-            return prevEl.lastElementChild || prevEl;
+        let prevEl = e.previousElementSibling;
+        if(prevEl) {
+            while(prevEl.lastElementChild)
+                prevEl = prevEl.lastElementChild;
+            return prevEl;
+        }
    
-        const parPrevEl = e.parentNode.previousElementSibling;
-        if(parPrevEl)
-            return parPrevEl.lastElementChild || parPrevEl;
-
+        let parPrevEl = e.parentNode.previousElementSibling;
+        if(parPrevEl) {
+            while(parPrevEl.lastElementChild)
+                parPrevEl = parPrevEl.lastElementChild;
+            return parPrevEl;
+        }
         return false;
     },
 
