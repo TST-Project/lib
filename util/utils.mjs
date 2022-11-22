@@ -108,11 +108,15 @@ const util = {
             return prevEl;
         }
    
-        let parPrevEl = e.parentNode.previousElementSibling;
-        if(parPrevEl) {
-            while(parPrevEl.lastElementChild)
-                parPrevEl = parPrevEl.lastElementChild;
-            return parPrevEl;
+        let par = e.parentNode;
+        while(par && par.nodeName !== 'text' && par.nodeName !== 'desc') {
+            let parPrevEl = par.previousElementSibling;
+            if(parPrevEl) {
+                while(parPrevEl.lastElementChild)
+                    parPrevEl = parPrevEl.lastElementChild;
+                return parPrevEl;
+            }
+            par = par.parentNode;
         }
         return false;
     },
