@@ -101,12 +101,14 @@ const util = {
     },
 
     prev: (e)  => {
-        if(e.previousElementSibling) return e.previousElementSibling;
-        if(e.parentNode.previousElementSibling) {
-            if(e.parentNode.previousElementSibling.lastChild)
-                return e.parentNode.previousElementSibling.lastElementChild;
-            else return e.parentNode.previousElementSibling;
-        }
+        const prevEl = e.previousElementSibling;
+        if(prevEl)
+            return prevEl.lastElementChild || prevEl;
+   
+        const parPrevEl = e.parentNode.previousElementSibling;
+        if(parPrevEl)
+            return parPrevEl.lastElementChild || parPrevEl;
+
         return false;
     },
 
