@@ -357,6 +357,7 @@ const output = {
 
         fs.writeFileSync('../colophons.html',template.documentElement.outerHTML,{encoding: 'utf8'});
     },
+    /*
     invocations: (data) => {
         
         const predux = function(acc,cur,cur1) {
@@ -500,6 +501,7 @@ const output = {
         table.querySelector('thead th').dataset.sort = 'sortTamil';
         fs.writeFileSync('../satellite_stanzas.html',template.documentElement.outerHTML,{encoding: 'utf8'});
     },
+    */
     titles: (data) => {
         
         const predux = function(acc,cur,cur1) {
