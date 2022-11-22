@@ -216,6 +216,10 @@ div.lg {
     padding-left: 0;
 }
 
+div.lg .l {
+    text-indent: 1rem;
+}
+
 span.invisinote {
           font-size:80%;
 }
