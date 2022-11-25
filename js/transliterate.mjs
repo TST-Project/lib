@@ -307,7 +307,7 @@ const Transliterate = (function() {
 
                             // if language is unqualified 'sa' and script is 'Taml', 
                             // switch to 'Gran'
-                            if(curlang === 'sa' && scriptappend.endsWith('Taml'))
+                            if(curlang === 'sa' && scriptappend && scriptappend.endsWith('Taml'))
                                 scriptappend = 'Gran';
 
                             curnode.lang = scriptappend ? 
