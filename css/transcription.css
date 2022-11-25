@@ -60,7 +60,7 @@ div.lg {
             padding-top: 0.5em;
             padding-right: 0;
             padding-bottom: 0.5em;
-            padding-left: 1.5em;
+            padding-left: 0.5em;
 }
 
 
@@ -80,6 +80,10 @@ blockquote div.lg, blockquote div.lg:first-child, .blockquote div.lg, .blockquot
 
 div.lg div.l {
         /*margin-bottom: 0.5em;*/
+        text-indent: 1em;
+}
+div.lg div.l.diplo {
+    text-indent: 0;
 }
 
 :lang(sa-Deva) .l {
