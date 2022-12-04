@@ -128,6 +128,7 @@ span.lb, span.cb {
     line-height:0.76;
     font-family: serif;
     font-weight:normal;
+    font-style: normal;
     vertical-align: -0.1em;
     cursor: default;
     white-space: nowrap;
@@ -213,13 +214,14 @@ blockquote > .cb.diplo:first-child::after {
 
 .pb {/*color:#FF9900;*/
     color: #A85110;
-    letter-spacing:-0.3em;
-    font-size:1.5rem;
+    letter-spacing: -0.3em;
+    font-size: 1.5rem;
     /*line-height:0.76;*/
-    font-weight:normal;
+    font-weight: normal;
+    font-style: normal;
     font-family: sans-serif;
     text-decoration: none;
-    vertical-align:top;
+    vertical-align: top;
     white-space: nowrap;
 }
 
@@ -505,6 +507,8 @@ span.metamark {
 
 span.milestone {
     font-size: 1.2rem;
+    font-weight:normal;
+    font-style: normal;
     color: #A85110;
     padding-right: 0.4rem;
 }
