@@ -63,7 +63,7 @@ ul:first-child {
     content: ')';
 }
 
-th {
+#msidentifier th {
     text-align: left;
     width: 5rem;
 }

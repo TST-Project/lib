@@ -1,13 +1,50 @@
-.app-inline {
+section div.wide {
+    max-width: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+.text-block {
+    top: 0;
+    padding-top: 1rem;
+    width: 60%;
+    font-size: 1.4rem;
+    position: sticky;
+}
+.apparatus-block {
+    top: 0;
+    padding-top: 1rem;
+    font-size: 1.1rem;
+    width: 40%;
+    padding-left: 2rem;
+    line-height: 1.3rem;
+    position: sticky;
 }
 
-.lem-inline {
+.apparatus-block span.note::after,
+.apparatus-block span.note::before {
+    content: '';
+}
+
+.apparatus-block span.note {
+    font-size: 90%;
+}
+
+.app {
+    margin-right: 2em;
+}
+
+.lem-inline:not(.lem-anchor) {
     /*display: inline-block;*/
     text-decoration: underline wavy rgb(180,184,196);
     text-decoration-thickness: from-font;
 }
 
-.app-inline:hover .lem-inline {
+.lem-anchor {
+    font-variant: super;
+}
+
+.lem-inline:hover, .lem-inline:hover *, .lem:hover, .highlit, .highlit * {
     text-decoration: none;
     background: rgba(255,255,128,1);
 }
@@ -23,7 +60,7 @@
     margin-right: 0.5em;
 }
 
-.lem::after {
+.lem:not(.lem-anchor)::after {
     content: ']';
 }
 
@@ -48,11 +85,18 @@
 
 .msid {
     font-variant: small-caps;
-    font-size: 0.8em;
+    font-size: 0.9rem;
     margin-right: 0.2rem;
     word-break: normal;
 }
 
-.msid a:after {
-    content: '';
+.msid a:link, .msid a:active {
+    text-decoration: none;
+    text-shadow: none;
+    background: none;
+}
+
+.msid a[href]::after {
+    background: none;
+    padding-right: 0;
 }

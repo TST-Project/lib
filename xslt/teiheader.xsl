@@ -11,7 +11,8 @@
         <xsl:call-template name="lang"/>
         <xsl:apply-templates />
     </xsl:element>
-    <xsl:if test="/x:TEI/x:text">
+    <xsl:variable name="teitext" select="/x:TEI/x:text"/>
+    <xsl:if test="$teitext and $teitext[not(@type='edition')]">
         <h3>Text transcription</h3>
     </xsl:if>
 </xsl:template>
@@ -21,6 +22,13 @@
 
 <xsl:template match="x:titleStmt/x:title">
     <xsl:element name="h1">
+        <xsl:call-template name="lang"/>
+        <xsl:apply-templates/>
+    </xsl:element>
+</xsl:template>
+
+<xsl:template match="x:titleStmt/x:title[@type='sub']">
+    <xsl:element name="h3">
         <xsl:call-template name="lang"/>
         <xsl:apply-templates/>
     </xsl:element>

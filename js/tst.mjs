@@ -41,11 +41,17 @@ const TSTViewer = (function() {
         Transliterate.init(recordcontainer);
         
         // start all texts in diplomatic view
-        for(const l of recordcontainer.querySelectorAll('.line-view-icon'))
-            lineView(l);
+        for(const l of recordcontainer.querySelectorAll('.line-view-icon')) {
+            const lb = l.closest('.teitext').querySelector('.lb, .pb');
+            if(!lb)
+                l.style.display = 'none';
+            else
+                lineView(l);
+        }
 
         recordcontainer.addEventListener('click',events.docClick);
         recordcontainer.addEventListener('mouseover',events.docMouseover);
+        recordcontainer.addEventListener('mouseout',events.docMouseout);
         recordcontainer.addEventListener('copy',events.removeHyphens);
 
     };
@@ -160,13 +166,33 @@ const TSTViewer = (function() {
             }
         },
         
-        docMouseover: function(e) {
+        docMouseover(e) {
+
+            const lem_inline = e.target.closest('.lem-inline');
+            if(lem_inline) highlight.inline(lem_inline);
+            const lem = e.target.closest('.lem');
+            if(lem) highlight.apparatus(lem);
+
             var targ = e.target.closest('[data-anno]');
             while(targ && targ.hasAttribute('data-anno')) {
+               
+                //ignore if apparatus is already on the side
+                if(document.getElementById('record-fat') && 
+                   targ.classList.contains('app-inline') &&
+                   !targ.closest('.teitext').querySelector('.diplo') ) {
+                    targ = targ.parentNode;
+                    continue;
+                }
+
                 toolTip.make(e,targ);
                 targ = targ.parentNode;
             }
+        },
 
+        docMouseout(e) {
+            if(e.target.closest('.lem') ||
+               e.target.closest('.lem-inline'))
+                highlight.unhighlight(e.target);
         },
 
         removeHyphens: function(ev) {
@@ -179,6 +205,35 @@ const TSTViewer = (function() {
             (ev.clipboardData || window.clipboardData).setData('Text',sel);
         },
     };
+
+    const highlight = {
+        inline(targ) {
+            const par = targ.closest('div.text-block');
+            if(!par) return;
+
+            const allleft = [...par.querySelectorAll('.lem-inline')];
+            const pos = allleft.indexOf(targ);
+            const right = par.parentElement.querySelector('.apparatus-block');
+            const allright = right.querySelectorAll('.lem');
+            allright[pos].classList.add('highlit');
+        },
+        apparatus(targ) {
+            const par = targ.closest('div.apparatus-block');
+            if(!par) return;
+            const allright = [...par.querySelectorAll('.lem')];
+            const pos = allright.indexOf(targ);
+            const left = par.parentElement.querySelector('.text-block');
+            const allleft = left.querySelectorAll('.lem-inline');
+            allleft[pos].classList.add('highlit');
+        },
+        unhighlight(targ) {
+            const par = targ.closest('div.wide');
+            if(!par) return;
+            for(const h of par.querySelectorAll('.highlit'))
+                h.classList.remove('highlit');
+        },
+    };
+
 
     const toolTip = {
         make: function(e,targ) {
@@ -271,17 +326,32 @@ const TSTViewer = (function() {
         const par = icon.closest('.teitext');
         if(icon.classList.contains('diplo')) {
             par.classList.remove('diplo');
+
             const els = par.querySelectorAll('.diplo');
             for(const el of els)
                 el.classList.remove('diplo');
+            
+            if(document.getElementById('record-fat')) {
+                const apps = par.querySelectorAll('.app');
+                for(const app of apps)
+                    app.style.display = 'initial';
+            }
+
             icon.title = 'diplomatic view';
         }
         else {
             icon.classList.add('diplo');
             par.classList.add('diplo');
+            
             const els = par.querySelectorAll('p,div.lg,div.l,div.ab,.pb,.lb,.cb,.caesura,.milestone');
             for(const el of els)
                 el.classList.add('diplo');
+            
+            if(document.getElementById('record-fat')) {
+                const apps = par.querySelectorAll('.app');
+                for(const app of apps)
+                    app.style.display = 'none';
+            } 
             icon.title = 'paragraph view';
         }
 

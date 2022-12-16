@@ -37,11 +37,14 @@
     </xsl:element>
 </xsl:template>
 
-<xsl:template match="x:p">
+<xsl:template name="p">
     <xsl:element name="p">
         <xsl:call-template name="lang"/>
         <xsl:apply-templates/>
     </xsl:element>
+</xsl:template>
+<xsl:template match="x:p">
+    <xsl:call-template name="p"/>
 </xsl:template>
 
 <xsl:template match="x:list">
@@ -79,7 +82,7 @@
     </xsl:element>
 </xsl:template>
 
-<xsl:template match="x:lg">
+<xsl:template name="lg">
     <xsl:element name="div">
         <xsl:attribute name="class">lg</xsl:attribute>
         <xsl:if test="@met">
@@ -88,6 +91,9 @@
         <xsl:call-template name="lang"/>
         <xsl:apply-templates/>
     </xsl:element>
+</xsl:template>
+<xsl:template match="x:lg">
+    <xsl:call-template name="lg"/>
 </xsl:template>
 
 <xsl:template match="x:l">

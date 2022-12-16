@@ -8,6 +8,7 @@ body {
     font-size: 1.5em;
     line-height: 1;
     */
+    hyphens: auto;
     display: flex;
     flex-direction: row-reverse;
     padding: 0;
@@ -44,14 +45,14 @@ body {
 
 #record-fat, .record-fat {
     position: relative;
-    /*padding-left: 12.5%;*/
+    padding-left: 12.5%;
     width: 87.5%;
-    max-width: 800px;
+    max-width: 1400px;
     margin: 0 auto;
 }
 
 #record-thin h1, .record-thin h1 {
-    /*max-width: 55%;
+    /*max-width: 55%;*/
     /*max-width: 550px;
     width: 87.5%;*/
 }
@@ -270,6 +271,13 @@ div.teitext {
 .record-fat section > p, .record-fat section > div.lg, .record-fat section > table {
     max-width: 800px;
     width: 87.5%;
+}
+
+#record-fat section > div.para.wide, #record-fat section > div.lg.wide {
+    max-width: 100%;
+    width: 87.5%;
+    padding-left: 0;
+    margin-left: 1rem;
 }
 
 #record-thin h2, #record-thin h3, #record-thin h4, #record-thin .editionStmt,

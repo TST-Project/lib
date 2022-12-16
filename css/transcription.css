@@ -1,4 +1,4 @@
-.teitext {
+#record-thin .teitext {
     /*width: 55%;*/
     width: 87.5%;
     font-size: 1.4rem;
@@ -48,6 +48,15 @@ div.diplo, p.diplo {
     display: inline;
 }
 
+.diplo > .text-block {
+    display: inline;
+    position: relative;
+}
+
+div.diplo > .apparatus-block {
+    display: none;
+}
+
 p.diplo::after {
     /*content: '\a';*/
     white-space: pre;
@@ -60,7 +69,7 @@ div.lg {
             padding-top: 0.5em;
             padding-right: 0;
             padding-bottom: 0.5em;
-            padding-left: 0.5em;
+            /*padding-left: 0.5em;*/
 }
 
 
@@ -110,6 +119,7 @@ span.unclear::before {
     content: '(';
     color: #CC0000;
 }
+
 
 span.unclear::after {
     content: ')';
