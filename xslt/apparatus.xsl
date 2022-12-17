@@ -121,7 +121,10 @@
                 <xsl:call-template name="lemma"/>
                 <xsl:apply-templates select="x:rdg"/>
             </xsl:if>
-            <xsl:apply-templates select="x:note"/>
+            <xsl:for-each select="x:note">
+                <xsl:text> </xsl:text>
+                <xsl:apply-templates select="."/>
+            </xsl:for-each>
         </span>
     </span>
 </xsl:template>
@@ -156,7 +159,10 @@
                     </xsl:for-each>
                 </span>
             </xsl:if>
-            <xsl:apply-templates select="x:note"/>
+            <xsl:for-each select="x:note">
+                <xsl:text> </xsl:text>
+                <xsl:apply-templates select="."/>
+            </xsl:for-each>
         </span>
         <xsl:text> </xsl:text>
     </xsl:for-each>
@@ -203,6 +209,7 @@
             <xsl:call-template name="splitwit"/>
         </span>
     </span>
+    <xsl:text> </xsl:text>
 </xsl:template>
 
 <xsl:template match="x:abbr[@corresp]">
