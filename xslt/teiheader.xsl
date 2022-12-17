@@ -269,7 +269,7 @@
                         <xsl:choose>
                             <xsl:when test="ancestor::x:TEI/x:text[@corresp=concat('#',$thisid)]">
                                 <xsl:element name="a">
-                                    <xsl:attribute name="class">local</xsl:attribute>
+                                    <!--xsl:attribute name="class">local</xsl:attribute-->
                                     <xsl:attribute name="href">
                                         <xsl:text>#text-</xsl:text>
                                         <xsl:value-of select="@xml:id"/>
@@ -1059,7 +1059,7 @@
                         </xsl:if>
                         <xsl:if test="$tu">
                             <xsl:element name="a">
-                                <xsl:attribute name="class">local</xsl:attribute>
+                                <!--xsl:attribute name="class">local</xsl:attribute-->
                                 <xsl:attribute name="href">
                                     <xsl:text>#text-</xsl:text>
                                     <xsl:value-of select="$tu"/>
@@ -1301,7 +1301,7 @@
     <xsl:element name="a">
         <xsl:attribute name="href"><xsl:value-of select="@target"/></xsl:attribute>
         <xsl:if test="substring(@target,1,1) = '#'">
-            <xsl:attribute name="class">local</xsl:attribute>
+            <!--xsl:attribute name="class">local</xsl:attribute-->
         </xsl:if>
         <xsl:apply-templates/>
     </xsl:element>
