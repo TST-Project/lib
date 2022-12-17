@@ -212,9 +212,4 @@
     <xsl:text> </xsl:text>
 </xsl:template>
 
-<xsl:template match="x:abbr[@corresp]">
-    <xsl:variable name="cleanstr" select="substring-after(@corresp,'#')"/>
-    <xsl:apply-templates select="/x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:listWit/x:witness[@xml:id=$cleanstr]/x:abbr/node()"/>
-</xsl:template>
-
 </xsl:stylesheet>
