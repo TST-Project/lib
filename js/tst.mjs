@@ -50,7 +50,7 @@ const TSTViewer = (function() {
         }
 
         // check for GitHub commit history
-        latestCommits(recordcontainer);
+        latestCommits();
 
         recordcontainer.addEventListener('click',events.docClick);
         recordcontainer.addEventListener('mouseover',events.docMouseover);
@@ -325,7 +325,7 @@ const TSTViewer = (function() {
         }
     };
 
-    const latestCommits = (par) => {
+    const latestCommits = () => {
         const loc = window.location;
         if(loc.hostname.endsWith('.github.io')) {
             const sub = loc.hostname.split('.',1)[0];
@@ -342,7 +342,7 @@ const TSTViewer = (function() {
                 .then((data) => {
                     if(data) {
                         const date = new Date(data[0].commit.committer.date);
-                        const span = par.getElementById('latestcommit');
+                        const span = document.getElementById('latestcommit');
                         span.innerHTML = `Latest commit: <a href="${data[0].html_url}">${date.toDateString()}</a>`;
                     }
                 });
