@@ -1279,6 +1279,7 @@
 <xsl:template match="x:revisionDesc">
     <section>
         <h3>Revision history</h3>
+        <p id="latestcommit"></p>
         <xsl:element name="table">
             <xsl:apply-templates/>
         </xsl:element>

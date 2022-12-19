@@ -6,9 +6,9 @@ const Mirador = MiradorModule.Mirador;
 const miradorImageTools = MiradorModule.miradorImageToolsPlugin;
 const miradorAnnotations = MiradorModule.miradorAnnotationPlugin;
 
-'use strict';
-
 const TSTViewer = (function() {
+    'use strict';
+
     const _state = Object.seal({
         manifest: null,
         winname: 'win1',
@@ -48,6 +48,9 @@ const TSTViewer = (function() {
             else
                 lineView(l);
         }
+
+        // check for GitHub commit history
+        latestCommits(recordcontainer);
 
         recordcontainer.addEventListener('click',events.docClick);
         recordcontainer.addEventListener('mouseover',events.docMouseover);
@@ -313,12 +316,33 @@ const TSTViewer = (function() {
         win.store.dispatch(act);
     };
 
-    const cleanLb = function(par) {
+    const cleanLb = (par) => {
         const lbs = par.querySelectorAll('[data-nobreak]');
         for(const lb of lbs) {
             const prev = lb.previousSibling;
             if(prev && prev.nodeType === 3)
                 prev.data = prev.data.trimEnd();
+        }
+    };
+
+    const latestCommits = (par) => {
+        const loc = window.location;
+        if(loc.hostname.endsWith('.github.io')) {
+            const sub = loc.hostname.split('.',1)[0];
+            const pathsplit = loc.pathname.split('/');
+            const repo = pathsplit.unshift();
+            const path = pathsplit.join('/');
+            const apiurl = `https://api.github.com/repos/${sub}/${repo}/commits?path=${path}`;
+            fetch(apiurl)
+                .then((resp) => {
+                    if(resp.ok)
+                        return resp.json();
+                })
+                .then((data) => {
+                    const date = new Date(data[0].commit.committer.date);
+                    const span = par.getElementbyId('latestcommit');
+                    span.innerHTML = `Latest commit: <a href="${data[0].html_url}">${date.toDateString()}</a>`;
+                });
         }
     };
 
