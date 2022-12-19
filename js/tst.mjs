@@ -340,9 +340,11 @@ const TSTViewer = (function() {
                         return resp.json();
                 })
                 .then((data) => {
-                    const date = new Date(data[0].commit.committer.date);
-                    const span = par.getElementbyId('latestcommit');
-                    span.innerHTML = `Latest commit: <a href="${data[0].html_url}">${date.toDateString()}</a>`;
+                    if(data) {
+                        const date = new Date(data[0].commit.committer.date);
+                        const span = par.getElementById('latestcommit');
+                        span.innerHTML = `Latest commit: <a href="${data[0].html_url}">${date.toDateString()}</a>`;
+                    }
                 });
         }
     };
