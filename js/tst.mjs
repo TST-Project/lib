@@ -333,6 +333,7 @@ const TSTViewer = (function() {
             const repo = pathsplit.unshift();
             const path = pathsplit.join('/');
             const apiurl = `https://api.github.com/repos/${sub}/${repo}/commits?path=${path}`;
+            console.log(apiurl);
             fetch(apiurl)
                 .then((resp) => {
                     if(resp.ok)
