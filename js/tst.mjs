@@ -342,7 +342,7 @@ const TSTViewer = (function() {
                 .then((data) => {
                     if(data) {
                         const date = new Date(data[0].commit.committer.date);
-                        const datestr = date.toLocateString('en-GB', {
+                        const datestr = date.toLocaleString('en-GB', {
                             weekday: 'long',
                             year: 'numeric',
                             month: 'long',
