@@ -342,8 +342,14 @@ const TSTViewer = (function() {
                 .then((data) => {
                     if(data) {
                         const date = new Date(data[0].commit.committer.date);
+                        const datestr = date.toLocateString('en-GB', {
+                            weekday: 'long',
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        });
                         const span = document.getElementById('latestcommit');
-                        span.innerHTML = `Latest commit: <a href="${data[0].html_url}">${date.toDateString()}</a>`;
+                        span.innerHTML = `Latest edit: <a href="${data[0].html_url}">${datestr}</a>`;
                     }
                 });
         }
