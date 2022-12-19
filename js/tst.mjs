@@ -330,10 +330,10 @@ const TSTViewer = (function() {
         if(loc.hostname.endsWith('.github.io')) {
             const sub = loc.hostname.split('.',1)[0];
             const pathsplit = loc.pathname.split('/');
-            const repo = pathsplit.unshift();
+            pathsplit.shift(); // pathname starts with a slash
+            const repo = pathsplit.shift();
             const path = pathsplit.join('/');
             const apiurl = `https://api.github.com/repos/${sub}/${repo}/commits?path=${path}`;
-            console.log(apiurl);
             fetch(apiurl)
                 .then((resp) => {
                     if(resp.ok)
