@@ -506,7 +506,7 @@
 
 <xsl:template match="x:filiation">
     <tr>
-        <th>Other manuscript testimonies</th>
+        <th>Manuscript filiation</th>
         <xsl:element name="td">
             <xsl:apply-templates/>
         </xsl:element>
@@ -835,7 +835,7 @@
 <xsl:template match="x:handDesc">
     <xsl:if test="node()[not(self::text())]">
         <tr>
-          <th>Scribal Hands</th>
+          <th>Scribal hands</th>
           <td><ul>
             <xsl:apply-templates select="x:handNote"/>
           </ul></td>
