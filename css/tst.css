@@ -18,12 +18,6 @@ body {
     height: 100vh;
     }
 
-@media (max-width: 600px) {
-    body {
-        flex-direction: column;
-    }
-}
-
 #recordcontainer, .recordcontainer {
     overflow-x: hidden;
     overflow-y: scroll;
@@ -55,6 +49,12 @@ body {
     /*max-width: 55%;*/
     /*max-width: 550px;
     width: 87.5%;*/
+}
+
+#record-thin .teitext {
+    /*width: 55%;*/
+    width: 87.5%;
+    font-size: 1.4rem;
 }
 
 #viewer {
@@ -181,12 +181,13 @@ th {
     vertical-align: baseline;
     font-size: 1rem;
     line-height: 2rem;
-    padding-right: 2em;
+    padding-right: 1.5rem;
     hyphens: none;
 }
 
 th.left-align {
     text-align: left;
+    writing-mode: horizontal-tb;
 }
 
 thead th {
@@ -348,3 +349,23 @@ p blockquote {
 a.uri {
     word-break: break-word;
 }
+
+hr {
+    width: 87.5%;
+}
+
+@media (max-width: 800px) {
+    th {
+        writing-mode: vertical-lr;
+    }
+}
+
+@media (max-width: 600px) {
+    body {
+        flex-direction: column;
+    }
+    #record-thin .teitext {
+        width: 95%;
+    }
+}
+

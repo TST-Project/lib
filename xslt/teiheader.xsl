@@ -143,7 +143,7 @@
 
 <xsl:template match="x:idno">
     <xsl:if test="node()">
-        <tr><th>
+        <tr><th class="left-align">
             <xsl:if test="@type">
               <xsl:call-template name="capitalize">
                 <xsl:with-param name="str" select="@type"/>
