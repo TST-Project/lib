@@ -367,5 +367,8 @@ hr {
     #record-thin .teitext {
         width: 95%;
     }
+    ul {
+        list-style-type: none;
+    }
 }
 
