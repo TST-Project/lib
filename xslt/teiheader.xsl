@@ -159,7 +159,7 @@
 <xsl:template match="x:idno[@type='alternate']">
     <xsl:if test="node()">
         <tr>
-          <th>Other identifiers</th>
+          <th class="left-align">Other identifiers</th>
           <td><ul>
             <xsl:for-each select="x:idno">
                 <li><xsl:value-of select="."/></li>
