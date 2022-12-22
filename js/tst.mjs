@@ -349,7 +349,7 @@ const TSTViewer = (function() {
                             day: 'numeric'
                         });
                         const span = document.getElementById('latestcommit');
-                        span.innerHTML = `Latest edit: <a href="${data[0].html_url}">${datestr}</a>`;
+                        span.innerHTML = `Last updated <a href="${data[0].html_url}">${datestr}</a>.`;
                     }
                 });
         }
