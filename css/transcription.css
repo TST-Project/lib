@@ -68,7 +68,7 @@ div.lg {
 }
 
 
-#tooltip div.lg {
+#tooltip div.lg, .note div.lg {
     font-size: revert;
     line-height: revert;
 }
