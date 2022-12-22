@@ -734,7 +734,7 @@ const Transliterate = (function() {
                 .replace(/([kṅcñṭṇtnpmyrlvḻḷṟṉ])\s+([aāiīuūeēoō])/g, '$1$2')
                 .replace(/ḷ/g,'l̥')
                 .replace(/(^|\s)_ā/g,'$1\u0B85\u200D\u0BBE')
-                .replace(/(\S)([AĀIĪUŪEĒ])/g,'$1\u200C$2')
+                .replace(/(\S)([AĀIĪUŪEĒOŌ])/g,'$1\u200C$2')
                 .replace(/(\S)·/g,'$1\u200C')
                 .toLowerCase();
             const rgex = new RegExp(`([${grc.join('')}])([${[...grv.keys()].join('')}])`,'g');
