@@ -137,7 +137,17 @@
     <xsl:element name="span">
          <xsl:attribute name="class">msid</xsl:attribute>
          <xsl:attribute name="lang">en</xsl:attribute>
-        <xsl:apply-templates select="/x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:listWit/x:witness[@xml:id=$cleanstr]/x:abbr/node()"/>
+         <xsl:variable name="witness" select="/x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:listWit/x:witness[@xml:id=$cleanstr]"/>
+         <xsl:variable name="siglum" select="$witness/x:abbr/node()"/>
+         <xsl:variable name="anno" select="$witness/x:expan"/>
+         <xsl:if test="$anno">
+             <xsl:attribute name="data-anno"></xsl:attribute>
+             <xsl:element name="span">
+                <xsl:attribute name="class">anno-inline</xsl:attribute>
+                 <xsl:apply-templates select="$anno"/>
+             </xsl:element>
+         </xsl:if>
+         <xsl:apply-templates select="$witness/x:abbr/node()"/>
     </xsl:element>
 </xsl:template>
 
