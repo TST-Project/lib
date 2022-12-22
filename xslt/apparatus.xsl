@@ -53,10 +53,12 @@
                 <xsl:attribute name="id"><xsl:value-of select="@xml:id"/></xsl:attribute>
                 <div>
                     <xsl:attribute name="class">text-block</xsl:attribute>
+                    <xsl:call-template name="lang"/>
                     <xsl:apply-templates/>
                 </div>
                 <div>
                     <xsl:attribute name="class">apparatus-block</xsl:attribute>
+                    <xsl:call-template name="lang"/>
                     <xsl:call-template name="apparatus"/>
                 </div>
             </div>
@@ -75,10 +77,12 @@
                 <xsl:attribute name="id"><xsl:value-of select="@xml:id"/></xsl:attribute>
                 <div>
                     <xsl:attribute name="class">text-block</xsl:attribute>
+                    <xsl:call-template name="lang"/>
                     <xsl:apply-templates/>
                 </div>
                 <div>
                     <xsl:attribute name="class">apparatus-block</xsl:attribute>
+                    <xsl:call-template name="lang"/>
                     <xsl:call-template name="apparatus"/>
                 </div>
             </div>
