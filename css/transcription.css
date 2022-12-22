@@ -68,6 +68,11 @@ div.lg {
 }
 
 
+#tooltip div.lg {
+    font-size: revert;
+    line-height: revert;
+}
+
 div.lg:first-child {
     padding-top: 0;
 }
