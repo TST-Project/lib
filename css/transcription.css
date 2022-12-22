@@ -287,15 +287,20 @@ span.space {background-color: rgba(132,132,10,0.3);
            /* color: #FFFFCC; */
 }
 
-span.editor {font-size: 0.8rem;
-             font-variant: small-caps;
+span.editor {
+    font-size: 0.8rem;
+    font-variant: small-caps;
 }
 
 span.note {
-          /*vertical-align: -20%;*/
-          font-size:80%;
-          /*font-variant: sub;*/
+    /*vertical-align: -20%;*/
+    font-size:80%;
+    /*font-variant: sub;*/
 }
+.anno-inline span.note {
+    font-size: 100%;
+}
+
 span.note.inline {
     margin-left: 0;
 }
@@ -307,10 +312,8 @@ span.note::after {
     content: ']';
 }
 
-span.note.super::before, span.note.sub::before {
-    content: '';
-}
-span.note.super::after, span.note.sub::after {
+span.note.super::before, span.note.sub::before, .anno-inline span.note::before,
+span.note.super::after, span.note.sub::after, .anno-inline span.note::after {
     content: '';
 }
 
