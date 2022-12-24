@@ -223,7 +223,7 @@ const TSTViewer = (function() {
         apparatus(targ) {
             const par = targ.closest('div.apparatus-block');
             if(!par) return;
-            const allright = [...par.querySelectorAll('.lem')];
+            const allright = [...par.querySelectorAll(':scope > .app > .lem')];
             const pos = allright.indexOf(targ);
             const left = par.parentElement.querySelector('.text-block');
             const allleft = left.querySelectorAll('.lem-inline');
