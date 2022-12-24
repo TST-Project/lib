@@ -240,7 +240,7 @@ const TSTViewer = (function() {
 
     const toolTip = {
         make: function(e,targ) {
-            const toolText = targ.dataset.anno || targ.querySelector('.anno-inline')?.cloneNode(true);
+            const toolText = targ.dataset.anno || targ.querySelector(':scope > .anno-inline')?.cloneNode(true);
             if(!toolText) return;
 
             var tBox = document.getElementById('tooltip');
