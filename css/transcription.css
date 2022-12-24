@@ -39,7 +39,7 @@
     font-style: normal;
 }
 
-div.diplo, p.diplo {
+div.diplo, div.wide.diplo, p.diplo {
     display: inline;
 }
 

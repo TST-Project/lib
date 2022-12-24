@@ -363,28 +363,29 @@ const TSTViewer = (function() {
             const els = par.querySelectorAll('.diplo');
             for(const el of els)
                 el.classList.remove('diplo');
-            
+           /* 
             if(document.getElementById('record-fat')) {
                 const apps = par.querySelectorAll('.app');
                 for(const app of apps)
                     app.style.display = 'initial';
             }
-
+            */
             icon.title = 'diplomatic view';
         }
         else {
             icon.classList.add('diplo');
             par.classList.add('diplo');
             
-            const els = par.querySelectorAll('p,div.lg,div.l,div.ab,.pb,.lb,.cb,.caesura,.milestone');
+            const els = par.querySelectorAll('p,.para,div.lg,div.l,div.ab,.pb,.lb,.cb,.caesura,.milestone');
             for(const el of els)
                 el.classList.add('diplo');
-            
+            /*
             if(document.getElementById('record-fat')) {
                 const apps = par.querySelectorAll('.app');
                 for(const app of apps)
                     app.style.display = 'none';
             } 
+            */
             icon.title = 'paragraph view';
         }
 
