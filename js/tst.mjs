@@ -217,7 +217,7 @@ const TSTViewer = (function() {
             const allleft = [...par.querySelectorAll('.lem-inline')];
             const pos = allleft.indexOf(targ);
             const right = par.parentElement.querySelector('.apparatus-block');
-            const allright = right.querySelectorAll('.lem');
+            const allright = right.querySelectorAll(':scope > .app > .lem');
             allright[pos].classList.add('highlit');
         },
         apparatus(targ) {
