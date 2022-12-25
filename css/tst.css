@@ -147,7 +147,7 @@ body {
 
 #transbutton:lang(sa-Mlym) {
     padding: 0.3rem 0.4rem 0.1rem 0.4rem;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
 }
 
 #transbutton:hover {
@@ -196,7 +196,7 @@ thead th {
 
 td {
     font-size: 1.4rem;
-    line-height: 2rem;
+    line-height: 140%;
 }
 
 td p:first-child {
