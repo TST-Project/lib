@@ -654,7 +654,7 @@ const Transliterate = (function() {
             if(!d_conv) text = text.toLowerCase();
         
             // remove space between word-final consonant and word-initial vowel
-            text = text.replace(/([ḍdrmvynhs]) ([aāiīuūṛeēoōêô])/g, '$1$2');
+            text = text.replace(/([gḍdrmvynhs]) ([aāiīuūṛeēoōêô])/g, '$1$2');
         
             if(d_conv) text = text.toLowerCase();
         
