@@ -16,12 +16,14 @@
 @font-face {
     font-family: 'PedanticMalayalam';
     src: url('../fonts/PedanticMalayalam.woff');
+    size-adjust: 115%;
     unicode-range: U+0D00-0D7F, U+25CC;
 }
 
 @font-face {
     font-family: 'PedanticMalayalam';
     src: url('../fonts/PedanticMalayalamBold.woff');
+    size-adjust: 115%;
     unicode-range: U+0D00-0D7F, U+25CC;
     font-weight: bold;
 }
@@ -106,7 +108,7 @@
 @font-face {
     font-family: 'Bangla';
     src: url('../fonts/Bangla-custom.woff');
-    size-adjust: 115%;
+    size-adjust: 130%;
     unicode-range: U+0980-09FF;
 }
 
