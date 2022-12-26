@@ -70,11 +70,11 @@ section div.wide {
 .rdg {
 }
 
-.rdg:not(:last-child)::after, .lem-wit::after {
+.rdg:not(:last-child) .rdg-wit .msid:last-child::after, .lem-wit > .msid:last-child::after {
     content: ';';
 }
 
-.rdg:last-child::after {
+.rdg:last-child .rdg-wit .msid:last-child::after {
     content: '.';
 }
 
