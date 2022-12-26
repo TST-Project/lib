@@ -8,39 +8,42 @@
 
 <xsl:template name="splitwit">
     <xsl:param name="mss" select="@wit"/>
-        <xsl:if test="string-length($mss)">
-            <!--xsl:if test="not($mss=@wit)"><xsl:text>,</xsl:text></xsl:if-->
-            <xsl:element name="span">
-                 <xsl:attribute name="class">msid</xsl:attribute>
-                 <xsl:attribute name="lang">en</xsl:attribute>
-                 <xsl:variable name="msstring" select="substring-before(
-                                            concat($mss,' '),
-                                          ' ')"/>
-                 <xsl:variable name="cleanstr" select="substring-after($msstring,'#')"/>
-                 <xsl:variable name="witness" select="/x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:listWit/x:witness[@xml:id=$cleanstr]"/>
-                 <xsl:variable name="siglum" select="$witness/x:abbr/node()"/>
-                 <xsl:variable name="anno" select="$witness/x:expan"/>
-                 <xsl:if test="$anno">
-                     <xsl:attribute name="data-anno"/>
-                     <xsl:element name="span">
-                        <xsl:attribute name="class">anno-inline</xsl:attribute>
-                         <xsl:apply-templates select="$anno"/>
-                     </xsl:element>
-                 </xsl:if>
-                 <xsl:choose>
-                    <xsl:when test="$siglum">
-                        <xsl:apply-templates select="$siglum"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:value-of select="$cleanstr"/>
-                    </xsl:otherwise>
-                </xsl:choose>
-            </xsl:element>
+        <!--xsl:if test="string-length($mss)"-->
+        <!--xsl:if test="not($mss=@wit)"><xsl:text>,</xsl:text></xsl:if-->
+        <xsl:element name="span">
+             <xsl:attribute name="class">msid</xsl:attribute>
+             <xsl:attribute name="lang">en</xsl:attribute>
+             <xsl:variable name="msstring" select="substring-before(
+                                        concat($mss,' '),
+                                      ' ')"/>
+             <xsl:variable name="cleanstr" select="substring-after($msstring,'#')"/>
+             <xsl:variable name="witness" select="/x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:listWit/x:witness[@xml:id=$cleanstr]"/>
+             <xsl:variable name="siglum" select="$witness/x:abbr/node()"/>
+             <xsl:variable name="anno" select="$witness/x:expan"/>
+             <xsl:if test="$anno">
+                 <xsl:attribute name="data-anno"/>
+                 <xsl:element name="span">
+                    <xsl:attribute name="class">anno-inline</xsl:attribute>
+                     <xsl:apply-templates select="$anno"/>
+                 </xsl:element>
+             </xsl:if>
+             <xsl:choose>
+                <xsl:when test="$siglum">
+                    <xsl:apply-templates select="$siglum"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="$cleanstr"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:element>
+        <xsl:variable name="nextstr" select="substring-after($mss, ' ')"/>
+        <xsl:if test="string-length($nextstr)">
+            <xsl:text>&#x200B;</xsl:text>
             <xsl:call-template name="splitwit">
-                <xsl:with-param name="mss" select=
-                    "substring-after($mss, ' ')"/>
+                <xsl:with-param name="mss" select="$nextstr"/>
             </xsl:call-template>
         </xsl:if>
+        <!--/xsl:if-->
 </xsl:template>
 
 <xsl:template match="x:listWit"/>
