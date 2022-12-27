@@ -50,7 +50,7 @@ const TSTViewer = (function() {
         }
 
         const corresps = params.getAll('corresp');
-        if(corresps) scrollToCorresp(corresps);
+        if(corresps.length > 0) scrollToCorresp(corresps);
 
         // check for GitHub commit history
         latestCommits();
