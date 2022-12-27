@@ -256,8 +256,8 @@ const TSTViewer = (function() {
             else {
                 tBox = document.createElement('div');
                 tBox.id = 'tooltip';
-                tBox.style.opacity = 0;
-                tBox.style.transition = 'opacity 0.2s ease-in';
+                //tBox.style.opacity = 0;
+                //tBox.style.transition = 'opacity 0.2s ease-in';
                 document.body.appendChild(tBox);
                 tBoxDiv.myTarget = targ;
             }
@@ -268,8 +268,12 @@ const TSTViewer = (function() {
             tBoxDiv.myTarget = targ;
             tBox.appendChild(tBoxDiv);
             targ.addEventListener('mouseleave',toolTip.remove,{once: true});
-            window.getComputedStyle(tBox).opacity;
-            tBox.style.opacity = 1;
+            //window.getComputedStyle(tBox).opacity;
+            //tBox.style.opacity = 1;
+            tBox.animate([
+                {opacity: 0 },
+                {opacity: 1, easing: 'ease-in'}
+                ], 200);
         },
         remove: function(e) {
             const tBox = document.getElementById('tooltip');
