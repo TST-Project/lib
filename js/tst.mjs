@@ -20,11 +20,12 @@ const TSTViewer = (function() {
 
     const init = function() {
 
+        const params = new URLSearchParams(window.location.search);
         // load image viewer if facsimile available
         const viewer = document.getElementById('viewer');
         if(viewer) {
             _state.manifest = viewer.dataset.manifest;
-            const param = (new URLSearchParams(window.location.search)).get('facs');
+            const param = params.get('facs');
             const page = param ? parseInt(param) - 1 : null;
             if(_state.mirador)
                 refreshMirador(_state.mirador,viewer.dataset.manifest, page || viewer.dataset.start);
@@ -32,7 +33,6 @@ const TSTViewer = (function() {
                 _state.mirador = newMirador('viewer',viewer.dataset.manifest,page || viewer.dataset.start);
         }        
         
-
         // initialize events for the record text
         const recordcontainer = document.getElementById('recordcontainer');
 
@@ -49,6 +49,9 @@ const TSTViewer = (function() {
                 lineView(l);
         }
 
+        const corresps = params.getAll('corresp');
+        if(corresps) scrollToCorresp(corresps);
+
         // check for GitHub commit history
         latestCommits();
 
@@ -57,6 +60,18 @@ const TSTViewer = (function() {
         recordcontainer.addEventListener('mouseout',events.docMouseout);
         recordcontainer.addEventListener('copy',events.removeHyphens);
 
+    };
+
+    const scrollToCorresp = (corresps) => {
+        const str = corresps.map(c => `[data-corresp='${c}']`).join(' ');
+        const el = document.querySelector(str);
+        if(!el) return;
+
+        el.scrollIntoView({behaviour: 'smooth', block: 'center'});
+        el.classList.add('highlit');
+        document.addEventListener('click',() => {
+           el.classList.remove('highlit'); 
+        },{once: true});
     };
 
     const newMirador = function(id,manifest,start = 0,annoMap = _state.annoMap, annotate = false) {

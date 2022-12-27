@@ -39,6 +39,9 @@
 
 <xsl:template name="p">
     <xsl:element name="p">
+        <xsl:if test="@corresp">
+            <xsl:attribute name="data-corresp"><xsl:value-of select="@corresp"/></xsl:attribute>
+        </xsl:if>
         <xsl:call-template name="lang"/>
         <xsl:apply-templates/>
     </xsl:element>
@@ -85,6 +88,9 @@
 <xsl:template name="lg">
     <xsl:element name="div">
         <xsl:attribute name="class">lg</xsl:attribute>
+        <xsl:if test="@corresp">
+            <xsl:attribute name="data-corresp"><xsl:value-of select="@corresp"/></xsl:attribute>
+        </xsl:if>
         <xsl:if test="@met">
             <xsl:attribute name="data-anno"><xsl:value-of select="@met"/></xsl:attribute>
         </xsl:if>

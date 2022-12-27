@@ -8,6 +8,7 @@
 
 <xsl:template name="splitwit">
     <xsl:param name="mss" select="@wit"/>
+    <xsl:param name="corresp"/>
         <!--xsl:if test="string-length($mss)"-->
         <!--xsl:if test="not($mss=@wit)"><xsl:text>,</xsl:text></xsl:if-->
         <xsl:element name="span">
@@ -17,9 +18,15 @@
                                         concat($mss,' '),
                                       ' ')"/>
              <xsl:variable name="cleanstr" select="substring-after($msstring,'#')"/>
-             <xsl:variable name="witness" select="/x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:listWit/x:witness[@xml:id=$cleanstr]"/>
+             <xsl:variable name="witness" select="/x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:listWit//x:witness[@xml:id=$cleanstr]"/>
              <xsl:variable name="siglum" select="$witness/x:abbr/node()"/>
              <xsl:variable name="anno" select="$witness/x:expan"/>
+
+             <xsl:variable name="parwit" select="$witness/ancestor::x:witness"/>
+
+             <xsl:variable name="mysource" select="$witness/@source"/>
+             <xsl:variable name="parsource" select="$parwit/@source"/>
+             <xsl:variable name="source" select="$mysource[$mysource] | $parsource[not($mysource)]"/>
              <xsl:if test="$anno">
                  <xsl:attribute name="data-anno"/>
                  <xsl:element name="span">
@@ -29,7 +36,29 @@
              </xsl:if>
              <xsl:choose>
                 <xsl:when test="$siglum">
-                    <xsl:apply-templates select="$siglum"/>
+                    <xsl:choose>
+                    <xsl:when test="$source">
+                        <xsl:element name="a">
+                            <xsl:variable name="href">
+                                <xsl:value-of select="$source"/>
+                                <xsl:text>?corresp=</xsl:text>
+                                <xsl:choose>
+                                    <xsl:when test="$parwit"><xsl:value-of select="$parwit/@xml:id"/></xsl:when>
+                                    <xsl:otherwise><xsl:value-of select="$cleanstr"/></xsl:otherwise>
+                                </xsl:choose>
+                            </xsl:variable>
+                            <xsl:attribute name="href">
+                                <xsl:value-of select="$href"/>
+                                <xsl:if test="$corresp">
+                                    <xsl:text>&amp;corresp=</xsl:text>
+                                    <xsl:value-of select="$corresp"/>
+                                </xsl:if>
+                            </xsl:attribute>
+                            <xsl:apply-templates select="$siglum"/>
+                        </xsl:element>
+                    </xsl:when>
+                    <xsl:otherwise><xsl:apply-templates select="$siglum"/></xsl:otherwise>
+                    </xsl:choose>
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:value-of select="$cleanstr"/>
@@ -41,6 +70,7 @@
             <xsl:text>&#x200B;</xsl:text>
             <xsl:call-template name="splitwit">
                 <xsl:with-param name="mss" select="$nextstr"/>
+                <xsl:with-param name="corresp" select="$corresp"/>
             </xsl:call-template>
         </xsl:if>
         <!--/xsl:if-->
@@ -54,6 +84,9 @@
             <div>
                 <xsl:attribute name="class">para wide</xsl:attribute>
                 <xsl:attribute name="id"><xsl:value-of select="@xml:id"/></xsl:attribute>
+                <xsl:if test="@corresp">
+                    <xsl:attribute name="data-corresp"><xsl:value-of select="@corresp"/></xsl:attribute>
+                </xsl:if>
                 <div>
                     <xsl:attribute name="class">text-block</xsl:attribute>
                     <xsl:call-template name="lang"/>
@@ -78,6 +111,9 @@
             <div>
                 <xsl:attribute name="class">lg wide</xsl:attribute>
                 <xsl:attribute name="id"><xsl:value-of select="@xml:id"/></xsl:attribute>
+                <xsl:if test="@corresp">
+                    <xsl:attribute name="data-corresp"><xsl:value-of select="@corresp"/></xsl:attribute>
+                </xsl:if>
                 <div>
                     <xsl:attribute name="class">text-block</xsl:attribute>
                     <xsl:call-template name="lang"/>
@@ -191,6 +227,7 @@
 </xsl:template>
 
 <xsl:template name="lemma">
+    <xsl:variable name="corresp" select="ancestor::*[@corresp]/@corresp"/>
     <span>
         <xsl:attribute name="class">lem</xsl:attribute>
         <xsl:apply-templates select="x:lem/node()"/>
@@ -200,6 +237,7 @@
             <xsl:attribute name="class">lem-wit</xsl:attribute>
             <xsl:call-template name="splitwit">
                 <xsl:with-param name="mss" select="x:lem/@wit"/>
+                <xsl:with-param name="corresp" select="$corresp"/>
             </xsl:call-template>
         </span>
     </xsl:if>
@@ -207,6 +245,7 @@
 </xsl:template>
 
 <xsl:template name="reading">
+    <xsl:variable name="corresp" select="ancestor::*[@corresp]/@corresp"/>
     <span>
         <xsl:attribute name="class">rdg</xsl:attribute>
         <span>
@@ -223,7 +262,9 @@
         <xsl:text> </xsl:text>
         <span>
             <xsl:attribute name="class">rdg-wit</xsl:attribute>
-            <xsl:call-template name="splitwit"/>
+            <xsl:call-template name="splitwit">
+                <xsl:with-param name="corresp" select="$corresp"/>
+            </xsl:call-template>
         </span>
     </span>
     <xsl:text> </xsl:text>

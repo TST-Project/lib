@@ -17,6 +17,7 @@
     <xsl:element name="section">
         <xsl:attribute name="class">teitext</xsl:attribute>
         <xsl:attribute name="data-synch"><xsl:value-of select="@synch"/></xsl:attribute>
+        <xsl:attribute name="data-corresp"><xsl:value-of select="$textid"/></xsl:attribute>
         <xsl:call-template name="lang"/>
         <xsl:element name="table">
             <xsl:attribute name="class">texttitle</xsl:attribute>
