@@ -180,9 +180,15 @@
     <xsl:element name="span">
          <xsl:attribute name="class">msid</xsl:attribute>
          <xsl:attribute name="lang">en</xsl:attribute>
-         <xsl:variable name="witness" select="/x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:listWit/x:witness[@xml:id=$cleanstr]"/>
+         <xsl:variable name="witness" select="/x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:listWit//x:witness[@xml:id=$cleanstr]"/>
          <xsl:variable name="siglum" select="$witness/x:abbr/node()"/>
          <xsl:variable name="anno" select="$witness/x:expan"/>
+         <xsl:variable name="parwit" select="$witness/ancestor::x:witness"/>
+
+         <xsl:variable name="mysource" select="$witness/@source"/>
+         <xsl:variable name="parsource" select="$parwit/@source"/>
+         <xsl:variable name="source" select="$mysource[$mysource] | $parsource[not($mysource)]"/>
+         <xsl:variable name="corresp" select="ancestor::*[@corresp]/@corresp"/>
          <xsl:if test="$anno">
              <xsl:attribute name="data-anno"></xsl:attribute>
              <xsl:element name="span">
@@ -190,7 +196,29 @@
                  <xsl:apply-templates select="$anno"/>
              </xsl:element>
          </xsl:if>
-         <xsl:apply-templates select="$witness/x:abbr/node()"/>
+        <xsl:choose>
+        <xsl:when test="$source">
+            <xsl:element name="a">
+                <xsl:variable name="href">
+                    <xsl:value-of select="$source"/>
+                    <xsl:text>?corresp=</xsl:text>
+                    <xsl:choose>
+                        <xsl:when test="$parwit"><xsl:value-of select="$parwit/@xml:id"/></xsl:when>
+                        <xsl:otherwise><xsl:value-of select="$cleanstr"/></xsl:otherwise>
+                    </xsl:choose>
+                </xsl:variable>
+                <xsl:attribute name="href">
+                    <xsl:value-of select="$href"/>
+                    <xsl:if test="$corresp">
+                        <xsl:text>&amp;corresp=</xsl:text>
+                        <xsl:value-of select="$corresp"/>
+                    </xsl:if>
+                </xsl:attribute>
+                <xsl:apply-templates select="$siglum"/>
+            </xsl:element>
+        </xsl:when>
+        <xsl:otherwise><xsl:apply-templates select="$siglum"/></xsl:otherwise>
+        </xsl:choose>
     </xsl:element>
 </xsl:template>
 
