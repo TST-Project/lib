@@ -93,7 +93,8 @@ section div.wide {
     word-break: normal;
 }
 
-.msid a:link, .msid a:active {
+.msid a:link, .msid a:active,
+a.alignment-pointer:link, a.alignment-pointer:active {
     text-decoration: none;
     text-shadow: none;
     background: none;
@@ -106,6 +107,18 @@ section div.wide {
 
 .listWit {
     display: none;
+}
+
+.alignment-pointer svg {
+    stroke: #A85110;
+    stroke-width: 10;
+    width: 1.2rem;
+    height: 1rem;
+    vertical-align: middle;
+}
+
+.alignment-pointer:hover svg {
+    stroke: #2B73B7;
 }
 
 #blackout {
