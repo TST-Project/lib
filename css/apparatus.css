@@ -137,6 +137,7 @@ section div.wide {
     padding: 0 1rem 0 1rem;
     position: sticky;
     left: 0;
+    writing-mode: horizontal-tb;
 }
 
 #alignment-viewer td {
@@ -164,5 +165,11 @@ section div.wide {
     border-left: 0;
     border-right: 4px solid #ffffff;
     padding-left: 0;
+}
+
+@media (max-width: 600px) {
+    #alignment-viewer {
+        max-width: 90%;
+    }
 }
 
