@@ -49,6 +49,9 @@ section div.wide {
     background: rgba(255,255,128,1);
 }
 
+.lightlit {
+    background: rgba(255,255,128,0.5);
+}
 /*
 .app-inline:hover .rdgs-inline, .app-inline:hover .lem-wit {
     display: inline;
@@ -100,3 +103,66 @@ section div.wide {
     background: none;
     padding-right: 0;
 }
+
+.listWit {
+    display: none;
+}
+
+#blackout {
+    z-index: 10;
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(50,50,50,.5);
+}
+#alignment-viewer {
+    max-width: 60%;
+    overflow: scroll;
+    background-color: #fffff8;
+    padding: 10px 10px 10px 0;
+    font-size: 1.1rem;
+}
+
+#alignment-viewer table {
+    border-collapse: collapse;
+}
+
+#alignment-viewer th {
+    background-color: #fffff8;
+    padding: 0 1rem 0 1rem;
+    position: sticky;
+    left: 0;
+}
+
+#alignment-viewer td {
+    font-size: inherit;
+    line-height: revert;
+    white-space: pre;
+    padding: 0;
+}
+#alignment-viewer td:empty {
+    background-color: rgb(240,240,240);
+}
+
+#alignment-viewer .group-start {
+    border-right: 0;
+    border-left: 4px solid #ffffff;
+    padding-right: 0;
+}
+#alignment-viewer .group-internal {
+    border-left: 0;
+    border-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+}
+#alignment-viewer .group-end {
+    border-left: 0;
+    border-right: 4px solid #ffffff;
+    padding-left: 0;
+}
+

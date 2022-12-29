@@ -1,5 +1,6 @@
 import { Transliterate } from './transliterate.mjs';
 import { MiradorModule } from './mirador.mjs';
+import { AlignmentViewer } from './alignment.mjs';
 import TSTStorageAdapter from './tstStorageAdapter.mjs';
 
 const Mirador = MiradorModule.Mirador;
@@ -176,7 +177,12 @@ const TSTViewer = (function() {
                 lineView(lineview);
                 return;
             }
-            
+            if(e.target.classList.contains('alignment-pointer')) {
+                e.preventDefault();
+                AlignmentViewer.viewer(e.target.href);
+                return;
+            }
+
             if(e.target.dataset.hasOwnProperty('scroll')) {
                 e.preventDefault();
                 const el = document.getElementById(e.target.href.split('#')[1]);
@@ -409,7 +415,6 @@ const TSTViewer = (function() {
         }
 
     };
-
     //window.addEventListener('load',init);
 
     return Object.freeze({

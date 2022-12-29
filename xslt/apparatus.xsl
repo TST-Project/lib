@@ -76,14 +76,32 @@
         <!--/xsl:if-->
 </xsl:template>
 
-<xsl:template match="x:listWit"/>
+<xsl:template match="x:listWit">
+    <xsl:element name="div">
+        <xsl:attribute name="class">listWit</xsl:attribute>
+        <xsl:apply-templates/>
+    </xsl:element>
+</xsl:template>
+<xsl:template match="x:witness">
+    <xsl:element name="div">
+        <xsl:attribute name="class">witness</xsl:attribute>
+        <xsl:attribute name="id"><xsl:value-of select="@xml:id"/></xsl:attribute>
+        <xsl:element name="span">
+            <xsl:attribute name="class">msid</xsl:attribute>
+            <xsl:apply-templates select="x:abbr/node()"/>
+        </xsl:element>
+        <xsl:apply-templates select="x:listWit"/>
+    </xsl:element>
+</xsl:template>
 
 <xsl:template match="x:text//x:p">
     <xsl:choose>
         <xsl:when test=".//x:app and not(//x:facsimile/x:graphic)">
             <div>
                 <xsl:attribute name="class">para wide</xsl:attribute>
-                <xsl:attribute name="id"><xsl:value-of select="@xml:id"/></xsl:attribute>
+                <xsl:if test="@xml:id">
+                    <xsl:attribute name="id"><xsl:value-of select="@xml:id"/></xsl:attribute>
+                </xsl:if>
                 <xsl:if test="@corresp">
                     <xsl:attribute name="data-corresp"><xsl:value-of select="@corresp"/></xsl:attribute>
                 </xsl:if>
@@ -110,7 +128,9 @@
         <xsl:when test=".//x:app and not(//x:facsimile/x:graphic)">
             <div>
                 <xsl:attribute name="class">lg wide</xsl:attribute>
-                <xsl:attribute name="id"><xsl:value-of select="@xml:id"/></xsl:attribute>
+                <xsl:if test="@xml:id">
+                    <xsl:attribute name="id"><xsl:value-of select="@xml:id"/></xsl:attribute>
+                </xsl:if>
                 <xsl:if test="@corresp">
                     <xsl:attribute name="data-corresp"><xsl:value-of select="@corresp"/></xsl:attribute>
                 </xsl:if>
@@ -252,6 +272,14 @@
             <xsl:apply-templates select="./node()"/>
         </span>
     </xsl:for-each-->
+    <xsl:if test="@source">
+        <xsl:element name="a">
+            <xsl:attribute name="href"><xsl:value-of select="@source"/></xsl:attribute>
+            <xsl:attribute name="data-anno">Textual alignment of this section</xsl:attribute>
+            <xsl:attribute name="class">alignment-pointer</xsl:attribute>
+            <xsl:text>🖙</xsl:text>
+        </xsl:element>
+    </xsl:if>
 </xsl:template>
 
 <xsl:template name="lemma">
