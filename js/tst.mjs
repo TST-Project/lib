@@ -167,6 +167,9 @@ const TSTViewer = (function() {
     const events = {
 
         docClick: function(e) {
+            const toolTip = document.getElementById('tooltip');
+            if(toolTip) toolTip.remove();
+
             const locel = e.target.closest('[data-loc]');
             if(locel) {
                 jumpTo(locel.dataset.loc);
@@ -177,9 +180,10 @@ const TSTViewer = (function() {
                 lineView(lineview);
                 return;
             }
-            if(e.target.classList.contains('alignment-pointer')) {
+            const apointer = e.target.closest('.alignment-pointer');
+            if(apointer) {
                 e.preventDefault();
-                AlignmentViewer.viewer(e.target.href);
+                AlignmentViewer.viewer(apointer.href);
                 return;
             }
 
@@ -298,6 +302,8 @@ const TSTViewer = (function() {
         },
         remove: function(e) {
             const tBox = document.getElementById('tooltip');
+            if(!tBox) return;
+
             if(tBox.children.length === 1) {
                 tBox.remove();
                 return;
