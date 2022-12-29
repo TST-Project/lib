@@ -150,6 +150,7 @@ a.alignment-pointer:link, a.alignment-pointer:active {
     padding: 0 1rem 0 1rem;
     position: sticky;
     left: 0;
+    text-align: left;
     writing-mode: horizontal-tb;
 }
 
