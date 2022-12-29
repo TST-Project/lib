@@ -596,6 +596,10 @@ rb {
     font-style: normal;
 }
 
+.note em.title {
+    font-style: italic;
+}
+
 .paratext:hover {
     background: rgba(239,239,61,0.5);
 }
