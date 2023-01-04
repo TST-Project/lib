@@ -2,8 +2,6 @@ import { replaceEl, transliterateTitle, convertFile } from './common.mjs';
 import { xml } from '../../../editor/lib/utils.mjs';
 import { showSaveFilePicker } from 'https://cdn.jsdelivr.net/npm/native-file-system-adapter/mod.js';
 
-'use strict';
-
 const upload = async (arr) => {
     const files = arr.map(file => {
         const reader = new FileReader();
@@ -38,10 +36,12 @@ const main = async () => {
         const subfilename = subunit.getAttribute('source');
         const subfile = subfilemap.get(subfilename);
         const subXML = xml.parseString(subfile);
+        const subcote = subXML.querySelector('unitid[type="cote"]');
+        subcote.setAttribute('type','division'); // change cote to division
         subunit.innerHTML = '';
         const tei = subXML.querySelector('TEI');
         subunit.appendChild(tei);
-    };
+    }
     
     const indoc = await xml.XSLTransform(xsltSheet,tstxml);
     transliterateTitle(indoc,tstxml);
