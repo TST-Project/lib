@@ -68,6 +68,27 @@
     </xsl:element>
 </xsl:template>
 
+<xsl:template match="x:p//x:list">
+    <xsl:element name="span">
+        <xsl:attribute name="class">list</xsl:attribute>
+        <xsl:call-template name="lang"/>
+        <xsl:apply-templates/>
+    </xsl:element>
+</xsl:template>
+<xsl:template match="x:p//x:list[@rend='numbered']">
+    <xsl:element name="span">
+        <xsl:attribute name="class">list numbered</xsl:attribute>
+        <xsl:apply-templates/>
+    </xsl:element>
+</xsl:template>
+<xsl:template match="x:p//x:list/x:item">
+    <xsl:element name="span">
+        <xsl:attribute name="class">item</xsl:attribute>
+        <xsl:call-template name="lang"/>
+        <xsl:apply-templates/>
+    </xsl:element>
+</xsl:template>
+
 <xsl:template match="x:span">
     <xsl:element name="span">
         <xsl:call-template name="lang"/>
