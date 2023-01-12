@@ -79,7 +79,7 @@ const viewer = async function(url) {
     const viewer = document.createElement('div');
     viewer.id='alignment-viewer';
     replaceHeaders(hdoc);
-    viewer.append(hdoc.documentElement);
+    viewer.append(hdoc.querySelector('table'));
     blackout.append(viewer);
     document.body.append(blackout);
     blackout.addEventListener('click',killViewer);
