@@ -47,8 +47,6 @@ const main = function() {
         const subfilename = dir + '/' + subunit.getAttribute('source');
         const subfile = fs.readFileSync(subfilename,{encoding: 'utf-8'});
         const subXML = parseXML(subfile);
-        const subcote = subXML.querySelector('unitid[type="cote"]');
-        subcote.setAttribute('type','division'); // change cote to division
         subunit.innerHTML = '';
         const tei = subXML.querySelector('TEI');
         subunit.appendChild(tei);

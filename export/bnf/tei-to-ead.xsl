@@ -23,7 +23,7 @@
 </xsl:template>
 
 <xsl:template name="shelfmark">
-    <xsl:value-of select="ancestor-or-self::x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msIdentifier/x:idno[@type='shelfmark']"/>
+    <xsl:value-of select="ancestor-or-self::x:TEI[1]/x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msIdentifier/x:idno[@type='shelfmark']"/>
 </xsl:template>
 
 <xsl:template name="tsturl">
@@ -119,8 +119,10 @@
 
 <xsl:template name="didetc">
     <xsl:param name="repo">true</xsl:param>
+    <xsl:param name="type">cote</xsl:param>
     <did>
-        <unitid type="cote">
+        <unitid>
+            <xsl:attribute name="type"><xsl:value-of select="$type"/></xsl:attribute>
             <xsl:call-template name="shelfmark"/>
         </unitid>
         <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msIdentifier/x:idno[@type='alternate']/x:idno"/>
@@ -176,7 +178,6 @@
                     <xsl:apply-templates select="."/>
                 </xsl:when>
                 <xsl:otherwise>
-                    <xsl:text>YES</xsl:text>
                     <p> 
                         <xsl:call-template name="msItemHeader"/>
                     </p>
@@ -539,6 +540,7 @@
 <xsl:template match="x:msItem[@source]/x:TEI">
     <xsl:call-template name="didetc">
         <xsl:with-param name="repo">false</xsl:with-param>
+        <xsl:with-param name="type">division</xsl:with-param>
     </xsl:call-template>
 </xsl:template>
 
