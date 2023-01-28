@@ -197,6 +197,7 @@ thead th {
 td {
     font-size: 1.4rem;
     line-height: 140%;
+    word-break: break-word;
 }
 
 td p:first-child {
@@ -371,4 +372,3 @@ hr {
         list-style-type: none;
     }
 }
-
