@@ -287,7 +287,7 @@ div.teitext {
 .record-thin h2, .record-thin h3, .record-thin h4, .record-thin .editionStmt,
 .record-thin section > p, .record-thin section > div.lg, .record-thin section > table {
     /*max-width: 55%;*/
-    max-width: 550px;
+    max-width: 600px;
     width: 87.5%;
 }
 
