@@ -31,7 +31,7 @@
                     <xsl:apply-templates select="$title"/>
                 </xsl:element>
                 <xsl:element name="td">
-                    <xsl:attribute name="style">text-align: right;</xsl:attribute>
+                    <xsl:attribute name="class">text-siglum</xsl:attribute>
                     <xsl:attribute name="lang">en</xsl:attribute>
                     <xsl:variable name="cu" select="substring-after(@synch,'#')"/>
                     <xsl:value-of select="$cu"/>

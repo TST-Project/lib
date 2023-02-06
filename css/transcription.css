@@ -2,6 +2,11 @@
     width: 100%;
 }
 
+.text-siglum {
+    text-align: right; 
+    word-break: normal;
+}
+
 .italic {
     font-style: italic;
     font-weight: normal;
