@@ -335,6 +335,9 @@
         <xsl:if test="//x:note">
             <emph render="bold"><xsl:text>{}</xsl:text></emph><xsl:text> indicates a note. </xsl:text>
         </xsl:if>
+        <xsl:if test="//x:note">
+            <emph render="bold"><xsl:text>[]</xsl:text></emph><xsl:text> indicates an editorial expansion. </xsl:text>
+        </xsl:if>
         <xsl:if test="//x:space[not(@type='vacat')]">
             <emph render="bold">[</emph>_<emph render="bold">]</emph><xsl:text> indicates spaces. </xsl:text>
         </xsl:if>
@@ -1243,6 +1246,12 @@
     <emph render="bold"><xsl:text>〚</xsl:text></emph>
     <xsl:apply-templates/>
     <emph render="bold"><xsl:text>〛</xsl:text></emph>
+</xsl:template>
+
+<xsl:template match="x:ex">
+    <emph render="bold"><xsl:text>[</xsl:text></emph>
+    <xsl:apply-templates/>
+    <emph render="bold"><xsl:text>]</xsl:text></emph>
 </xsl:template>
 
 <xsl:template match="x:placeName | x:geogName | x:orgName">

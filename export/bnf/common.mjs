@@ -18,11 +18,11 @@ const replaceEl = function(newdoc,par,kidname,inplace = false) {
 };
 const transliterateTitle = (doc,tstxml) => {
     // lazily get just the first script mentioned
-    const script = tstxml.querySelector('handNote').getAttribute('script').split(' ')[0];
+    const script = tstxml.querySelector('handNote')?.getAttribute('script')?.split(' ')[0];
     const allscripts = Transliterate.scripts();
     const pars = doc.querySelectorAll('unittitle[type="non-latin originel"]');
     for(const par of pars) {
-        if(!par.querySelector('[xml:lang]')) {
+        if(!script || !par.querySelector('[xml:lang]')) {
             par.remove();
             continue;
         }
