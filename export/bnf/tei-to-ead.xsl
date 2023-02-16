@@ -329,14 +329,11 @@
         <xsl:if test="//x:sic">
             <emph render="bold">¿?</emph><xsl:text> indicates </xsl:text><emph render="italic"><xsl:text>sic erat scriptum</xsl:text></emph><xsl:text> or surplus text. </xsl:text>
         </xsl:if>
-        <xsl:if test="//x:supplied | //x:reg | //x:corr">
+        <xsl:if test="//x:supplied | //x:reg | //x:corr | //x:ex">
             <emph render="bold"><xsl:text>[]</xsl:text></emph><xsl:text> indicates text supplied or corrected by the cataloguer. </xsl:text>
         </xsl:if>
         <xsl:if test="//x:note">
             <emph render="bold"><xsl:text>{}</xsl:text></emph><xsl:text> indicates a note. </xsl:text>
-        </xsl:if>
-        <xsl:if test="//x:note">
-            <emph render="bold"><xsl:text>[]</xsl:text></emph><xsl:text> indicates an editorial expansion. </xsl:text>
         </xsl:if>
         <xsl:if test="//x:space[not(@type='vacat')]">
             <emph render="bold">[</emph>_<emph render="bold">]</emph><xsl:text> indicates spaces. </xsl:text>
