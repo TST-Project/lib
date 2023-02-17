@@ -14,7 +14,9 @@
 
 <xsl:output method="html" encoding="UTF-8" omit-xml-declaration="yes"/>
 
-<xsl:template match="x:TEI">
+<xsl:param name="root">https://tst-project.github.io/lib/</xsl:param>
+
+<xsl:template name="TEI">
     <xsl:element name="html">
         <xsl:element name="head">
             <xsl:element name="meta">
@@ -34,59 +36,59 @@
             </xsl:element>
             <xsl:element name="link">
                 <xsl:attribute name="rel">stylesheet</xsl:attribute>
-                <xsl:attribute name="href">../lib/css/tufte.css</xsl:attribute>
+                <xsl:attribute name="href"><xsl:value-of select="$root"/>css/tufte.css</xsl:attribute>
             </xsl:element>
             <xsl:element name="link">
                 <xsl:attribute name="rel">stylesheet</xsl:attribute>
-                <xsl:attribute name="href">../lib/css/fonts.css</xsl:attribute>
+                <xsl:attribute name="href"><xsl:value-of select="$root"/>css/fonts.css</xsl:attribute>
             </xsl:element>
             <xsl:element name="link">
                 <xsl:attribute name="rel">stylesheet</xsl:attribute>
-                <xsl:attribute name="href">../lib/css/tst.css</xsl:attribute>
+                <xsl:attribute name="href"><xsl:value-of select="$root"/>css/tst.css</xsl:attribute>
             </xsl:element>
             <xsl:element name="link">
                 <xsl:attribute name="rel">stylesheet</xsl:attribute>
-                <xsl:attribute name="href">../lib/css/header.css</xsl:attribute>
+                <xsl:attribute name="href"><xsl:value-of select="$root"/>css/header.css</xsl:attribute>
             </xsl:element>
             <xsl:element name="link">
                 <xsl:attribute name="rel">stylesheet</xsl:attribute>
-                <xsl:attribute name="href">../lib/css/transcription.css</xsl:attribute>
+                <xsl:attribute name="href"><xsl:value-of select="$root"/>css/transcription.css</xsl:attribute>
             </xsl:element>
             <xsl:element name="link">
                 <xsl:attribute name="rel">stylesheet</xsl:attribute>
-                <xsl:attribute name="href">../lib/css/apparatus.css</xsl:attribute>
+                <xsl:attribute name="href"><xsl:value-of select="$root"/>css/apparatus.css</xsl:attribute>
             </xsl:element>
             <!--xsl:element name="script">
                 <xsl:attribute name="type">text/javascript</xsl:attribute>
-                <xsl:attribute name="src">../lib/js/sanscript.js</xsl:attribute>
+                <xsl:attribute name="src"><xsl:value-of select="$root"/>js/sanscript.js</xsl:attribute>
             </xsl:element>
             <xsl:element name="script">
                 <xsl:attribute name="type">text/javascript</xsl:attribute>
-                <xsl:attribute name="src">../lib/js/transliterate.js</xsl:attribute>
+                <xsl:attribute name="src"><xsl:value-of select="$root"/>js/transliterate.js</xsl:attribute>
             </xsl:element>
             <xsl:element name="script">
                 <xsl:attribute name="type">text/javascript</xsl:attribute>
-                <xsl:attribute name="src">../lib/js/viewpos.js</xsl:attribute>
+                <xsl:attribute name="src"><xsl:value-of select="$root"/>js/viewpos.js</xsl:attribute>
             </xsl:element>
             <xsl:element name="script">
                 <xsl:attribute name="type">text/javascript</xsl:attribute>
-                <xsl:attribute name="src">../lib/js/hypher-nojquery.js</xsl:attribute>
+                <xsl:attribute name="src"><xsl:value-of select="$root"/>js/hypher-nojquery.js</xsl:attribute>
             </xsl:element>
             <xsl:element name="script">
                 <xsl:attribute name="type">text/javascript</xsl:attribute>
-                <xsl:attribute name="src">../lib/js/sa.js</xsl:attribute>
+                <xsl:attribute name="src"><xsl:value-of select="$root"/>js/sa.js</xsl:attribute>
             </xsl:element>
             <xsl:element name="script">
                 <xsl:attribute name="type">text/javascript</xsl:attribute>
-                <xsl:attribute name="src">../lib/js/ta.js</xsl:attribute>
+                <xsl:attribute name="src"><xsl:value-of select="$root"/>js/ta.js</xsl:attribute>
             </xsl:element>
             <xsl:element name="script">
                 <xsl:attribute name="type">text/javascript</xsl:attribute>
-                <xsl:attribute name="src">../lib/js/ta-Latn.js</xsl:attribute>
+                <xsl:attribute name="src"><xsl:value-of select="$root"/>js/ta-Latn.js</xsl:attribute>
             </xsl:element-->
             <!--xsl:element name="script">
                 <xsl:attribute name="type">text/javascript</xsl:attribute>
-                <xsl:attribute name="src">../lib/js/mirador.js</xsl:attribute>
+                <xsl:attribute name="src"><xsl:value-of select="$root"/>js/mirador.js</xsl:attribute>
             </xsl:element-->
             <!--xsl:element name="script">
                 <xsl:attribute name="type">text/javascript</xsl:attribute>
@@ -94,7 +96,9 @@
             </xsl:element-->
             <xsl:element name="script">
                 <xsl:attribute name="type">module</xsl:attribute>
-                <xsl:text>import { TSTViewer } from '../lib/js/tst.mjs';
+                <xsl:text>import { TSTViewer } from '</xsl:text>
+                <xsl:value-of select="$root"/>
+                <xsl:text>js/tst.mjs';
                 window.addEventListener('load',TSTViewer.init);
                 </xsl:text>
                 <xsl:variable name="annos" select="x:teiHeader/x:xenoData[@type='webannotation']"/>
