@@ -26,12 +26,14 @@ const TSTViewer = (function() {
         const viewer = document.getElementById('viewer');
 
         const corresps = params.getAll('corresp');
-        let facs;
+        let facs,scrollel;
         if(corresps.length > 0) {
-            const res = scrollToCorresp(corresps);
-            if(res) facs = res.split(':')[0] - 1;
+            scrollel = findCorresp(corresps);
+            if(scrollel) {
+                const res = findFacs(scrollel);
+                if(res) facs = res.split(':')[0] - 1;
+            }
         }
-
         if(viewer) {
             _state.manifest = viewer.dataset.manifest;
             const param = params.get('facs');
@@ -66,20 +68,23 @@ const TSTViewer = (function() {
         recordcontainer.addEventListener('mouseout',events.docMouseout);
         recordcontainer.addEventListener('copy',events.removeHyphens);
 
+        if(scrollel) scrollTo(scrollel);
+
     };
 
-    const scrollToCorresp = (corresps) => {
+    const findCorresp = (corresps) => {
         const str = corresps.map(c => `[data-corresp='${c}']`).join(' ');
         const el = document.querySelector(str);
-        if(!el) return;
+        return el || false;
+    };
+
+    const scrollTo = (el) => {
 
         el.scrollIntoView({behaviour: 'smooth', block: 'center'});
         el.classList.add('highlit');
         document.addEventListener('click',() => {
            el.classList.remove('highlit'); 
         },{once: true});
-
-        return findFacs(el);
     };
 
     const findFacs = (startel) => {
@@ -104,9 +109,21 @@ const TSTViewer = (function() {
             }
             return false;
         };
-    
-        if('loc' in startel.firstElementChild?.dataset)
-            return startel.firstElementChild.dataset.loc;
+        
+        const forwardFind = (e) => {
+            const walker = document.createTreeWalker(e,NodeFilter.SHOW_ALL);
+            while(walker.nextNode()) {
+                const cur = walker.currentNode;
+                if(cur.nodeType === 3 && cur.data.trim() !== '') 
+                    return false;
+                else if(cur.nodeType === 1 && 'loc' in cur.dataset) 
+                    return cur.dataset.loc;
+            }
+                
+        };
+        
+        const found = forwardFind(startel);
+        if(found) return found;
 
         var p = prev(startel);
         while(p) {
