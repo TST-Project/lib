@@ -24,15 +24,23 @@ const TSTViewer = (function() {
         const params = new URLSearchParams(window.location.search);
         // load image viewer if facsimile available
         const viewer = document.getElementById('viewer');
+
+        const corresps = params.getAll('corresp');
+        let facs;
+        if(corresps.length > 0) {
+            const res = scrollToCorresp(corresps);
+            if(res) facs = res.split(':')[0] - 1;
+        }
+
         if(viewer) {
             _state.manifest = viewer.dataset.manifest;
             const param = params.get('facs');
-            const page = param ? parseInt(param) - 1 : null;
+            const page = facs || (param ? parseInt(param) - 1 : null);
             if(_state.mirador)
                 refreshMirador(_state.mirador,viewer.dataset.manifest, page || viewer.dataset.start);
             else
                 _state.mirador = newMirador('viewer',viewer.dataset.manifest,page || viewer.dataset.start);
-        }        
+        }
         
         // initialize events for the record text
         const recordcontainer = document.getElementById('recordcontainer');
@@ -49,9 +57,6 @@ const TSTViewer = (function() {
             else
                 lineView(l);
         }
-
-        const corresps = params.getAll('corresp');
-        if(corresps.length > 0) scrollToCorresp(corresps);
 
         // check for GitHub commit history
         latestCommits();
@@ -73,6 +78,45 @@ const TSTViewer = (function() {
         document.addEventListener('click',() => {
            el.classList.remove('highlit'); 
         },{once: true});
+
+        return findFacs(el);
+    };
+
+    const findFacs = (startel) => {
+
+        const prev = (e)  => {
+            let prevEl = e.previousElementSibling;
+            if(prevEl) {
+                while(prevEl.lastElementChild)
+                    prevEl = prevEl.lastElementChild;
+                return prevEl;
+            }
+       
+            let par = e.parentNode;
+            while(par && !par.classList?.contains('teitext')) {
+                let parPrevEl = par.previousElementSibling;
+                if(parPrevEl) {
+                    while(parPrevEl.lastElementChild)
+                        parPrevEl = parPrevEl.lastElementChild;
+                    return parPrevEl;
+                }
+                par = par.parentNode;
+            }
+            return false;
+        };
+    
+        if('loc' in startel.firstElementChild?.dataset)
+            return startel.firstElementChild.dataset.loc;
+
+        var p = prev(startel);
+        while(p) {
+            if(!p) return '';
+            if('loc' in p.dataset) {
+                return p.dataset.loc;
+            }
+            p = prev(p);
+        }
+        return false;
     };
 
     const newMirador = function(id,manifest,start = 0,annoMap = _state.annoMap, annotate = false) {
