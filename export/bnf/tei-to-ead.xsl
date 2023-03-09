@@ -240,17 +240,18 @@
 </xsl:template>
 <xsl:template name="more-additions">
     <xsl:variable name="ps" select="ancestor::x:TEI/x:text//x:seg[
+                                @function != '' and
                                 @function != 'rubric' and 
                                 @function != 'incipit' and
                                 @function != 'explicit' and
                                 @function != 'completion-statement' and
                                 @function != 'colophon' and 
                                 not(ancestor::x:seg)] |
-                                ancestor::x:TEI/x:text//x:seg[@function = 'rubric']/x:seg |
-                                ancestor::x:TEI/x:text//x:seg[@function = 'incipit']/x:seg |
-                                ancestor::x:TEI/x:text//x:seg[@function = 'explicit']/x:seg |
-                                ancestor::x:TEI/x:text//x:seg[@function = 'completion-statement']/x:seg |
-                                ancestor::x:TEI/x:text//x:seg[@function = 'colophon']/x:seg"/>
+                                ancestor::x:TEI/x:text//x:seg[@function = 'rubric']/x:seg[@function != ''] |
+                                ancestor::x:TEI/x:text//x:seg[@function = 'incipit']/x:seg[@function != ''] |
+                                ancestor::x:TEI/x:text//x:seg[@function = 'explicit']/x:seg[@function != ''] |
+                                ancestor::x:TEI/x:text//x:seg[@function = 'completion-statement']/x:seg[@function != ''] |
+                                ancestor::x:TEI/x:text//x:seg[@function = 'colophon']/x:seg[@function != '']"/>
     <xsl:if test="node()[not(self::text())] or $ps">
         <xsl:for-each select="$ps">
             <item>
