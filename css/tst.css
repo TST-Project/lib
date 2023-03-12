@@ -188,6 +188,8 @@ th {
 th.left-align {
     text-align: left;
     writing-mode: horizontal-tb;
+    position: initial;
+    padding-top: 0;
 }
 
 thead th {
@@ -358,6 +360,10 @@ hr {
 @media (max-width: 800px) {
     th {
         writing-mode: vertical-lr;
+        position: sticky;
+        top: 0;
+        padding-top: 1rem;
+        background: rgb(255,255,248);
     }
 }
 
