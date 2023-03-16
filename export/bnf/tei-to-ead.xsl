@@ -1173,7 +1173,7 @@
 <xsl:template match="x:textLang">
         <xsl:variable name="mainLang" select="@mainLang"/>
         <language>
-            <xsl:attribute name="langcode"><xsl:value-of select="$mainLang"/></xsl:attribute>
+            <xsl:attribute name="langcode"><xsl:value-of select="$TST/tst:iso6392b/tst:entry[@key=$mainLang]"/></xsl:attribute>
             <xsl:value-of select="$TST/tst:langs/tst:entry[@key=$mainLang]"/>
         </language>
         <xsl:if test="@otherLangs and not(@otherLangs='')">
