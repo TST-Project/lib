@@ -56,6 +56,20 @@
     </xsl:if>
 </xsl:template>
 
+<xsl:template name="genericsplit">
+    <xsl:param name="delimiter"><xsl:text> </xsl:text></xsl:param>
+    <xsl:param name="list"/>
+    <xsl:if test="string-length($list)">
+        <tst:node>
+            <xsl:value-of select="substring-before(concat($list,$delimiter), $delimiter)"/>
+        </tst:node>
+        <xsl:call-template name="genericsplit">
+            <xsl:with-param name="list" select="substring-after($list, $delimiter)"/>
+            <xsl:with-param name="delimiter" select="$delimiter"/>
+        </xsl:call-template>
+    </xsl:if>
+</xsl:template>
+
 <xsl:template name="capitalize">
     <xsl:param name="str"/>
     <xsl:variable name="LowerCase" select="'abcdefghijklmnopqrstuvwxyz'"/>

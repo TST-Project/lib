@@ -1177,12 +1177,30 @@
             <xsl:value-of select="$TST/tst:langs/tst:entry[@key=$mainLang]"/>
         </language>
         <xsl:if test="@otherLangs and not(@otherLangs='')">
+            <xsl:variable name="otherlangs">
+                <xsl:call-template name="genericsplit">
+                    <xsl:with-param name="list" select="@otherLangs"/>
+                </xsl:call-template>
+            </xsl:variable>
             <xsl:text> (+ </xsl:text>
-            <xsl:call-template name="splitlist">
+            <xsl:variable name="delimiter"> </xsl:variable>
+            <xsl:for-each select="exsl:node-set($otherlangs)/node()">
+                <xsl:variable name="text" select="./text()"/>
+                <xsl:element name="language">
+                    <xsl:attribute name="langcode">
+                        <xsl:value-of select="$TST/tst:iso6392b/tst:entry[@key=$text]"/>
+                    </xsl:attribute>
+                    <xsl:value-of select="$TST/tst:langs/tst:entry[@key=$text]"/>
+                </xsl:element>
+                <xsl:if test="not(position() = last())">
+                    <xsl:text>, </xsl:text>
+                </xsl:if>
+            </xsl:for-each>
+            <!--xsl:call-template name="splitlist">
                 <xsl:with-param name="list" select="@otherLangs"/>
                 <xsl:with-param name="nocapitalize">true</xsl:with-param>
                 <xsl:with-param name="map">tst:langs</xsl:with-param>
-            </xsl:call-template>
+            </xsl:call-template-->
             <xsl:text>)</xsl:text>
         </xsl:if>
 </xsl:template>
