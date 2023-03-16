@@ -127,7 +127,7 @@ const find = {
             ['lat','Latin'],
             ['mal','Malayalam'],
             ['mar','Marathi'],
-            ['pal','Pali'],
+            ['pli','Pali'],
             ['por','Portuguese'],
             ['pra','Prakrit'],
             ['san','Sanskrit'],
