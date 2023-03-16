@@ -200,7 +200,7 @@
     <tst:entry key="lat">Latin</tst:entry>
     <tst:entry key="mal">Malayalam</tst:entry>
     <tst:entry key="mar">Marathi</tst:entry>
-    <tst:entry key="pal">Pali</tst:entry>
+    <tst:entry key="pli">Pali</tst:entry>
     <tst:entry key="por">Portuguese</tst:entry>
     <tst:entry key="pra">Prakrit</tst:entry>
     <tst:entry key="raj">Rajasthani</tst:entry>
@@ -211,6 +211,28 @@
     <tst:entry key="bod">Tibetan</tst:entry>
 </tst:langs>
 
+<tst:iso6392b>
+    <tst:entry key="ara">ara</tst:entry>
+    <tst:entry key="bra">bra</tst:entry>
+    <tst:entry key="zho">chi</tst:entry>
+    <tst:entry key="eng">eng</tst:entry>
+    <tst:entry key="fra">fre</tst:entry>
+    <tst:entry key="deu">ger</tst:entry>
+    <tst:entry key="guj">guj</tst:entry>
+    <tst:entry key="hin">hin</tst:entry>
+    <tst:entry key="lat">lat</tst:entry>
+    <tst:entry key="mal">mal</tst:entry>
+    <tst:entry key="mar">mar</tst:entry>
+    <tst:entry key="pli">pli</tst:entry>
+    <tst:entry key="por">por</tst:entry>
+    <tst:entry key="pra">pra</tst:entry>
+    <tst:entry key="raj">raj</tst:entry>
+    <tst:entry key="san">san</tst:entry>
+    <tst:entry key="sin">sin</tst:entry>
+    <tst:entry key="tam">tam</tst:entry>
+    <tst:entry key="tel">tel</tst:entry>
+    <tst:entry key="bod">tib</tst:entry>
+</tst:iso6392b>
 <tst:entities>
     <tst:entry key="#pcs">&#x0BF3;</tst:entry>
     <tst:entry key="#pcl">&#x0BF3;</tst:entry>
