@@ -5,7 +5,6 @@ import { hyphenation_ta } from './ta.mjs';
 import { hyphenation_ta_Latn } from './ta-Latn.mjs';
 import { hyphenation_sa } from './sa.mjs';
 import { hyphenation_hi } from './hi.mjs';
-'use strict';
 
 const Transliterate = (function() {
     const _state = Object.seal({
@@ -27,12 +26,15 @@ const Transliterate = (function() {
             'ta-Taml': new Hypher(hyphenation_ta),
             'sa-Latn': new Hypher(hyphenation_sa),
             'ta-Latn': new Hypher(hyphenation_ta_Latn),
+            'te-Latn': new Hypher(hyphenation_sa),
             'hi-Deva': new Hypher(hyphenation_hi)
         },
         defaultSanscript: null,
         reverselangs: new Map([
             ['ta-Latn-t-ta-Taml','ta-Taml-t-ta-Latn'],
             ['ta-Taml-t-ta-Latn','ta-Latn-t-ta-Taml'],
+            ['te-Latn-t-te-Gran','te-Gran-t-te-Latn'],
+            ['te-Gran-t-te-Latn','te-Latn-t-te-Gran'],
             /*
             ['mr-Latn-t-mr-Deva','mr-Deva-t-mr-Latn'],
             ['mr-Deva-t-mr-Latn','mr-Latn-t-mr-Deva'],
@@ -47,7 +49,7 @@ const Transliterate = (function() {
         button: null
     });
     
-    _state.availlangs = Object.freeze(['ta','sa',..._state.hindic]);
+    _state.availlangs = Object.freeze(['sa','ta','te',..._state.hindic]);
 
     _state.hindic.forEach(code => {
         _state.hyphenator[`${code}-Latn`] = _state.hyphenator['sa-Latn'];
