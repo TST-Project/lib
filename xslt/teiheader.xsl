@@ -333,8 +333,18 @@
 </xsl:template>
 
 <xsl:template name="excerpt">
-     <xsl:param name="xmllang"/>
-     <xsl:param name="header"/>    
+     <xsl:param name="el"/>
+     <xsl:variable name="xmllang" select="$el/@xml:lang"/>
+     <xsl:variable name="header">
+        <xsl:choose>
+            <xsl:when test="local-name($el) = 'rubric' or $el/@function = 'rubric'">Rubric / Namaskāra</xsl:when>
+            <xsl:when test="local-name($el) = 'incipit' or $el/@function = 'incipit'">Incipit</xsl:when>
+            <xsl:when test="local-name($el) = 'explicit' or $el/@function = 'explicit'">Explicit</xsl:when>
+            <xsl:when test="local-name($el) = 'finalRubric' or $el/@function = 'completion-statement'">Completion statement</xsl:when>
+            <xsl:when test="local-name($el) = 'colophon' or $el/@function = 'colophon'">Colophon</xsl:when>
+            <xsl:otherwise/>
+        </xsl:choose>
+    </xsl:variable>
      <tr>
         <th><xsl:value-of select="$header"/>
             <xsl:choose>
@@ -383,35 +393,14 @@
     </xsl:for-each>
     <xsl:apply-templates select="x:textLang"/>
     <xsl:apply-templates select="x:filiation"/>
-    <xsl:for-each select="x:rubric | ancestor::x:TEI/x:text[@corresp=$thisid]//x:seg[@function='rubric' and not(@corresp)] | ancestor::x:TEI/x:text//x:seg[@function='rubric' and @corresp=$thisid]">
+    <xsl:for-each select="x:rubric | ancestor::x:TEI/x:text[@corresp=$thisid]//x:seg[@function='rubric' and not(@corresp)] | ancestor::x:TEI/x:text//x:seg[@function='rubric' and @corresp=$thisid] | 
+    x:incipit | ancestor::x:TEI/x:text[@corresp=$thisid]//x:seg[@function='incipit' and not(@corresp)] | ancestor::x:TEI/x:text//x:seg[@function='incipit' and @corresp=$thisid] |
+    x:explicit | ancestor::x:TEI/x:text[@corresp=$thisid]//x:seg[@function='explicit' and not(@corresp)] | ancestor::x:TEI/x:text//x:seg[@function='explicit' and @corresp=$thisid] |
+    x:finalRubric | ancestor::x:TEI/x:text[@corresp=$thisid]//x:seg[@function='completion-statement' and not(@corresp)] | ancestor::x:TEI/x:text//x:seg[@function='completion-statement' and @corresp=$thisid] |
+   x:colophon | ancestor::x:TEI/x:text[@corresp=$thisid]//x:seg[@function='colophon' and not(@corresp)] | ancestor::x:TEI/x:text//x:seg[@function='colophon' and @corresp=$thisid]">
          <xsl:call-template name="excerpt">
-            <xsl:with-param name="header">Rubric / Namaskāra</xsl:with-param>
-            <xsl:with-param name="xmllang" select="@xml:lang"/>
+            <xsl:with-param name="el" select="."/>
         </xsl:call-template>
-    </xsl:for-each>
-    <xsl:for-each select="x:incipit | ancestor::x:TEI/x:text[@corresp=$thisid]//x:seg[@function='incipit' and not(@corresp)] | ancestor::x:TEI/x:text//x:seg[@function='incipit' and @corresp=$thisid]">
-         <xsl:call-template name="excerpt">
-            <xsl:with-param name="header">Incipit</xsl:with-param>
-            <xsl:with-param name="xmllang" select="@xml:lang"/>
-        </xsl:call-template>
-    </xsl:for-each>
-    <xsl:for-each select="x:explicit | ancestor::x:TEI/x:text[@corresp=$thisid]//x:seg[@function='explicit' and not(@corresp)] | ancestor::x:TEI/x:text//x:seg[@function='explicit' and @corresp=$thisid]">
-         <xsl:call-template name="excerpt">
-            <xsl:with-param name="header">Explicit</xsl:with-param>
-            <xsl:with-param name="xmllang" select="@xml:lang"/>
-        </xsl:call-template>
-    </xsl:for-each>
-    <xsl:for-each select="x:finalRubric | ancestor::x:TEI/x:text[@corresp=$thisid]//x:seg[@function='completion-statement' and not(@corresp)] | ancestor::x:TEI/x:text//x:seg[@function='completion-statement' and @corresp=$thisid]">
-         <xsl:call-template name="excerpt">
-            <xsl:with-param name="header">Completion statement</xsl:with-param>
-            <xsl:with-param name="xmllang" select="@xml:lang"/>
-         </xsl:call-template>
-    </xsl:for-each>
-    <xsl:for-each select="x:colophon | ancestor::x:TEI/x:text[@corresp=$thisid]//x:seg[@function='colophon' and not(@corresp)] | ancestor::x:TEI/x:text//x:seg[@function='colophon' and @corresp=$thisid]">
-         <xsl:call-template name="excerpt">
-            <xsl:with-param name="header">Colophon</xsl:with-param>
-            <xsl:with-param name="xmllang" select="@xml:lang"/>
-         </xsl:call-template>
     </xsl:for-each>
   </table>
   <xsl:if test="not(position() = last())">
