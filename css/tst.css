@@ -50,11 +50,13 @@ body {
     /*max-width: 550px;
     width: 87.5%;*/
 }
+.teitext {
+    font-size: 1.4rem;
+}
 
 #record-thin .teitext {
     /*width: 55%;*/
     width: 87.5%;
-    font-size: 1.4rem;
 }
 
 #viewer {
