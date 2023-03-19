@@ -1352,7 +1352,8 @@
 <xsl:template match="x:sourceDoc"/>
 
 <xsl:template name="import-milestone">
-    <xsl:if test="self::x:seg and not(./*[1]/@facs)">
+    <!--xsl:if test="self::x:seg and not(./*[1]/@facs)"-->
+    <xsl:if test="self::x:seg and not(./*[1][@facs or local-name() = 'milestone' or local-name() = 'pb'])">
         <xsl:variable name="milestone" select="preceding::*[(self::x:milestone and (@unit = 'folio' or @unit = 'page') ) or self::x:pb][1]"/>
         <xsl:if test="$milestone">
             <xsl:apply-templates select="$milestone">
