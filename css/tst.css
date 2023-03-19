@@ -50,13 +50,14 @@ body {
     /*max-width: 550px;
     width: 87.5%;*/
 }
-.teitext {
-    font-size: 1.4rem;
-}
 
-#record-thin .teitext {
+/*#record-thin */.teitext {
     /*width: 55%;*/
     width: 87.5%;
+    font-size: 1.4rem;
+}
+.teitext p:not(.diplo) {
+    max-width: 70ch;
 }
 
 #viewer {
@@ -257,7 +258,7 @@ span.spacer {display: none;
     font-family: Brill, PedanticDevanagari, PedanticMalayalam, PedanticTelugu, Tantular Bali, serif;
 }
 */
-
+/*
 div.teitext {
     border: 0;
     padding: 0 4% 0 0;
@@ -266,7 +267,7 @@ div.teitext {
     line-height:135%;
     top: 2em;
 }
-
+*/
 .texttitle td {
     font-size: 2rem;
 }
@@ -299,11 +300,11 @@ span.type {
     padding-right: 1em;
     font-variant: small-caps;
 }
-
+/*
 .teitext {
     width: inherit;
 }
-
+*/
 .off {
     display: none;
 }
