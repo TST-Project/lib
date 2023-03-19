@@ -33,7 +33,7 @@
                 <xsl:element name="td">
                     <xsl:attribute name="class">text-siglum</xsl:attribute>
                     <xsl:attribute name="lang">en</xsl:attribute>
-                    <xsl:variable name="cu" select="substring-after(@synch,'#')"/>
+                    <xsl:variable name="cu" select="translate(@synch,'#','')"/>
                     <xsl:value-of select="$cu"/>
                     <xsl:if test="$cu and $textid">
                         <xsl:text>, </xsl:text>
