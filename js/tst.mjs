@@ -59,6 +59,10 @@ const TSTViewer = (function() {
             else
                 lineView(l);
         }
+        for(const excerpt of recordcontainer.querySelectorAll('.excerpt')) {
+            for(const el of excerpt.querySelectorAll('p,.lg,.l,.ab,.caesura'))
+                el.classList.add('diplo');
+        }
 
         // check for GitHub commit history
         latestCommits();
