@@ -1075,6 +1075,12 @@
                     <xsl:call-template name="moretypes">
                         <xsl:with-param name="node" select="."/>
                     </xsl:call-template>
+                    <xsl:variable name="placement" select="ancestor::x:fw/@place"/>
+                    <xsl:if test="$placement">
+                        <xsl:text> (</xsl:text>
+                        <xsl:value-of select="translate($placement,'-',' ')"/>
+                        <xsl:text>)</xsl:text>
+                    </xsl:if>
                 </span>
             </span>
             <ul class="imported-paratext">

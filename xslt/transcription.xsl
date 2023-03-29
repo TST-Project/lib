@@ -53,8 +53,11 @@
     </xsl:element>
 </xsl:template-->
 
-<xsl:template match="x:text/x:body">
-    <xsl:apply-templates/>
+<xsl:template match="x:text/x:body | x:text/x:front | x:text//x:div">
+    <xsl:element name="div">
+        <xsl:call-template name="lang"/>
+        <xsl:apply-templates/>
+    </xsl:element>
 </xsl:template>
 
 <xsl:template match="x:ab">
@@ -72,6 +75,44 @@
     </xsl:element>
 </xsl:template>
 
+<xsl:template match="x:titlePage">
+    <xsl:element name="div">
+        <xsl:attribute name="class">titlepage</xsl:attribute>
+        <xsl:variable name="form" select="ancestor::x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:physDesc/x:objectDesc/@form"/>
+        <xsl:variable name="unit">
+            <xsl:choose>
+                <xsl:when test="$form = 'pothi'">
+                    <xsl:text>folio</xsl:text>
+                </xsl:when>
+                <xsl:otherwise><xsl:text>page</xsl:text></xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        <xsl:attribute name="data-anno">title <xsl:value-of select="$unit"/></xsl:attribute>
+        <xsl:call-template name="lang"/>
+        <xsl:apply-templates/>
+    </xsl:element>
+</xsl:template>
+<xsl:template match="x:docTitle">
+    <xsl:apply-templates/>
+</xsl:template>
+<xsl:template match="x:titlePart">
+    <xsl:element name="h3">
+        <xsl:call-template name="lang"/>
+        <xsl:apply-templates/>
+    </xsl:element>
+</xsl:template>
+
+<xsl:template match="x:fw">
+    <xsl:element name="div">
+        <xsl:attribute name="class">fw</xsl:attribute>
+        <xsl:if test="@place">
+            <xsl:variable name="place" select="translate(@place,'-',' ')"/>
+            <xsl:attribute name="data-anno"><xsl:value-of select="$place"/></xsl:attribute>
+        </xsl:if>
+        <xsl:call-template name="lang"/>
+        <xsl:apply-templates/>
+    </xsl:element>
+</xsl:template>
 <!-- transcription styling -->
 
 <xsl:template match="x:del">
