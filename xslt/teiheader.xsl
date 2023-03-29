@@ -393,11 +393,11 @@
     </xsl:for-each>
     <xsl:apply-templates select="x:textLang"/>
     <xsl:apply-templates select="x:filiation"/>
-    <xsl:for-each select="x:rubric | ancestor::x:TEI/x:text[@corresp=$thisid]//x:seg[@function='rubric' and not(@corresp)] | ancestor::x:TEI/x:text//x:seg[@function='rubric' and @corresp=$thisid] | 
-    x:incipit | ancestor::x:TEI/x:text[@corresp=$thisid]//x:seg[@function='incipit' and not(@corresp)] | ancestor::x:TEI/x:text//x:seg[@function='incipit' and @corresp=$thisid] |
-    x:explicit | ancestor::x:TEI/x:text[@corresp=$thisid]//x:seg[@function='explicit' and not(@corresp)] | ancestor::x:TEI/x:text//x:seg[@function='explicit' and @corresp=$thisid] |
-    x:finalRubric | ancestor::x:TEI/x:text[@corresp=$thisid]//x:seg[@function='completion-statement' and not(@corresp)] | ancestor::x:TEI/x:text//x:seg[@function='completion-statement' and @corresp=$thisid] |
-   x:colophon | ancestor::x:TEI/x:text[@corresp=$thisid]//x:seg[@function='colophon' and not(@corresp)] | ancestor::x:TEI/x:text//x:seg[@function='colophon' and @corresp=$thisid]">
+    <xsl:for-each select="x:rubric | ancestor::x:TEI/x:text[@corresp=$thisid]//*[@function='rubric' and not(@corresp)] | ancestor::x:TEI/x:text//*[@function='rubric' and @corresp=$thisid] | 
+    x:incipit | ancestor::x:TEI/x:text[@corresp=$thisid]//*[@function='incipit' and not(@corresp)] | ancestor::x:TEI/x:text//*[@function='incipit' and @corresp=$thisid] |
+    x:explicit | ancestor::x:TEI/x:text[@corresp=$thisid]//*[@function='explicit' and not(@corresp)] | ancestor::x:TEI/x:text//*[@function='explicit' and @corresp=$thisid] |
+    x:finalRubric | ancestor::x:TEI/x:text[@corresp=$thisid]//*[@function='completion-statement' and not(@corresp)] | ancestor::x:TEI/x:text//*[@function='completion-statement' and @corresp=$thisid] |
+   x:colophon | ancestor::x:TEI/x:text[@corresp=$thisid]//*[@function='colophon' and not(@corresp)] | ancestor::x:TEI/x:text//*[@function='colophon' and @corresp=$thisid]">
          <xsl:call-template name="excerpt">
             <xsl:with-param name="el" select="."/>
         </xsl:call-template>
@@ -994,19 +994,20 @@
 </xsl:template-->
 
 <xsl:template match="x:msDesc/x:physDesc/x:additions">
-  <xsl:variable name="ps" select="ancestor::x:TEI/x:text//x:seg[
+  <xsl:variable name="ps" select="ancestor::x:TEI/x:text//*[
                                 @function != '' and
                                 @function != 'rubric' and 
                                 @function != 'incipit' and
                                 @function != 'explicit' and
                                 @function != 'completion-statement' and
                                 @function != 'colophon' and 
-                                not(ancestor::x:seg)] |
-                                ancestor::x:TEI/x:text//x:seg[@function = 'rubric']/x:seg[@function != ''] |
-                                ancestor::x:TEI/x:text//x:seg[@function = 'incipit']/x:seg[@function != ''] |
-                                ancestor::x:TEI/x:text//x:seg[@function = 'explicit']/x:seg[@function != ''] |
-                                ancestor::x:TEI/x:text//x:seg[@function = 'completion-statement']/x:seg[@function != ''] |
-                                ancestor::x:TEI/x:text//x:seg[@function = 'colophon']/x:seg[@function != '']"/>
+                                not(ancestor::x:seg or ancestor::x:fw)] |
+                                ancestor::x:TEI/x:text//*[@function = 'rubric']/*[@function != ''] |
+                                ancestor::x:TEI/x:text//*[@function = 'incipit']/*[@function != ''] |
+                                ancestor::x:TEI/x:text//*[@function = 'explicit']/*[@function != ''] |
+                                ancestor::x:TEI/x:text//*[@function = 'completion-statement']/*[@function != ''] |
+                                ancestor::x:TEI/x:text//*[@function = 'colophon']/*[@function != ''] |
+                                ancestor::x:TEI/x:text//x:fw"/>
   <xsl:if test="node()[not(self::text())] or $ps">
       <tr>
         <th>Paratexts</th>
@@ -1028,7 +1029,12 @@
         <li>
             <span>
                 <xsl:attribute name="class">type</xsl:attribute>
-                <xsl:variable name="type" select="@function"/>
+                <xsl:variable name="type">
+                    <xsl:choose>
+                    <xsl:when test="self::x:fw"><xsl:text>header</xsl:text></xsl:when>
+                    <xsl:otherwise><xsl:value-of select="@function"/></xsl:otherwise>
+                    </xsl:choose>
+                </xsl:variable>
                 <xsl:variable name="cu">
                     <xsl:call-template name="search-and-replace">
                         <xsl:with-param name="input" select="ancestor::x:text/@synch"/>
@@ -1075,7 +1081,7 @@
                     <xsl:call-template name="moretypes">
                         <xsl:with-param name="node" select="."/>
                     </xsl:call-template>
-                    <xsl:variable name="placement" select="ancestor::x:fw/@place"/>
+                    <xsl:variable name="placement" select="@place | ancestor::x:fw/@place"/>
                     <xsl:if test="$placement">
                         <xsl:text> (</xsl:text>
                         <xsl:value-of select="translate($placement,'-',' ')"/>
@@ -1359,7 +1365,7 @@
 
 <xsl:template name="import-milestone">
     <!--xsl:if test="self::x:seg and not(./*[1]/@facs)"-->
-    <xsl:if test="self::x:seg and not(./*[1][@facs or local-name() = 'milestone' or local-name() = 'pb'])">
+    <xsl:if test="self::x:fw or (@function and not(./*[1][@facs or local-name() = 'milestone' or local-name() = 'pb']) )">
         <xsl:variable name="milestone" select="preceding::*[(self::x:milestone and (@unit = 'folio' or @unit = 'page') ) or self::x:pb][1]"/>
         <xsl:if test="$milestone">
             <xsl:apply-templates select="$milestone">
