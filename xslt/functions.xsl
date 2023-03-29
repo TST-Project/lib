@@ -134,4 +134,35 @@
      </xsl:choose>
 </xsl:template>
 
+<xsl:template name="firstmilestone">
+    <xsl:param name="start" select="."/>
+    <xsl:variable name="next" select="$start/node()[1] |
+                                      $start/following-sibling::node()[1] | 
+                                      $start/parent::*/following-sibling::node()[1]"/>
+    <xsl:choose>
+        <xsl:when test="not($next)"/>
+        <xsl:when test="$start = text()">
+            <xsl:choose>
+                <xsl:when test="normalize-space($start) = ''">
+                    <xsl:call-template name="firstmilestone">
+                        <xsl:with-param name="start" select="$next[1]"/>
+                    </xsl:call-template>
+                </xsl:when>
+                <xsl:otherwise/><!-- return null -->
+            </xsl:choose>
+        </xsl:when>
+        <xsl:otherwise>
+            <xsl:choose>
+                <xsl:when test="$start[not(node())]">
+                    <xsl:copy-of select="$start"/> <!-- found milestone -->
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:call-template name="firstmilestone">
+                        <xsl:with-param name="start" select="$next[1]"/>
+                    </xsl:call-template>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:otherwise>
+    </xsl:choose>
+</xsl:template>
 </xsl:stylesheet>

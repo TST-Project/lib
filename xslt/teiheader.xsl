@@ -1365,7 +1365,7 @@
 
 <xsl:template name="import-milestone">
     <!--xsl:if test="self::x:seg and not(./*[1]/@facs)"-->
-    <xsl:if test="self::x:fw or (@function and not(./*[1][@facs or local-name() = 'milestone' or local-name() = 'pb']) )">
+    <xsl:if test="(self::x:fw or @function) and not(./node()[1][@facs or local-name() = 'milestone' or local-name() = 'pb'])">
         <xsl:variable name="milestone" select="preceding::*[(self::x:milestone and (@unit = 'folio' or @unit = 'page') ) or self::x:pb][1]"/>
         <xsl:if test="$milestone">
             <xsl:apply-templates select="$milestone">
@@ -1376,19 +1376,29 @@
 </xsl:template>
 
 <xsl:template name="import-lb">
-    <xsl:if test="self::x:seg and not(./*[1][self::x:lb or self::x:pb or self::x:milestone or self::x:cb] or ./*[1]/x:lb or ./*[1]/x:pb or ./*[1]/x:cb or ./*[1]/x:milestone)">
-        <xsl:variable name="lb" select="preceding::*[self::x:lb][1]"/>
-        <xsl:if test="$lb">
-            <xsl:apply-templates select="$lb">
-                <xsl:with-param name="hyphen">no</xsl:with-param>
-            </xsl:apply-templates>
-            <xsl:element name="span">
-                <xsl:attribute name="lang">en</xsl:attribute>
-                <xsl:attribute name="class">gap ellipsis</xsl:attribute>
-                <xsl:attribute name="data-anno">gap (ellipsis)</xsl:attribute>
-                <xsl:text>…</xsl:text>
-            </xsl:element>
-            <xsl:text> </xsl:text>
+    <xsl:if test="self::x:fw or @function">
+        <xsl:variable name="testnode">
+            <xsl:call-template name="firstmilestone">
+                <xsl:with-param name="start" select="./node()[1]"/>
+            </xsl:call-template>
+        </xsl:variable>
+        <xsl:variable name="milestone" select="exsl:node-set($testnode)/node()[1]"/>
+        <!--xsl:if test="(self::x:fw or @function) and not(./node()[1][self::x:lb or self::x:pb or self::x:milestone or self::x:cb] or ./node()[1]/x:lb or ./node()[1]/x:pb or ./node()[1]/x:cb or ./node()[1]/x:milestone)"-->
+        <xsl:if test="not($milestone)">
+
+            <xsl:variable name="lb" select="preceding::*[self::x:lb][1]"/>
+            <xsl:if test="$lb">
+                <xsl:apply-templates select="$lb">
+                    <xsl:with-param name="hyphen">no</xsl:with-param>
+                </xsl:apply-templates>
+                <xsl:element name="span">
+                    <xsl:attribute name="lang">en</xsl:attribute>
+                    <xsl:attribute name="class">gap ellipsis</xsl:attribute>
+                    <xsl:attribute name="data-anno">gap (ellipsis)</xsl:attribute>
+                    <xsl:text>…</xsl:text>
+                </xsl:element>
+                <xsl:text> </xsl:text>
+            </xsl:if>
         </xsl:if>
     </xsl:if>
 </xsl:template>
