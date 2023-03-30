@@ -614,7 +614,7 @@ rb {
 }
 
 div.fw {
-    background-color: rgba(132,132,10,0.3);
+    background-color: rgba(132,132,10,0.15);
     /*background: rgba(0,0,0,0.1);*/
     width: fit-content;
     padding: 0.5rem 1rem 0.5rem 1rem;
