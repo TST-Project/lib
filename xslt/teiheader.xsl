@@ -1365,12 +1365,21 @@
 
 <xsl:template name="import-milestone">
     <!--xsl:if test="self::x:seg and not(./*[1]/@facs)"-->
-    <xsl:if test="(self::x:fw or @function) and not(./node()[1][@facs or local-name() = 'milestone' or local-name() = 'pb'])">
-        <xsl:variable name="milestone" select="preceding::*[(self::x:milestone and (@unit = 'folio' or @unit = 'page') ) or self::x:pb][1]"/>
-        <xsl:if test="$milestone">
-            <xsl:apply-templates select="$milestone">
-                <xsl:with-param name="excerpt">yes</xsl:with-param>
-            </xsl:apply-templates>
+    <!--xsl:if test="(self::x:fw or @function) and not(./node()[1][@facs or local-name() = 'milestone' or local-name() = 'pb'])"-->
+    <xsl:if test="self::x:fw or @function">
+        <xsl:variable name="testnode">
+            <xsl:call-template name="firstmilestone">
+                <xsl:with-param name="start" select="./node()[1]"/>
+            </xsl:call-template>
+        </xsl:variable>
+        <xsl:variable name="innermilestone" select="exsl:node-set($testnode)/node()[1]"/>
+        <xsl:if test="not($innermilestone) or not($innermilestone[local-name() = 'milestone' or local-name = 'pb']) or not($innermilestone/@n)">
+            <xsl:variable name="milestone" select="preceding::*[(self::x:milestone and (@unit = 'folio' or @unit = 'page') ) or self::x:pb][1]"/>
+            <xsl:if test="$milestone">
+                <xsl:apply-templates select="$milestone">
+                    <xsl:with-param name="excerpt">yes</xsl:with-param>
+                </xsl:apply-templates>
+            </xsl:if>
         </xsl:if>
     </xsl:if>
 </xsl:template>
