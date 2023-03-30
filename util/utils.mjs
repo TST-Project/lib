@@ -27,6 +27,7 @@ const util = {
             milestone = util.milestone(el) || 
                 el.closest('desc')?.querySelector('locus');
             placement = util.placement(el) || 
+                el.closest('fw')?.getAttribute('place')?.replaceAll('-',' ') ||
                 el.closest('desc')?.getAttribute('subtype')?.replaceAll('-',' ') ||
                 util.line(el) ||
                 '';
@@ -38,7 +39,7 @@ const util = {
             inner = el.innerHTML;
         }
         else {
-            const subtype = el.getAttribute('subtype') || '';
+            const subtype = el.getAttribute('place') || el.getAttribute('subtype') || '';
             milestone = el.querySelector('locus, milestone, pb');
             placement = subtype.replace(/\s/g,', ').replaceAll('-',' ');
             synch = el.getAttribute('synch') || el.closest('msItem')?.getAttribute('synch');
