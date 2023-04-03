@@ -186,6 +186,7 @@ th {
     line-height: 2rem;
     padding-right: 1.5rem;
     hyphens: none;
+    width: min-content;
 }
 
 th.left-align {
