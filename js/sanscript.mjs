@@ -284,14 +284,14 @@ var schemes = Sanscript.schemes = {
          * The most "professional" Sanskrit romanization scheme.
          */
         iast: {
-            vowels: 'a ā i ī u ū ṛ ṝ ḷ ḹ e ē ai o ō au ê aî ô aû'.split(' '),
+            vowels: 'a ā i ī u ū ṛ ṝ l̥ l̥̄ e ē ai o ō au ê aî ô aû'.split(' '),
             //vowels: 'a ā i ī u ū e ē ai o ō au'.split(' '),
             other_marks: ['ṃ','ḥ','m̐','ẖ','ḫ','ḵ'],
             virama: [''],
             //skip: ['_'],
             //consonants: 'k kh g gh ṅ c ch j jh ñ ṭ ṭh ḍ ḍh ṇ t th d dh n p ph b bh m y r l v ś ṣ s h ḻ kṣ jñ'.split(' '),
             //symbols: "0 1 2 3 4 5 6 7 8 9 oṁ ' | ||".split(' '),
-            consonants: 'k kh g gh ṅ c ch j jh ñ ṭ ṭh ḍ ḍh ṇ t th d dh n p ph b bh m y r l v ś ṣ s h ḻ l̥ ṟ ṉ ẏ q qh ġ z zh f ṙ ṙh ṫh ḋh w'.split(' '),
+            consonants: 'k kh g gh ṅ c ch j jh ñ ṭ ṭh ḍ ḍh ṇ t th d dh n p ph b bh m y r l v ś ṣ s h ḷ ḻ ṟ ṉ ẏ q qh ġ z zh f ṙ ṙh ṫh ḋh w'.split(' '),
             symbols: '0 1 2 3 4 5 6 7 8 9 oṁ oḿ \' | || ⁰ ⁰⁰ ⁰⁰⁰'.split(' '),
         }
     },

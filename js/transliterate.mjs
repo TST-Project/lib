@@ -479,8 +479,8 @@ const Transliterate = (function() {
                 node.origNode = node.cloneNode(true);
 
             const kids = node.childNodes;
-            const starts_with_vowel = /^[aāiīuūeoêôṛṝḷṃḥ]/;
-            const ends_with_consonant = /[kgṅcjñṭḍṇtdnpbmyrlvṣśsh]$/;
+            const starts_with_vowel = /^[aāiīuūeoêôṛṝl̥l̥̄ṃḥ]/;
+            const ends_with_consonant = /[kgṅcjñṭḍṇtdnpbmyrlḷḻvṣśsh]$/;
 
             const telugu_vowels = ['ā','i','ī','e','o','_','ai','au'];
             const telu_cons_headstroke = ['h','k','ś','y','g','gh','c','ch','jh','ṭh','ḍ','ḍh','t','th','d','dh','n','p','ph','bh','m','r','ḻ','v','ṣ','s'];
@@ -702,8 +702,8 @@ const Transliterate = (function() {
         iast: function(text,from) {
             const f = from || 'tamil';
             const literated = Sanscript.t(text,f,'iast')
-                .replace(/^⁰|([^\d⁰])⁰/g,'$1¹⁰')
-                .replace(/l̥/g,'ḷ');
+                .replace(/^⁰|([^\d⁰])⁰/g,'$1¹⁰');
+                //.replace(/l̥/g,'ḷ');
             if(f !== 'tamil')
                 return literated.replace(/e/g,'ĕ')
                                 .replace(/ē/g,'e')
@@ -734,7 +734,7 @@ const Transliterate = (function() {
 
             const smushed = text
                 .replace(/([kṅcñṭṇtnpmyrlvḻḷṟṉ])\s+([aāiīuūeēoō])/g, '$1$2')
-                .replace(/ḷ/g,'l̥')
+                //.replace(/ḷ/g,'l̥')
                 .replace(/(^|\s)_ā/g,'$1\u0B85\u200D\u0BBE')
                 .replace(/(\S)([AĀIĪUŪEĒOŌ])/g,'$1\u200C$2')
                 .replace(/(\S)·/g,'$1\u200C')
@@ -813,8 +813,8 @@ const Transliterate = (function() {
             const pretext = txt//.replace(/ṙ/g, 'r')
                 .replace(/e/g,'ē')
                 .replace(/o(?![ṁḿ])/g,'ō')
-                .replace(/([^aāiīuūeēoōṛṝḷḹ])ṃ/,'$1\'\u200Dṃ') // standalone anusvāra
-                .replace(/([^aāiīuūeēoōṛṝḷḹ])ḥ/,'$1\'\u200Dḥ') // standalone visarga
+                .replace(/([^aāiīuūeēoōṛṝl̥l̥̄])ṃ/,'$1\'\u200Dṃ') // standalone anusvāra
+                .replace(/([^aāiīuūeēoōṛṝl̥l̥̄])ḥ/,'$1\'\u200Dḥ') // standalone visarga
                 .replace(/(^|\s)_y/,'$1\'\u200Dy') // half-form of ya
                 .replace(/(^|\s)_ā/g,'$1\u093D\u200D\u093E')
                 .replace(/(^|\s)_r/g,'$1\u093D\u200D\u0930\u094D');
