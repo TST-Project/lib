@@ -141,7 +141,8 @@
                 </xsl:otherwise>
             </xsl:choose>
             <xsl:text> in </xsl:text>
-            <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msContents/x:msItem[1]/x:textLang"/>
+            <!--xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msContents/x:msItem[1]/x:textLang"/-->
+            <xsl:call-template name="textLang"/>
             <xsl:text>.</xsl:text>
         </langmaterial>
         <xsl:apply-templates select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:history/x:origin/x:origDate[1]"/>
@@ -1170,7 +1171,62 @@
     <xsl:apply-templates/>
 </xsl:template>
 
-<xsl:template match="x:textLang">
+<xsl:template name="textLang">
+    <xsl:variable name="mainlang" select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msContents/x:msItem[1]/x:textLang/@mainLang"/>
+    <xsl:variable name="mainlangs" select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msContents/x:msItem[position() > 1]/x:textLang/@mainLang"/>
+    <xsl:variable name="otherlanglists" select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msContents/x:msItem/x:textLang/@otherLangs"/>
+
+    <language>
+        <xsl:attribute name="langcode"><xsl:value-of select="$TST/tst:iso6392b/tst:entry[@key=$mainlang]"/></xsl:attribute>
+        <xsl:value-of select="$TST/tst:langs/tst:entry[@key=$mainlang]"/>
+    </language>
+
+    <xsl:if test="$mainlangs or $otherlanglists">
+        <xsl:variable name="alllangs">
+            <xsl:for-each select="$otherlanglists">
+                <xsl:call-template name="genericsplit">
+                    <xsl:with-param name="list" select="."/>
+                </xsl:call-template>
+            </xsl:for-each>
+            <xsl:for-each select="$mainlangs">
+                <tst:node><xsl:value-of select="."/></tst:node>
+            </xsl:for-each>
+        </xsl:variable>
+        <xsl:variable name="uniquelangs">
+            <xsl:for-each select="exsl:node-set($alllangs)/node()">
+                <xsl:sort select="text()"/>
+                <xsl:if test="text() != $mainlang">
+                    <xsl:copy-of select="."/>
+                </xsl:if>
+            </xsl:for-each>
+        </xsl:variable>
+
+        <xsl:for-each select="exsl:node-set($uniquelangs)/node()">
+            <xsl:variable name="code" select="text()"/>
+            <xsl:variable name="pos" select="position()"/>
+            <xsl:if test="not($code = $mainlang) and
+                         ( $pos = last() or not($code=following-sibling::*/text()) )">
+                <xsl:if test="$pos = 1">
+                    <xsl:text> (+ </xsl:text>
+                </xsl:if>
+                <language>
+                    <xsl:attribute name="langcode"><xsl:value-of select="$TST/tst:iso6392b/tst:entry[@key=$code]"/></xsl:attribute>
+                    <xsl:value-of select="$TST/tst:langs/tst:entry[@key=$code]"/>
+                </language>
+                <xsl:choose>
+                    <xsl:when test="not($pos = last())">
+                        <xsl:text>, </xsl:text>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:text>)</xsl:text>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:if>
+        </xsl:for-each>
+    </xsl:if>
+</xsl:template>
+
+<!--xsl:template match="x:textLang">
         <xsl:variable name="mainLang" select="@mainLang"/>
         <language>
             <xsl:attribute name="langcode"><xsl:value-of select="$TST/tst:iso6392b/tst:entry[@key=$mainLang]"/></xsl:attribute>
@@ -1197,7 +1253,7 @@
             </xsl:for-each>
             <xsl:text>)</xsl:text>
         </xsl:if>
-</xsl:template>
+</xsl:template-->
 
 <xsl:template match="x:pc">
     <xsl:apply-templates/>
