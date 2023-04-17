@@ -231,7 +231,8 @@ var schemes = Sanscript.schemes = {
             // "Dependent" forms of the vowels. These are used whenever the
             // vowel immediately follows a consonant. If a letter is not
             // listed in `vowels`, it should not be listed here.
-            vowel_marks: 'ा ि ी ु ू ृ ॄ ॢ ॣ ॆ े ै ॊ ो ौ ॎ ॎे ॎा ॎो ॆ ॏ'.split(' '),
+            //vowel_marks: 'ा ि ी ु ू ृ ॄ ॢ ॣ ॆ े ै ॊ ो ौ ॎ ॎे ॎा ॎो ॆ ॏ'.split(' '),
+            vowel_marks: ['ा','ि','ी','ु','ू','ृ','ॄ','ॢ','ॣ','ॆ','े','ै','ॊ','ो','ो','ॎ','ॎे','ॎो'],
 
             // Miscellaneous marks, all of which are used in Sanskrit.
             other_marks: ['ं','ः','ँ','ᳵ','ᳶ',''],
