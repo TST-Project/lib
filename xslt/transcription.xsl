@@ -389,6 +389,10 @@
     </xsl:element>
 </xsl:template>
 
+<xsl:template match="x:c">
+    <xsl:element name="span"><xsl:apply-templates/></xsl:element>
+</xsl:template>
+
 <xsl:template match="x:g">
         <xsl:variable name="ref" select="@ref"/>
         <xsl:variable name="rend" select="@rend"/>
@@ -771,10 +775,14 @@
 </xsl:template>
 
 <xsl:template match="x:note[@place='foot']">
+    <xsl:variable name="anchor" select="./x:c[@type='anchor']"/>
     <xsl:element name="span">
         <xsl:attribute name="data-anno"/>
         <xsl:attribute name="class">footnote</xsl:attribute>
-        <xsl:text>†</xsl:text>
+        <xsl:choose>
+            <xsl:when test="$anchor"><xsl:value-of select="$anchor"/></xsl:when>
+            <xsl:otherwise><xsl:text>†</xsl:text></xsl:otherwise>
+        </xsl:choose>
         <xsl:element name="span">
             <xsl:attribute name="class">anno-inline</xsl:attribute>
             <xsl:call-template name="lang"/>
