@@ -58,7 +58,7 @@ const TSTViewer = (function() {
             if(!lb)
                 l.style.display = 'none';
             else {
-                if(!teitext.classList.contains('edition'))
+                if(teitext.classList.contains('edition'))
                     l.classList.add('diplo'); // lineView will then switch it to paragraph mode
                 lineView(l);
             }
