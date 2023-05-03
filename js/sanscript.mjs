@@ -232,7 +232,7 @@ var schemes = Sanscript.schemes = {
             // vowel immediately follows a consonant. If a letter is not
             // listed in `vowels`, it should not be listed here.
             //vowel_marks: 'ा ि ी ु ू ृ ॄ ॢ ॣ ॆ े ै ॊ ो ौ ॎ ॎे ॎा ॎो ॆ ॏ'.split(' '),
-            vowel_marks: ['ा','ि','ी','ु','ू','ृ','ॄ','ॢ','ॣ','ॆ','े','ै','ॊ','ो','ो','ॎ','ॎे','ॎो'],
+            vowel_marks: ['ा','ि','ी','ु','ू','ृ','ॄ','ॢ','ॣ','ॆ','े','ै','ॊ','ो','ौ','ॎ','ॎे','ॎो'],
 
             // Miscellaneous marks, all of which are used in Sanskrit.
             other_marks: ['ं','ः','ँ','ᳵ','ᳶ',''],
