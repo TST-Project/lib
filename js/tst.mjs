@@ -59,7 +59,8 @@ const TSTViewer = (function() {
                 l.style.display = 'none';
             else {
                 if(!teitext.classList.contains('edition'))
-                    lineView(l);
+                    l.classList.add('diplo'); // lineView will then switch it to paragraph mode
+                lineView(l);
             }
         }
         for(const excerpt of recordcontainer.querySelectorAll('.excerpt')) {
