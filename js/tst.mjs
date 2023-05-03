@@ -53,11 +53,14 @@ const TSTViewer = (function() {
         
         // start all texts in diplomatic view
         for(const l of recordcontainer.querySelectorAll('.line-view-icon')) {
-            const lb = l.closest('.teitext:not(.edition)')?.querySelector('.lb, .pb');
+            const teitext = l.closest('.teitext');
+            const lb = teitext?.querySelector('.lb, .pb');
             if(!lb)
                 l.style.display = 'none';
-            else
-                lineView(l);
+            else {
+                if(!teitext.classList.contains('edition'))
+                    lineView(l);
+            }
         }
         for(const excerpt of recordcontainer.querySelectorAll('.excerpt')) {
             for(const el of excerpt.querySelectorAll('p,.lg,.l,.ab,.caesura'))
