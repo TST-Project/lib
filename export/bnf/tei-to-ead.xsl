@@ -1387,7 +1387,7 @@
                 <xsl:apply-templates select="$lb">
                     <xsl:with-param name="hyphen">no</xsl:with-param>
                 </xsl:apply-templates>
-                <xsl:text>>[…]</xsl:text>
+                <xsl:text>[…]</xsl:text>
                 <xsl:text> </xsl:text>
             </xsl:if>
         </xsl:if>
