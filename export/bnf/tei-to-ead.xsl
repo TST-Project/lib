@@ -349,7 +349,7 @@
             <emph render="bold">¿?</emph><xsl:text> indicates </xsl:text><emph render="italic"><xsl:text>sic erat scriptum</xsl:text></emph><xsl:text> or surplus text. </xsl:text>
         </xsl:if>
         <xsl:if test="//x:supplied | //x:reg | //x:corr | //x:ex">
-            <emph render="bold"><xsl:text>[]</xsl:text></emph><xsl:text> indicates text supplied or corrected by the cataloguer. </xsl:text>
+            <emph render="bold"><xsl:text>[]</xsl:text></emph><xsl:text> indicates text supplied, corrected, or expanded by the cataloguer. </xsl:text>
         </xsl:if>
         <xsl:if test="//x:note">
             <emph render="bold"><xsl:text>{}</xsl:text></emph><xsl:text> indicates a note. </xsl:text>
@@ -737,7 +737,10 @@
     <xsl:apply-templates/>
     <emph render="bold"><xsl:text>?</xsl:text></emph>
 </xsl:template>
-<xsl:template match="x:supplied | x:corr | x:reg">
+<xsl:template match="x:expan">
+    <xsl:apply-templates/>
+</xsl:template>
+<xsl:template match="x:supplied | x:corr | x:reg | x:ex">
     <emph render="bold"><xsl:text>[</xsl:text></emph>
     <xsl:apply-templates/>
     <emph render="bold"><xsl:text>]</xsl:text></emph>
