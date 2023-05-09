@@ -342,8 +342,8 @@
         <xsl:if test="//x:del">
             <emph render="bold"><xsl:text>〚〛</xsl:text></emph><xsl:text> indicates deletions. </xsl:text>
         </xsl:if>
-        <xsl:if test="//x:add">
-            <emph render="bold"><xsl:text>\/</xsl:text></emph><xsl:text> indicates additions. </xsl:text>
+        <xsl:if test="//x:add | //x:rt">
+            <emph render="bold"><xsl:text>\/</xsl:text></emph><xsl:text> indicates additions or annotations. </xsl:text>
         </xsl:if>
         <xsl:if test="//x:sic">
             <emph render="bold">¿?</emph><xsl:text> indicates </xsl:text><emph render="italic"><xsl:text>sic erat scriptum</xsl:text></emph><xsl:text> or surplus text. </xsl:text>
@@ -747,6 +747,9 @@
     <xsl:apply-templates/>
 </xsl:template>
 
+<xsl:template match="x:app">
+    <xsl:apply-templates/>
+</xsl:template>
 <xsl:template match="x:note">
     <xsl:text>{</xsl:text><xsl:apply-templates/><xsl:text>}</xsl:text>
 </xsl:template>
@@ -1291,6 +1294,11 @@
 <xsl:template match="x:seg">
     <xsl:apply-templates/>
 </xsl:template>
+<xsl:template match="x:fw">
+    <xsl:variable name="place" select="translate(@place,'-','')"/>
+    <lb/>header (<xsl:value-of select="$place"/>): <xsl:apply-templates/>
+</xsl:template>
+
 <xsl:template match="x:list">
     <list>
         <xsl:apply-templates/>
@@ -1351,6 +1359,16 @@
 
 <xsl:template match="x:placeName | x:geogName | x:orgName">
     <xsl:apply-templates/>
+</xsl:template>
+
+<xsl:template match="x:ruby">
+    <xsl:apply-templates/>
+</xsl:template>
+<xsl:template match="x:rb">
+    <xsl:apply-templates/>
+</xsl:template>
+<xsl:template match="x:rt">
+    <emph render="bold"><xsl:text>\</xsl:text></emph><xsl:apply-templates/><emph render="bold"><xsl:text>/</xsl:text></emph>
 </xsl:template>
 
 <xsl:template name="import-milestone">
