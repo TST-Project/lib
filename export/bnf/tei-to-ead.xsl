@@ -1130,6 +1130,7 @@
     <xsl:if test="normalize-space(.) != ''">
         <xsl:text>: </xsl:text>
         <xsl:apply-templates/>
+        <xsl:text> </xsl:text>
     </xsl:if>
 </xsl:template>
 <xsl:template match="x:decoNote/x:desc">
@@ -1390,10 +1391,10 @@
     <xsl:apply-templates/>
 </xsl:template>
 <xsl:template match="x:rt">
-    <emph render="superscript"><xsl:apply-templates/></emph>
+    <emph render="super"><xsl:apply-templates/></emph>
 </xsl:template>
 
-<xsl:template match="x:material"><xsl:apply-templates/></xsl:template>
+<xsl:template match="x:material | x:caesura | x:metamark"><xsl:apply-templates/></xsl:template>
 
 <xsl:template name="import-milestone">
     <xsl:if test="self::x:fw or @function">
