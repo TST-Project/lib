@@ -12,7 +12,7 @@
 <xsl:import href="ead-common.xsl"/>
 <xsl:import href="bnf.xsl"/>
 
-<xsl:output method="xml" encoding="UTF-8" omit-xml-declaration="no" indent="yes"/>
+<xsl:output method="xml" encoding="UTF-8" omit-xml-declaration="no" indent="no"/>
 
 <xsl:template name="gallica">
     <xsl:variable name="url" select="ancestor::x:TEI/x:facsimile/x:graphic/@url"/>
@@ -342,8 +342,8 @@
         <xsl:if test="//x:del">
             <emph render="bold"><xsl:text>〚〛</xsl:text></emph><xsl:text> indicates deletions. </xsl:text>
         </xsl:if>
-        <xsl:if test="//x:add | //x:rt">
-            <emph render="bold"><xsl:text>\/</xsl:text></emph><xsl:text> indicates additions or annotations. </xsl:text>
+        <xsl:if test="//x:add">
+            <emph render="bold"><xsl:text>\/</xsl:text></emph><xsl:text> indicates additions. </xsl:text>
         </xsl:if>
         <xsl:if test="//x:sic">
             <emph render="bold">¿?</emph><xsl:text> indicates </xsl:text><emph render="italic"><xsl:text>sic erat scriptum</xsl:text></emph><xsl:text> or surplus text. </xsl:text>
@@ -664,7 +664,15 @@
     <emph render="bold">(</emph><xsl:apply-templates/><emph render="bold">)</emph>
 </xsl:template>
 <xsl:template match="x:add">
-    <emph render="bold"><xsl:text>\</xsl:text></emph><xsl:apply-templates/><emph render="bold"><xsl:text>/</xsl:text></emph>
+    <xsl:element name="emph">
+        <xsl:attribute name="render">bold</xsl:attribute>
+        <xsl:text>\</xsl:text>
+    </xsl:element>
+    <xsl:apply-templates/>
+    <xsl:element name="emph">
+        <xsl:attribute name="render">bold</xsl:attribute>
+        <xsl:text>/</xsl:text>
+    </xsl:element>
 </xsl:template>
 
 <xsl:template match="x:gap">
@@ -1349,15 +1357,19 @@
 </xsl:template>
 
 <xsl:template match="x:del">
-    <emph render="bold"><xsl:text>〚</xsl:text></emph>
+    <xsl:element name="emph">
+        <xsl:attribute name="render">bold</xsl:attribute>
+        <xsl:text>〚</xsl:text>
+    </xsl:element>
     <xsl:apply-templates/>
-    <emph render="bold"><xsl:text>〛</xsl:text></emph>
+    <xsl:element name="emph">
+        <xsl:attribute name="render">bold</xsl:attribute>
+        <xsl:text>〛</xsl:text>
+    </xsl:element>
 </xsl:template>
 
 <xsl:template match="x:ex">
-    <emph render="bold"><xsl:text>[</xsl:text></emph>
-    <xsl:apply-templates/>
-    <emph render="bold"><xsl:text>]</xsl:text></emph>
+    <emph render="bold"><xsl:text>[</xsl:text></emph><xsl:apply-templates/><emph render="bold"><xsl:text>]</xsl:text></emph>
 </xsl:template>
 
 <xsl:template match="x:placeName | x:geogName | x:orgName">
@@ -1371,7 +1383,7 @@
     <xsl:apply-templates/>
 </xsl:template>
 <xsl:template match="x:rt">
-    <emph render="bold"><xsl:text>\</xsl:text></emph><xsl:apply-templates/><emph render="bold"><xsl:text>/</xsl:text></emph>
+    <emph render="superscript"><xsl:apply-templates/></emph>
 </xsl:template>
 
 <xsl:template name="import-milestone">
