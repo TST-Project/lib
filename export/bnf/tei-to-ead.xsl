@@ -1215,7 +1215,7 @@
 
 <xsl:template name="textLang">
     <xsl:variable name="mainlang">
-        <xsl:variable name="test1" select="ancestor::x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msContents/x:msItem[1]/x:textLang/@mainLang"/>
+        <xsl:variable name="test1" select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msContents/x:msItem[1]/x:textLang/@mainLang"/>
         <xsl:choose>
             <xsl:when test="$test1"><xsl:value-of select="$test1"/></xsl:when>
             <xsl:when test="//*[@xml:lang='ta']">tam</xsl:when>
@@ -1223,8 +1223,8 @@
             <xsl:otherwise/>
         </xsl:choose>
     </xsl:variable>
-    <xsl:variable name="mainlangs" select="ancestor::x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msContents/x:msItem[position() > 1]/x:textLang/@mainLang"/>
-    <xsl:variable name="otherlanglists" select="ancestor::x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msContents/x:msItem/x:textLang/@otherLangs"/>
+    <xsl:variable name="mainlangs" select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msContents/x:msItem[position() > 1]/x:textLang/@mainLang"/>
+    <xsl:variable name="otherlanglists" select="x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:msContents/x:msItem/x:textLang/@otherLangs"/>
 
     <language>
         <xsl:attribute name="langcode"><xsl:value-of select="$TST/tst:iso6392b/tst:entry[@key=$mainlang]"/></xsl:attribute>
@@ -1392,6 +1392,8 @@
 <xsl:template match="x:rt">
     <emph render="superscript"><xsl:apply-templates/></emph>
 </xsl:template>
+
+<xsl:template match="x:material"><xsl:apply-templates/></xsl:template>
 
 <xsl:template name="import-milestone">
     <xsl:if test="self::x:fw or @function">
