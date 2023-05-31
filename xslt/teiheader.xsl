@@ -1031,6 +1031,7 @@
                 <xsl:attribute name="class">type</xsl:attribute>
                 <xsl:variable name="type">
                     <xsl:choose>
+                    <xsl:when test="self::x:fw[@place='bottom-margin']"><xsl:text>footer</xsl:text></xsl:when>
                     <xsl:when test="self::x:fw"><xsl:text>header</xsl:text></xsl:when>
                     <xsl:otherwise><xsl:value-of select="@function"/></xsl:otherwise>
                     </xsl:choose>
