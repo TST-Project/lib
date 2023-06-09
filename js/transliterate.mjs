@@ -357,18 +357,18 @@ const Transliterate = (function() {
             }
             else {
                 for(const s of subst)
-                    this.jiggle(s);
+                    if(s.lang.startsWith('sa') || s.lang.startsWith('ta')) this.jiggle(s);
                 this.convertNums();
                 this.activate();
                 button.transliterate();
             }
         },
         
-        revert() {
-            const puncs = _state.parEl.getElementsByClassName('invisible');
+        revert(par = _state.parEl) {
+            const puncs = par.getElementsByClassName('invisible');
             for(const p of puncs) p.classList.remove('off');
              
-            const walker = document.createTreeWalker(_state.parEl,NodeFilter.SHOW_ALL);
+            const walker = document.createTreeWalker(par,NodeFilter.SHOW_ALL);
             var curnode = walker.currentNode;
             while(curnode) {
                 if(curnode.nodeType === Node.ELEMENT_NODE) {
@@ -410,17 +410,17 @@ const Transliterate = (function() {
             }
         },
 
-        activate() {
+        activate(par = _state.parEl) {
             // Go through all <pc>-</pc> tags and make them invisible,
             // then empty the text node on the left, and add its content
             // to the text not on the right.
             // If there are many <pc> tags, the text node on the right
             // just keeps getting longer.
             // The original state of each text node was previously cached.
-            const puncs = _state.parEl.getElementsByClassName('invisible');
+            const puncs = par.getElementsByClassName('invisible');
             //const puncs = _state.parEl.querySelectorAll(`.invisible[lang=${langcode}]`);
             for(const p of puncs) {
-
+                if(p.lang === 'en') continue; // en nodes aren't cached
                 //if(p.classList.contains('off')) continue;
                 p.classList.add('off');
                 const prev = p.previousSibling;
@@ -432,7 +432,7 @@ const Transliterate = (function() {
                 }
             }
              
-            const walker = document.createTreeWalker(_state.parEl,NodeFilter.SHOW_ALL);
+            const walker = document.createTreeWalker(par,NodeFilter.SHOW_ALL);
             var curnode = walker.currentNode;
             while(curnode) {
                 if(curnode.nodeType === Node.ELEMENT_NODE) {
@@ -932,7 +932,14 @@ const Transliterate = (function() {
     return Object.freeze({
         init: init,
         to: to,
-        scripts: function() { return _state.scriptnames},
+        scripts: function() { return _state.scriptnames;},
+        refreshCache: (par) => {
+            const walker = document.createTreeWalker(par,NodeFilter.SHOW_ALL);
+            prepTextWalker(walker);
+        },
+        activate: transliterator.activate,
+        revert: transliterator.revert
+
     });
 }());
 
