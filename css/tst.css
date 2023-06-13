@@ -155,6 +155,7 @@ body {
 
 #transbutton:hover {
     background: #ff9900;
+    border: 1px solid #ff9900;
 }
 
 .line-view-icon {
