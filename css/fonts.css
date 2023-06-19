@@ -156,13 +156,14 @@
     font-feature-settings: "trad" 1;
 }
 
-:lang(sa-Gran) {
+[lang^="sa-Gran"] {
     line-height: 2;
 }
 
-:lang(sa-Shrd) {
+[lang^="sa-Shrd"] {
     font-feature-settings: "ss01" 1;
 }
+
 /*
 :lang(bod), :lang(bo) {
     font-size: 1.9rem;
