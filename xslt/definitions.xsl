@@ -337,8 +337,8 @@
 
 <tst:entityrend>
     <tst:entry key="prereform">hlig</tst:entry>
-    <tst:entry key="below-base">hlig</tst:entry>
-    <tst:entry key="post-base">hlig</tst:entry>
+    <tst:entry key="below-base">dlig</tst:entry>
+    <tst:entry key="post-base">dlig</tst:entry>
 </tst:entityrend>
 <tst:rendnames>
     <tst:entry key="prereform">prereform</tst:entry>
