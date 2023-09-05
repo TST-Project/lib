@@ -144,6 +144,9 @@
     font-variant-ligatures: historical-ligatures;
 }
 
+.dlig {
+    font-variant-ligatures: discretionary-ligatures;
+}
 .cv00 {
     font-feature-settings: "cv00" 1;
 }
