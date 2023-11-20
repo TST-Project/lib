@@ -156,7 +156,7 @@ const events = {
             return;
         }
 
-        if(e.target.dataset.hasOwnProperty('scroll')) {
+        if(e.target.dataset && e.target.dataset.hasOwnProperty('scroll')) {
             e.preventDefault();
             const el = document.getElementById(e.target.href.split('#')[1]);
             el.scrollIntoView({behavior: 'smooth', inline:'end'});
