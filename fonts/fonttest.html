@@ -17,6 +17,14 @@ body {
     hyphens: auto;
     font-feature-settings: "aalt" 0;
     font-variant-ligatures: none;
+    display: flex;
+    justify-content: center;
+}
+table {
+    text-align: left;
+}
+th {
+    padding-right: 1rem;
 }
 .aalt {
     font-feature-settings: "aalt" 1;
@@ -29,16 +37,16 @@ body {
 }
 </style>
 <body>
-<div>normal: &#x11306;</div>
-<div class="aalt">aalt: &#x11306;</div>
-
-<div>normal: &#x0B86;</div>
-<div class="aalt">aalt: &#x0B86;</div>
-
-<div>normal: க்க</div>
-<div class="dlig">dlig: க்க</div>
-
-<div>normal: ணோ</div>
-<div class="hlig">hlig: ணோ</div>
+<table>
+<tr><th/><th>your browser</th><th>what it should look like</th></tr>
+<tr><th>normal</th><td>&#x11306;</td><td><img src="fonttest-grantha-a.png"></td></tr>
+<tr><th>aalt</th><td class="aalt">&#x11306;</td><td><img src="fonttest-kal.png"></td></tr>
+<tr><th>normal</th><td>&#x0B86;</td><td><img src="fonttest-tamil-a.png"></td></tr>
+<tr><th>aalt</th><td class="aalt">&#x0B86;</td><td><img src="fonttest-kal.png"></td></tr>
+<tr><th>normal</th><td>க்க</td><td><img src="fonttest-kka.png"></td></tr>
+<tr><th>dlig</th><td class="dlig">க்க</td><td><img src="fonttest-kka-ligature.png"></tr>
+<tr><th>normal</th><td>ணோ</td><td><img src="fonttest-no.png"></td></tr>
+<tr><th>hlig</th><td class="hlig">ணோ</td><td><img src="fonttest-no-ligature.png"></td></tr>
+</table>
 </body>
 </html>
