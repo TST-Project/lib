@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8"/>
+<head>
+<style>
+    
+@font-face {
+    font-family: 'Noto Serif Grantha';
+    src: url('TSTGrantha.woff');
+}
+@font-face {
+    font-family: 'Noto Serif Tamil';
+    src: url('TSTTamil.woff');
+}
+body {
+    font-family:"Noto Serif Grantha", "Noto Serif Tamil";
+    hyphens: auto;
+    font-feature-settings: "aalt" 0;
+    font-variant-ligatures: none;
+}
+.aalt {
+    font-feature-settings: "aalt" 1;
+}
+.dlig {
+    font-variant-ligatures: discretionary-ligatures;
+}
+.hlig {
+    font-variant-ligatures: historical-ligatures;
+}
+</style>
+<body>
+<div>normal: &#x11306;</div>
+<div class="aalt">aalt: &#x11306;</div>
+
+<div>normal: &#x0B86;</div>
+<div class="aalt">aalt: &#x0B86;</div>
+
+<div>normal: க்க</div>
+<div class="dlig">dlig: க்க</div>
+
+<div>normal: ணோ</div>
+<div class="hlig">hlig: ணோ</div>
+</body>
+</html>
