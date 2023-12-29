@@ -12,7 +12,6 @@
         <!--xsl:if test="string-length($mss)"-->
         <!--xsl:if test="not($mss=@wit)"><xsl:text>,</xsl:text></xsl:if-->
         <xsl:element name="span">
-             <xsl:attribute name="class">msid</xsl:attribute>
              <xsl:attribute name="lang">en</xsl:attribute>
              <xsl:variable name="msstring" select="substring-before(
                                         concat($mss,' '),
@@ -27,6 +26,20 @@
              <xsl:variable name="mysource" select="$witness/@source"/>
              <xsl:variable name="parsource" select="$parwit/@source"/>
              <xsl:variable name="source" select="$mysource[$mysource] | $parsource[not($mysource)]"/>
+             <xsl:variable name="spacestring">
+                <xsl:text> </xsl:text>
+                <xsl:value-of select="$msstring"/>
+                <xsl:text> </xsl:text>
+             </xsl:variable>
+             <xsl:choose>
+                 <xsl:when test="./x:rdg[not(@type='main')][contains(concat(' ', normalize-space(@wit), ' '),$spacestring)]">
+                    <xsl:attribute name="class">msid mshover</xsl:attribute>
+                 </xsl:when>
+                 <xsl:otherwise>
+                    <xsl:attribute name="class">msid</xsl:attribute>
+                 </xsl:otherwise>
+             </xsl:choose>
+
              <xsl:if test="$anno">
                  <xsl:attribute name="data-anno"/>
                  <xsl:element name="span">
@@ -163,16 +176,16 @@
                 <xsl:if test="@corresp">
                     <xsl:attribute name="data-corresp"><xsl:value-of select="@corresp"/></xsl:attribute>
                 </xsl:if>
-                <div>
+                <xsl:element name="div">
                     <xsl:attribute name="class">text-block</xsl:attribute>
                     <xsl:call-template name="lang"/>
-                    <xsl:apply-templates/>
-                </div>
-                <div>
+                    <xsl:apply-templates select="x:l"/>
+                </xsl:element>
+                <xsl:element name="div">
                     <xsl:attribute name="class">apparatus-block</xsl:attribute>
                     <xsl:call-template name="lang"/>
                     <xsl:call-template name="apparatus"/>
-                </div>
+                </xsl:element>
             </div>
         </xsl:when>
         <xsl:otherwise>
@@ -229,7 +242,8 @@
     <xsl:element name="span">
          <xsl:attribute name="class">msid</xsl:attribute>
          <xsl:attribute name="lang">en</xsl:attribute>
-         <xsl:variable name="witness" select="/x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:listWit//x:witness[@xml:id=$cleanstr]"/>
+         <!--xsl:variable name="witness" select="/x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:listWit//x:witness[@xml:id=$cleanstr]"/-->
+         <xsl:variable name="witness" select="//x:listWit//x:witness[@xml:id=$cleanstr]"/>
          <xsl:variable name="siglum" select="$witness/x:abbr/node()"/>
          <xsl:variable name="anno" select="$witness/x:expan"/>
          <xsl:variable name="parwit" select="$witness/ancestor::x:witness"/>
@@ -282,9 +296,9 @@
                     <span class="lem lem-anchor">†</span>
                 </xsl:otherwise>
             </xsl:choose>
-            <xsl:if test="x:rdg">
+            <xsl:if test="x:rdg | x:rdgGrp">
                 <span>
-                    <xsl:for-each select="x:rdg">
+                    <xsl:for-each select="./x:rdg | ./x:rdgGrp">
                         <xsl:call-template name="reading"/>
                     </xsl:for-each>
                 </span>
@@ -348,6 +362,9 @@
         <span>
             <xsl:attribute name="class">rdg-text</xsl:attribute>
             <xsl:choose>
+                <xsl:when test="local-name() = 'rdgGrp'">
+                    <xsl:apply-templates select="./x:rdg[@type='main']/node()"/>
+                </xsl:when>
                 <xsl:when test="./node()">
                     <xsl:apply-templates select="./node()"/>
                 </xsl:when>
@@ -356,6 +373,14 @@
                 </xsl:otherwise>
             </xsl:choose>
         </span>
+        <xsl:for-each select="./x:rdg[@type='sandhi']">
+            <span class="rdg-alt">
+                <xsl:attribute name="data-wit">
+                    <xsl:value-of select="translate(@wit,'#','')"/>
+                </xsl:attribute>
+                <xsl:apply-templates select="./node()"/>
+            </span>
+        </xsl:for-each>
         <xsl:text> </xsl:text>
         <span>
             <xsl:attribute name="class">rdg-wit</xsl:attribute>

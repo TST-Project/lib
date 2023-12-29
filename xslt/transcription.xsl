@@ -196,7 +196,13 @@
 
 <xsl:template match="x:pc">
     <xsl:element name="span">
-        <xsl:attribute name="class">invisible</xsl:attribute>
+        <xsl:attribute name="class">
+            <xsl:text>invisible</xsl:text>
+            <xsl:if test="@type">
+                <xsl:text> </xsl:text>
+                <xsl:value-of select="@type"/>
+            </xsl:if>
+        </xsl:attribute>
         <xsl:apply-templates/>
     </xsl:element>
 </xsl:template>
@@ -731,6 +737,18 @@
     </xsl:element>
 </xsl:template>
 
+<xsl:template match="x:mod">
+    <xsl:element name="span">
+        <xsl:attribute name="class">unclear</xsl:attribute>
+        <xsl:attribute name="data-anno">
+            <xsl:text>modified</xsl:text>
+            <xsl:if test="@rend">
+                <xsl:text> (</xsl:text><xsl:value-of select="@rend"/><xsl:text>)</xsl:text>
+            </xsl:if>
+        </xsl:attribute>
+    </xsl:element>
+</xsl:template>
+
 <xsl:template match="x:unclear">
     <xsl:variable name="r" select="@reason"/>
     <xsl:variable name="reason" select="$TST//tst:reason//tst:entry[@key=$r]"/>
@@ -765,6 +783,15 @@
     <xsl:element name="span">
         <xsl:call-template name="lang"/>
         <xsl:attribute name="class">expan</xsl:attribute>
+        <xsl:attribute name="data-anno">abbreviation</xsl:attribute>
+        <xsl:apply-templates/>
+    </xsl:element>
+</xsl:template>
+
+<xsl:template match="x:abbr">
+    <xsl:element name="span">
+        <xsl:call-template name="lang"/>
+        <xsl:attribute name="class">abbr</xsl:attribute>
         <xsl:attribute name="data-anno">abbreviation</xsl:attribute>
         <xsl:apply-templates/>
     </xsl:element>
@@ -863,6 +890,7 @@
         <xsl:apply-templates/>
     </xsl:element>
 </xsl:template>
+
 <xsl:template match="x:metamark">
     <xsl:variable name="func" select="@function"/>
     <xsl:element name="span">
