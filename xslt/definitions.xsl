@@ -345,6 +345,7 @@
     <tst:entry key="prereform">prereform</tst:entry>
     <tst:entry key="below-base">below-base ligature</tst:entry>
     <tst:entry key="post-base">post-base ligature</tst:entry>
+    <tst:entry key="vowel-sign">vowel sign</tst:entry>
 </tst:rendnames>
 
 <tst:entitynames>
