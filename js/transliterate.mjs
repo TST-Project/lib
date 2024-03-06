@@ -27,6 +27,7 @@ const Transliterate = (function() {
             'sa-Latn': new Hypher(hyphenation_sa),
             'ta-Latn': new Hypher(hyphenation_ta_Latn),
             'te-Latn': new Hypher(hyphenation_sa),
+            'ml-Latn': new Hypher(hyphenation_sa),
             'hi-Deva': new Hypher(hyphenation_hi)
         },
         defaultSanscript: null,
@@ -35,6 +36,8 @@ const Transliterate = (function() {
             ['ta-Taml-t-ta-Latn','ta-Latn-t-ta-Taml'],
             ['te-Latn-t-te-Gran','te-Gran-t-te-Latn'],
             ['te-Gran-t-te-Latn','te-Latn-t-te-Gran'],
+            ['ml-Mlym-t-ml-Latn','ml-Latn-t-ml-Mlym'],
+            ['ml-Latn-t-ml-Mlym','ml-Mlym-t-ml-Latn'],
             /*
             ['mr-Latn-t-mr-Deva','mr-Deva-t-mr-Latn'],
             ['mr-Deva-t-mr-Latn','mr-Latn-t-mr-Deva'],
@@ -49,7 +52,7 @@ const Transliterate = (function() {
         button: null
     });
     
-    _state.availlangs = Object.freeze(['sa','ta','te',..._state.hindic]);
+    _state.availlangs = Object.freeze(['sa','ta','te','ml',..._state.hindic]);
 
     _state.hindic.forEach(code => {
         _state.hyphenator[`${code}-Latn`] = _state.hyphenator['sa-Latn'];
@@ -789,6 +792,7 @@ const Transliterate = (function() {
                 .replace(/(^|\s)_ā/,'$1\u0D3D\u200D\u0D3E')
                 //.replace(/(^|\s)_r/,"$1\u0D3D\u200D\u0D30\u0D4D");
                 //FIXME (replaced by chillu r right now)
+                .replace(/ǔ/g,'u\u0D4D')
                 .replace(/(\S)·/g,'$1\u200C');
             
             const newtxt = Sanscript.t(smushed,'iast','malayalam')
