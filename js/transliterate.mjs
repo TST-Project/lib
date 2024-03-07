@@ -94,10 +94,11 @@ const Transliterate = (function() {
 
         // find if there are any Tamil or Sanskrit passages
         const foundTamil = par.querySelector('[lang|="ta"]');
-        const foundSanskrit = par.querySelector('[lang|="sa"]');
-        if(!foundTamil && !foundSanskrit) return;
+        const foundOther = par.querySelector('[lang|="sa"],[lang|="hi"],[lang|="ml"],[lang|="mr"]');
+        // add Telugu, etc.
+        if(!foundTamil && !foundOther) return;
 
-        if(foundSanskrit) {
+        if(foundOther) {
             const scripttags = par.getElementsByClassName('record_scripts');
             const defaultSanscript = getSanscript(scripttags);
             if(!defaultSanscript && !foundTamil) {
@@ -289,7 +290,10 @@ const Transliterate = (function() {
                         // Tamil in other scripts?
                     }
 
-                    else if(curlang === 'sa' || _state.hindic.indexOf(curlang) !== -1) {
+                    else if(curlang === 'sa' || 
+                            curlang === 'ml' ||
+                            // add Telugu, etc.
+                            _state.hindic.indexOf(curlang) !== -1) {
                         // case 1: sa-XXXX
                         // case 2: sa
                         // case 3: sa-Latn[-t-sa-XXXX]
