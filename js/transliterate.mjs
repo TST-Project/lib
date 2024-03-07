@@ -796,7 +796,7 @@ const Transliterate = (function() {
                 .replace(/(^|\s)_ā/,'$1\u0D3D\u200D\u0D3E')
                 //.replace(/(^|\s)_r/,"$1\u0D3D\u200D\u0D30\u0D4D");
                 //FIXME (replaced by chillu r right now)
-                .replace(/ǔ/g,'u\u0D4D')
+                .replace(/ŭ/g,'u\u0D4D')
                 .replace(/(\S)·/g,'$1\u200C');
             
             const newtxt = Sanscript.t(smushed,'iast','malayalam')
