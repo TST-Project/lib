@@ -17,6 +17,7 @@ const Transliterate = (function() {
             ['malayalam','Mlym'],
             ['newa','Newa'],
             ['sarada','Shrd'],
+            ['sinhala','Sinh'],
             ['telugu','Telu'],
             ['nandinagari','Nand']
         ]),
@@ -25,6 +26,7 @@ const Transliterate = (function() {
         hyphenator: {
             'ta-Taml': new Hypher(hyphenation_ta),
             'sa-Latn': new Hypher(hyphenation_sa),
+            'pi-Latn': new Hypher(hyphenation_sa),
             'ta-Latn': new Hypher(hyphenation_ta_Latn),
             'te-Latn': new Hypher(hyphenation_sa),
             'ml-Latn': new Hypher(hyphenation_sa),
@@ -38,6 +40,8 @@ const Transliterate = (function() {
             ['te-Gran-t-te-Latn','te-Latn-t-te-Gran'],
             ['ml-Mlym-t-ml-Latn','ml-Latn-t-ml-Mlym'],
             ['ml-Latn-t-ml-Mlym','ml-Mlym-t-ml-Latn'],
+            ['pi-Sinh-t-pi-Latn','pi-Latn-t-pi-Sinh'],
+            ['pi-Latn-t-pi-Sinh','pi-Sinh-t-pi-Latn'],
             /*
             ['mr-Latn-t-mr-Deva','mr-Deva-t-mr-Latn'],
             ['mr-Deva-t-mr-Latn','mr-Latn-t-mr-Deva'],
@@ -291,8 +295,9 @@ const Transliterate = (function() {
                     }
 
                     else if(curlang === 'sa' || 
+                            curlang === 'pi' ||
                             curlang === 'ml' ||
-                            // add Telugu, etc.
+                            // TODO: add Telugu, etc.
                             _state.hindic.indexOf(curlang) !== -1) {
                         // case 1: sa-XXXX
                         // case 2: sa

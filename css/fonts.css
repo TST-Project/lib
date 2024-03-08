@@ -136,6 +136,12 @@
     src: url('../fonts/noto/NotoSansNandinagari-Regular.ttf');
     unicode-range: U+200D, U+119A0-119FF,U+0CE6-0CEF;
 }
+@font-face {
+    font-family: 'Abhaya Libre';
+    src: url('../fonts/AbhayaLibre-Medium.ttf');
+    unicode-range: U+200D, U+0D80-U+0DFF;
+}
+
 .aalt {
     font-feature-settings: "aalt" 1;
 }
