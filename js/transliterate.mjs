@@ -56,7 +56,7 @@ const Transliterate = (function() {
         button: null
     });
     
-    _state.availlangs = Object.freeze(['sa','ta','te','ml',..._state.hindic]);
+    _state.availlangs = Object.freeze(['sa','ta','ml','pi','te',..._state.hindic]);
 
     _state.hindic.forEach(code => {
         _state.hyphenator[`${code}-Latn`] = _state.hyphenator['sa-Latn'];
@@ -901,6 +901,13 @@ const Transliterate = (function() {
             const text = Sanscript.t(smushed,'iast','sarada')
                 .replace(/¯/g, '\u{111DC}');
             return text;
+        },
+        
+        sinhala: function(txt) {
+
+            const smushed = to.smush(txt);
+
+            return Sanscript.t(smushed,'iast','sinhala');
         },
 
         nandinagari: function(txt) {
