@@ -118,7 +118,7 @@
     <tst:entry key="newa">newa</tst:entry>
     <tst:entry key="pala">pala</tst:entry>
     <tst:entry key="sarada">sarada</tst:entry>
-    <tst:entry key="sinhalese">sinhalese</tst:entry>
+    <tst:entry key="sinhala">sinhala</tst:entry>
     <tst:entry key="telugu">telugu</tst:entry>
     <tst:entry key="tamil">tamil</tst:entry>
     <tst:entry key="dbucan">uchen</tst:entry>
