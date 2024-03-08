@@ -793,8 +793,10 @@ const Transliterate = (function() {
                 'ക':'ൿ',
                 'ത':'ൽ',
                 'ന':'ൻ',
+                'ണ':'ൺ',
                 'മ':'ൔ',
                 'ര':'ർ',
+                'ല':'ൾ',
             };
 
             const smushed = to.smush(txt,true)
