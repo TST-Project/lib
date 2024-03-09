@@ -791,9 +791,9 @@ const Transliterate = (function() {
         malayalam: function(txt) {
             const chillu = {
                 'ക':'ൿ',
+                'ണ':'ൺ',
                 'ത':'ൽ',
                 'ന':'ൻ',
-                'ണ':'ൺ',
                 'മ':'ൔ',
                 'ര':'ർ',
                 'ല':'ൾ',
@@ -808,7 +808,7 @@ const Transliterate = (function() {
             
             const newtxt = Sanscript.t(smushed,'iast','malayalam')
                 // use chillu final consonants	
-                .replace(/([കതനമര])്(?![^\s\u200C,—’―])/g, function(match,p1) {
+                .replaceAll(/([കണതനമരല])്(?![^\s\u200C,—’―])/g, function(match,p1) {
                     return chillu[p1];
                 });
 	
