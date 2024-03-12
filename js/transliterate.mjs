@@ -797,7 +797,7 @@ const Transliterate = (function() {
                 'മ':'ൔ',
                 'ര':'ർ',
                 'ല':'ൽ',
-                'ള':'ൾ''
+                'ള':'ൾ'
             };
 
             const smushed = to.smush(txt,true)
