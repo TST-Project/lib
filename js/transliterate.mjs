@@ -1,4 +1,5 @@
 import { Sanscript } from './sanscript.mjs';
+import { EwtsConverter } from './EwtsConverter.mjs';
 import { viewPos } from './viewpos.mjs';
 import Hypher from './hypher.mjs';
 import { hyphenation_ta } from './ta.mjs';
@@ -19,7 +20,8 @@ const Transliterate = (function() {
             ['sarada','Shrd'],
             ['sinhala','Sinh'],
             ['telugu','Telu'],
-            ['nandinagari','Nand']
+            ['nandinagari','Nand'],
+            ['dbumed','Tibt'],
         ]),
         cachedtext: new Map(),
         parEl: null,
@@ -42,6 +44,8 @@ const Transliterate = (function() {
             ['ml-Latn-t-ml-Mlym','ml-Mlym-t-ml-Latn'],
             ['pi-Sinh-t-pi-Latn','pi-Latn-t-pi-Sinh'],
             ['pi-Latn-t-pi-Sinh','pi-Sinh-t-pi-Latn'],
+            ['bo-Latn-t-bo-Tibt','bo-Tibt-t-bo-Latn'],
+            ['bo-Tibt-t-bo-Latn','bo-Latn-t-bo-Tibt'],
             /*
             ['mr-Latn-t-mr-Deva','mr-Deva-t-mr-Latn'],
             ['mr-Deva-t-mr-Latn','mr-Latn-t-mr-Deva'],
@@ -56,7 +60,7 @@ const Transliterate = (function() {
         button: null
     });
     
-    _state.availlangs = Object.freeze(['sa','ta','ml','pi','te',..._state.hindic]);
+    _state.availlangs = Object.freeze(['sa','ta','ml','pi','te','bo',..._state.hindic]);
 
     _state.hindic.forEach(code => {
         _state.hyphenator[`${code}-Latn`] = _state.hyphenator['sa-Latn'];
@@ -98,7 +102,7 @@ const Transliterate = (function() {
 
         // find if there are any Tamil or Sanskrit passages
         const foundTamil = par.querySelector('[lang|="ta"]');
-        const foundOther = par.querySelector('[lang|="sa"],[lang|="hi"],[lang|="ml"],[lang|="mr"]');
+        const foundOther = par.querySelector('[lang|="sa"],[lang|="hi"],[lang|="ml"],[lang|="mr"],[lang|="bo"]');
         // add Telugu, etc.
         if(!foundTamil && !foundOther) return;
 
@@ -128,7 +132,7 @@ const Transliterate = (function() {
                 _state.button.textContent = to.tamil('a');
                 _state.button.lang = 'ta-Taml';
             }
-            else {
+            else if(_state.defaultSanscript) {
                 _state.button.textContent = to[_state.defaultSanscript]('a');
                 _state.button.lang = `sa-${_state.scriptToIso.get(_state.defaultSanscript)}`;
             }
@@ -185,6 +189,10 @@ const Transliterate = (function() {
                 }
                 else return hyphenated;
             }
+            if(shortlang === 'bo-Tibt') {
+                _state.cachedtext.set(txtnode,txt);
+                return to.ewts(txt);
+            }
             else {
                 _state.cachedtext.set(txtnode,txt);
                 return txt;
@@ -199,7 +207,7 @@ const Transliterate = (function() {
                                _state.cachedtext.get(txtnode) :
                                txtnode.data,
     };
-   
+    
     const getSanscript = (handDescs) => {
         if(handDescs.length === 0) return _state.defaultSanscript;
     
@@ -227,7 +235,7 @@ const Transliterate = (function() {
         }
         return maybetamil ? 'grantha' : false;
         */
-    }
+    };
     const prepText = () => {
         // tag codicological units associated with a script first
         const synchs = _state.parEl.querySelectorAll('[data-synch]');
@@ -254,7 +262,7 @@ const Transliterate = (function() {
         const isodefault = _state.scriptToIso.get(_state.defaultSanscript);
         const walker = document.createTreeWalker(_state.parEl,NodeFilter.SHOW_ALL, 
             { acceptNode(node) { return node.nodeType === Node.ELEMENT_NODE && node.hasAttribute('data-synch') ?
-                NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT} });
+                NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;} });
         prepTextWalker(walker,isodefault);
     };
     
@@ -282,18 +290,19 @@ const Transliterate = (function() {
                 else {
                     const [curlang,curscript] = curlangattr.split('-');
                     if(curlang === 'ta') {
-                        if(!curscript) {
-                            // assume Madras Lexicon transliteration
-                            curnode.lang = 'ta-Latn-t-ta-Taml';
-                        }
+                        // assume Madras Lexicon transliteration
+                        curnode.lang = 'ta-Latn-t-ta-Taml';
                         // Tamil in Tamil script
-                        else if(curscript === 'Taml') {
+                        if(curscript === 'Taml') {
                             curnode.classList.add('originalscript');
-                            curnode.lang = 'ta-Latn-t-ta-Taml';
                         }
                         // Tamil in other scripts?
                     }
-
+                    else if(curlang === 'bo') {
+                        curnode.lang = 'bo-Latn-t-bo-Tibt';
+                        if(curscript === 'Tibt')
+                            curnode.classList.add('originalscript');
+                    }
                     else if(curlang === 'sa' || 
                             curlang === 'pi' ||
                             curlang === 'ml' ||
@@ -313,7 +322,7 @@ const Transliterate = (function() {
                                 // could be a 'hi-Deva' parent, with 'sa' child === 'sa-Deva'
                             const parscript = (() => {
                                 const scriptsplit = curnode.parentNode.lang.split('-');
-                                if(scriptsplit.length > 1)
+                                if(scriptsplit.legth > 1)
                                     return scriptsplit.pop();
                                 else return null;
                             })();
@@ -397,7 +406,10 @@ const Transliterate = (function() {
                             if(curnode.parentNode.classList.contains('originalscript')) {
                                 //TODO: also do for sa-Beng, sa-Deva, etc.
                                 const fromcode = _state.isoToScript.get(parlang[4]);
-                                return to.iast(cached,fromcode);
+                                if(parlang[0] === 'bo')
+                                    return to.ewts(cached,fromcode);
+                                else
+                                    return to.iast(cached,fromcode);
                             }
                             else
                                 return cached;
@@ -724,6 +736,18 @@ const Transliterate = (function() {
             else return literated;
         },
         
+        ewts: (text) => {
+            const ewts = new EwtsConverter({fix_spacing: false, pass_through: true});
+            return ewts.to_ewts(text.replaceAll('ༀ','oM'));
+        },
+        dbumed: (text) => {
+            const ewts = new EwtsConverter();
+            return ewts.to_unicode(text);
+        },
+        dbucan: (text) => {
+            const ewts = new EwtsConverter();
+            return ewts.to_unicode(text);
+        },
         tamil: function(text) {
             const txt = to.smush(text);
             const grv = new Map([

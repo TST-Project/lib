@@ -154,6 +154,10 @@ body {
     font-size: 1.1rem;
 }
 
+#transbutton:lang(sa-Tibt) {
+    padding: 0.6rem 0.5rem 0 0.45rem;
+    line-height: 1.5rem;
+}
 #transbutton:hover {
     background: #ff9900;
     border: 1px solid #ff9900;
