@@ -22,6 +22,7 @@ const Transliterate = (function() {
             ['telugu','Telu'],
             ['nandinagari','Nand'],
             ['dbumed','Tibt'],
+            ['dbucan','Tibt'],
         ]),
         cachedtext: new Map(),
         parEl: null,
