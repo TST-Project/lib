@@ -740,10 +740,18 @@ const Transliterate = (function() {
         ewts: (text) => {
             const ewts = new EwtsConverter({fix_spacing: false, pass_through: true});
             return ewts.to_ewts(text.replaceAll('ༀ','om̐'))
-                       .replaceAll(/r-i/g,'ṛ')
-                       .replaceAll(/r-I/g,'ṝ')
-                       .replaceAll(/l-i/g,'l̥')
-                       .replaceAll(/l-I/g,'l̥̄');
+                       .replaceAll(/[rl]-[iI]/g,(m) => {
+                            switch (m) {
+                                case 'r-i':
+                                    return 'ṛ';
+                                case 'r-I':
+                                    return 'ṝ';
+                                case 'l-i': 
+                                    return 'l̥';
+                                default:
+                                    return 'l̥̄';
+                            }
+                       }).replaceAll(/([gṭḍbd])\+h/g,'$1h');
         },
         dbumed: (text) => {
             const ewts = new EwtsConverter();
