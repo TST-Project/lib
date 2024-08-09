@@ -739,7 +739,7 @@ const Transliterate = (function() {
         
         ewts: (text) => {
             const ewts = new EwtsConverter({fix_spacing: false, pass_through: true});
-            return ewts.to_ewts(text.replaceAll('ༀ','oM'));
+            return ewts.to_ewts(text.replaceAll('ༀ','om̐'));
         },
         dbumed: (text) => {
             const ewts = new EwtsConverter();
