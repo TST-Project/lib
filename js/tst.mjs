@@ -127,7 +127,7 @@ const findFacs = (startel) => {
 
     var p = prev(startel);
     while(p) {
-        if(!p) return '';
+        if(!p || !p.dataset) return '';
         if('loc' in p.dataset) {
             return p.dataset.loc;
         }
