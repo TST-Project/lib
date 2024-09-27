@@ -43,7 +43,9 @@ section div.wide {
 .lem-anchor {
     font-variant: super;
 }
-
+.lem .caesura {
+    display: none;
+}
 .lem-inline:hover, .lem-inline:hover *, .lem:hover, .highlit, .highlit * {
     text-decoration: none;
     background: rgba(255,255,128,1);
