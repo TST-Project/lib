@@ -61,6 +61,9 @@
 <xsl:template match="x:text/x:body | x:text/x:front | x:text//x:div">
     <xsl:element name="div">
         <xsl:call-template name="lang"/>
+        <xsl:if test="@rend='parallel'">
+            <xsl:attribute name="class">parallel</xsl:attribute>
+        </xsl:if>
         <xsl:apply-templates/>
     </xsl:element>
 </xsl:template>
