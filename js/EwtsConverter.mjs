@@ -176,8 +176,8 @@ class EwtsConverter {
 		"ai": "\u0f7b",
 		"o": "\u0f7c",
 		"au": "\u0f7d",
-		"-i": "\u0f80",
-		"-I": "\u0f71\u0f80",
+		//"-i": "\u0f80",
+		//"-I": "\u0f71\u0f80",
 
 		// special sanskrit vowels
 		"ṛ": "\u0fb2\u0f80",
@@ -193,10 +193,14 @@ class EwtsConverter {
 	// these vowels have different forms for the standalone thing and when added to a syllable
 	// Wylie => [ 'standalone', 'added' ]
 	static complex_vowel = {
-		"r-i": [ "\u0f62\u0f80", "\u0fb2\u0f80" ],
-		"r-I": [ "\u0f62\u0f71\u0f80", "\u0fb2\u0f71\u0f80" ], 
-		"l-i": [ "\u0f63\u0f80", "\u0fb3\u0f80" ],
-		"l-I": [ "\u0f63\u0f71\u0f80", "\u0fb3\u0f71\u0f80" ], 
+		//"r-i": [ "\u0f62\u0f80", "\u0fb2\u0f80" ],
+		"ṛ": [ "\u0f62\u0f80", "\u0fb2\u0f80" ],
+		//"r-I": [ "\u0f62\u0f71\u0f80", "\u0fb2\u0f71\u0f80" ], 
+		"ṝ": [ "\u0f62\u0f71\u0f80", "\u0fb2\u0f71\u0f80" ], 
+		//"l-i": [ "\u0f63\u0f80", "\u0fb3\u0f80" ],
+        "l̥": [ "\u0f63\u0f80", "\u0fb3\u0f80" ],
+		//"l-I": [ "\u0f63\u0f71\u0f80", "\u0fb3\u0f71\u0f80" ], 
+		"l̥̄": [ "\u0f63\u0f71\u0f80", "\u0fb3\u0f71\u0f80" ], 
 	};
 
 	// stuff that can come after the vowel
@@ -231,12 +235,14 @@ class EwtsConverter {
 		" ": "\u0f0b",
 		"*": "\u0f0c",
 		"/": "\u0f0d",
+		"/ ": "\u0f0d ",
 		"//": "\u0f0e",
+		"// ": "\u0f0e ",
 		";": "\u0f0f",
 		"|": "\u0f11",
 		//"!": "\u0f08",
 		":": "\u0f14",
-		"_": " ",
+		//"_": " ",
 		"=": "\u0f34",
 		"<": "\u0f3a",
 		">": "\u0f3b",
@@ -475,7 +481,7 @@ class EwtsConverter {
 
 	// other stand-alone characters
 	static tib_other = {
-		" ": "_",
+		//" ": "_",
 		//"\u0f04": "@",
 		//"\u0f05": "#",
 		"\u0f06": "$",
@@ -621,7 +627,8 @@ class EwtsConverter {
 	// - sloppy: silently fix a number of common Wylie mistakes when converting to Unicode
 	// - leave_dubious: when converting to Unicode, leave dubious syllables unprocessed, between [brackets], instead of doing a best attempt.
 	// - pass_through: when converting to EWTS, pass through non-Tib characters instead of converting to [comments]
-	constructor({ check = true, check_strict = true, fix_spacing = true, leave_dubious = false, sloppy = false, pass_through = false } = {}) {
+    // - handle_spaces: convert spaces to underscore
+	constructor({ check = true, check_strict = true, fix_spacing = true, leave_dubious = false, sloppy = false, pass_through = false, handle_spaces = false } = {}) {
 		// initialize calculated static properties once
 		this.constructor.static_init();
 
@@ -659,7 +666,7 @@ class EwtsConverter {
 			.replaceAll("...", "\\u0f0b\\u0f0b\\u0f0b")
 			.replaceAll(" (", "_(")
 			.replaceAll(") ", ")_")
-			.replaceAll("/ ", "/_")
+			//.replaceAll("/ ", "/_")
 			.replaceAll(" 0", "_0")
 			.replaceAll(" 1", "_1")
 			.replaceAll(" 2", "_2")
@@ -1322,7 +1329,7 @@ class EwtsConverter {
 					this.warn(`line ${line}: ${w}`);
 				}
 
-				if (this.pass_through) [ i, out ] = this._handle_spaces(str, i, out);
+				if (this.pass_through && this.handle_spaces) [ i, out ] = this._handle_spaces(str, i, out);
 				continue ITER;
 			}
 
@@ -1336,7 +1343,7 @@ class EwtsConverter {
 				i++;
 				units++;
 
-				if (this.pass_through) [ i, out ] = this._handle_spaces(str, i, out);
+				if (this.pass_through && this.handle_spaces) [ i, out ] = this._handle_spaces(str, i, out);
 				continue ITER;
 			}
 

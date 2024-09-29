@@ -738,7 +738,7 @@ const Transliterate = (function() {
         },
         
         ewts: (text) => {
-            const ewts = new EwtsConverter({fix_spacing: false, pass_through: true});
+            const ewts = new EwtsConverter({fix_spacing: true, pass_through: true,fix_sloppy: false});
             return ewts.to_ewts(text.replaceAll('ༀ','om̐'))
                        .replaceAll(/[rl]-[iI]/g,(m) => {
                             switch (m) {
