@@ -11,6 +11,15 @@ section div.wide {
     font-size: 1.4rem;
     position: sticky;
 }
+.text-block.nolemmata .lem-inline {
+    text-decoration: none;
+}
+
+.text-block.nolemmata .lem-inline:hover, 
+.text-block.nolemmata .lem-inline:hover * {
+    background: none;
+}
+
 .apparatus-block {
     top: 0;
     padding-top: 1rem;

@@ -118,15 +118,21 @@
                 <xsl:if test="@corresp">
                     <xsl:attribute name="data-corresp"><xsl:value-of select="@corresp"/></xsl:attribute>
                 </xsl:if>
+                <xsl:variable name="hideapp" select="./ancestor::x:div[@rend='parallel']"/>
                 <div>
-                    <xsl:attribute name="class">text-block</xsl:attribute>
+                    <xsl:attribute name="class">
+                        <xsl:text>text-block</xsl:text>
+                        <xsl:if test="$hideapp">
+                            <xsl:text> nolemmata</xsl:text>
+                        </xsl:if>
+                    </xsl:attribute>
                     <xsl:call-template name="lang"/>
                     <xsl:apply-templates/>
                 </div>
                 <div>
                     <xsl:attribute name="class">
                         <xsl:text>apparatus-block</xsl:text>
-                        <xsl:if test="./ancestor::x:div[@rend='parallel']">
+                        <xsl:if test="$hideapp">
                             <xsl:text> hidden</xsl:text>
                         </xsl:if>
                     </xsl:attribute>
@@ -152,15 +158,21 @@
                 <xsl:if test="@corresp">
                     <xsl:attribute name="data-corresp"><xsl:value-of select="@corresp"/></xsl:attribute>
                 </xsl:if>
+                <xsl:variable name="hideapp" select="./ancestor::x:div[@rend='parallel']"/>
                 <div>
-                    <xsl:attribute name="class">text-block</xsl:attribute>
+                    <xsl:attribute name="class">
+                        <xsl:text>text-block</xsl:text>
+                        <xsl:if test="$hideapp">
+                            <xsl:text> nolemmata</xsl:text>
+                        </xsl:if>
+                    </xsl:attribute>
                     <xsl:call-template name="lang"/>
                     <xsl:call-template name="texthead"/>
                 </div>
                 <div>
                     <xsl:attribute name="class">
                         <xsl:text>apparatus-block</xsl:text>
-                        <xsl:if test="./ancestor::x:div[@rend='parallel']">
+                        <xsl:if test="$hideapp">
                             <xsl:text> hidden</xsl:text>
                         </xsl:if>
                     </xsl:attribute>
@@ -186,15 +198,21 @@
                 <xsl:if test="@corresp">
                     <xsl:attribute name="data-corresp"><xsl:value-of select="@corresp"/></xsl:attribute>
                 </xsl:if>
+                <xsl:variable name="hideapp" select="./ancestor::x:div[@rend='parallel']"/>
                 <xsl:element name="div">
-                    <xsl:attribute name="class">text-block</xsl:attribute>
+                    <xsl:attribute name="class">
+                        <xsl:text>text-block</xsl:text>
+                        <xsl:if test="$hideapp">
+                            <xsl:text> nolemmata</xsl:text>
+                        </xsl:if>
+                    </xsl:attribute>
                     <xsl:call-template name="lang"/>
                     <xsl:apply-templates select="x:l"/>
                 </xsl:element>
                 <xsl:element name="div">
                     <xsl:attribute name="class">
                         <xsl:text>apparatus-block</xsl:text>
-                        <xsl:if test="./ancestor::x:div[@rend='parallel']">
+                        <xsl:if test="$hideapp">
                             <xsl:text> hidden</xsl:text>
                         </xsl:if>
                     </xsl:attribute>

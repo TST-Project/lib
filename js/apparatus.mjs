@@ -279,6 +279,7 @@ const Events = {
         if(!translationsvg.checkVisibility()) {
             for(const apparatus of apparati) {
                 apparatus.previousElementSibling.style.width = '60%';
+                apparatus.previousElementSibling.classList.remove('nolemmata');
                 const translation = apparatus.parentNode.nextElementSibling;
                 if(translation) translation.classList.add('hidden');
                 apparatus.classList.remove('hidden');
@@ -289,6 +290,7 @@ const Events = {
         else {
             for(const apparatus of apparati) {
                 apparatus.previousElementSibling.style.width = 'unset';
+                apparatus.previousElementSibling.classList.add('nolemmata');
                 const translation = apparatus.parentNode.nextElementSibling;
                 if(translation) translation.classList.remove('hidden');
                 apparatus.classList.add('hidden');
