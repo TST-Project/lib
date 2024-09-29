@@ -184,7 +184,7 @@ body {
     hyphens: auto;
 }
 
-p:lang(bo), p:lang(bod) {
+p:lang(bo-Tibt), p:lang(bod) {
     line-height: 3rem;
 }
 /*
