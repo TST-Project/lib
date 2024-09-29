@@ -270,9 +270,41 @@ const Events = {
            e.target.closest('.lem-inline'))
             unhighlight(e.target);
     },
+    
+    toggleApparatus(e) {
+        const apparatussvg = document.getElementById('apparatussvg');
+        const translationsvg = document.getElementById('translationsvg');
+        const apparati = document.querySelectorAll('.apparatus-block');
+
+        if(!translationsvg.checkVisibility()) {
+            for(const apparatus of apparati) {
+                apparatus.previousElementSibling.style.width = '60%';
+                const translation = apparatus.parentNode.nextElementSibling;
+                if(translation) translation.classList.add('hidden');
+                apparatus.classList.remove('hidden');
+            }
+            apparatussvg.style.display = 'none';
+            translationsvg.style.display = 'block';
+        }
+        else {
+            for(const apparatus of apparati) {
+                apparatus.previousElementSibling.style.width = 'unset';
+                const translation = apparatus.parentNode.nextElementSibling;
+                if(translation) translation.classList.remove('hidden');
+                apparatus.classList.add('hidden');
+            }
+            translationsvg.style.display = 'none';
+            apparatussvg.style.display = 'block';
+        }
+    }
 };
 
 const init = () => {
+    if(document.querySelector('.apparatus-block.hidden')) {
+        const apparatusbutton = document.getElementById('apparatusbutton');
+        apparatusbutton.style.display = 'block';
+        apparatusbutton.addEventListener('click',Events.toggleApparatus);
+    }
     document.addEventListener('mouseover',Events.docMouseover);
     document.addEventListener('mouseout',Events.docMouseout);
 };

@@ -124,7 +124,12 @@
                     <xsl:apply-templates/>
                 </div>
                 <div>
-                    <xsl:attribute name="class">apparatus-block</xsl:attribute>
+                    <xsl:attribute name="class">
+                        <xsl:text>apparatus-block</xsl:text>
+                        <xsl:if test="./ancestor::x:div[@rend='parallel']">
+                            <xsl:text> hidden</xsl:text>
+                        </xsl:if>
+                    </xsl:attribute>
                     <xsl:call-template name="lang"/>
                     <xsl:call-template name="apparatus"/>
                 </div>
@@ -153,7 +158,12 @@
                     <xsl:call-template name="texthead"/>
                 </div>
                 <div>
-                    <xsl:attribute name="class">apparatus-block</xsl:attribute>
+                    <xsl:attribute name="class">
+                        <xsl:text>apparatus-block</xsl:text>
+                        <xsl:if test="./ancestor::x:div[@rend='parallel']">
+                            <xsl:text> hidden</xsl:text>
+                        </xsl:if>
+                    </xsl:attribute>
                     <xsl:call-template name="lang"/>
                     <xsl:call-template name="apparatus"/>
                 </div>
@@ -182,7 +192,12 @@
                     <xsl:apply-templates select="x:l"/>
                 </xsl:element>
                 <xsl:element name="div">
-                    <xsl:attribute name="class">apparatus-block</xsl:attribute>
+                    <xsl:attribute name="class">
+                        <xsl:text>apparatus-block</xsl:text>
+                        <xsl:if test="./ancestor::x:div[@rend='parallel']">
+                            <xsl:text> hidden</xsl:text>
+                        </xsl:if>
+                    </xsl:attribute>
                     <xsl:call-template name="lang"/>
                     <xsl:call-template name="apparatus"/>
                 </xsl:element>

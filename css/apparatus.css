@@ -20,7 +20,9 @@ section div.wide {
     line-height: 1.3rem;
     position: sticky;
 }
-
+.hidden {
+    display: none;
+}
 .apparatus-block span.note::after,
 .apparatus-block span.note::before {
     content: '';
@@ -181,6 +183,37 @@ a.alignment-pointer:link, a.alignment-pointer:active {
     border-left: 0;
     border-right: 4px solid #ffffff;
     padding-left: 0;
+}
+
+#apparatusbutton {
+    position: relative;
+    border: 1px solid black;
+    padding: 5px;
+    cursor: pointer;
+    display: none;
+    height: 36px;
+    width: 34px;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+#translationsvg {
+    display: none;
+}
+
+.parallel {
+    display: flex;
+}
+
+.parallel > div {
+    flex-basis: 100%;
+}
+
+.parallel > .wide {
+    justify-content: flex-start;
+}
+
+.parallel .text-block {
+    width: unset;
 }
 
 @media (max-width: 600px) {
