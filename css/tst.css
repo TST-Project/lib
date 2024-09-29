@@ -376,6 +376,11 @@ a.uri {
 hr {
     width: 87.5%;
 }
+#record-thin hr {
+    width: unset;
+    margin-right: 2rem;
+    max-width: 800px;
+}
 
 @media (max-width: 800px) {
     th {
