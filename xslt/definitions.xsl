@@ -322,6 +322,11 @@
     <tst:entry key="#mindu">&#x11B09;</tst:entry>
     <tst:entry key="#jain_omkara">&#xA8FD;</tst:entry>
 
+    <tst:entry key="#puspika">&#xA8F8;</tst:entry>
+    <tst:entry key="#sirorekha">&#xA8FB;</tst:entry>
+    <tst:entry key="#broken_danda">&#x0964;</tst:entry>
+    <tst:entry key="#danda_with_slash">&#x0964;</tst:entry>
+
     <tst:entry key="#latin_cross">✝</tst:entry>
 </tst:entities>
 
@@ -333,6 +338,9 @@
     <tst:entry key="#ya=m">hlig</tst:entry>
     <tst:entry key="#newa-old-gap-filler">trad</tst:entry>
     <tst:entry key="#double_kal">hlig</tst:entry>
+
+    <tst:entry key="#broken_danda">cv01</tst:entry>
+    <tst:entry key="#danda_with_slash">cv02</tst:entry>
 </tst:entityclasses>
 
 <tst:entityrend>
@@ -434,6 +442,11 @@
     <tst:entry key="#bhale_nine_reversed">reversed nine-like bhale</tst:entry>
     <tst:entry key="#mindu">mīṇḍu</tst:entry>
     <tst:entry key="#jain_omkara">Jaina oṃkāra</tst:entry>
+
+    <tst:entry key="#puspika">puṣpikā</tst:entry>
+    <tst:entry key="#sirorekha">śirorekhā</tst:entry>
+    <tst:entry key="#broken_danda">broken daṇḍa</tst:entry>
+    <tst:entry key="#danda_with_slash">daṇḍa with slash</tst:entry>
 
     <tst:entry key="#latin_cross">latin cross</tst:entry>
 </tst:entitynames>
