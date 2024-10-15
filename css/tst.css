@@ -297,6 +297,11 @@ div.teitext {
     width: 87.5%;
 }
 
+#record-fat section > table.texttitle {
+    max-width: 100%;
+    width: 100%;
+}
+
 #record-fat section > div.para.wide, #record-fat section > div.lg.wide {
     max-width: 100%;
     width: 87.5%;
