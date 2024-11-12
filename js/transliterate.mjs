@@ -489,8 +489,10 @@ transliterator.jiggle = node => {
     const telugu_vowels = ['ā','i','ī','e','o','_','ai','au'];
     const telu_cons_headstroke = ['h','k','ś','y','g','gh','c','ch','jh','ṭh','ḍ','ḍh','t','th','d','dh','n','p','ph','bh','m','r','ḻ','v','ṣ','s'];
     var telugu_del_headstroke = false;
-    var telugu_kids = [];
-    var add_at_beginning = [];
+    const telugu_kids = [];
+    const add_at_beginning = [];
+    const add_virama = [];
+
     const starts_with_text = (kids[0].nodeType === 3);
 
     for (let kid of kids) {
@@ -499,6 +501,8 @@ transliterator.jiggle = node => {
         const txt = kid.textContent.trim();
         if(txt === '') continue;
         if(txt === 'a') { 
+            if(kid.nodeType === 1)
+                add_virama.push(kid);
             kid.textContent = '';
             continue;
         }
@@ -630,6 +634,20 @@ transliterator.jiggle = node => {
 
     for (const el of add_at_beginning) {
         node.insertBefore(el,node.firstChild);
+    }
+    
+    const virama = Sanscript.schemes[_state.isoToScript.get(script)].virama;
+    for (const el of add_virama) {
+        const newel = el.nodeName === 'DEL' ? 
+            document.createElement('ins') :
+            document.createElement('del');
+        if(newel.nodeName === 'INS')
+            newel.className = 'add';
+
+        for(const att of el.attributes)
+            newel.setAttribute(att.name,att.value);
+        newel.append(virama);
+        el.replaceWith(newel);
     }
 
     if(telugu_del_headstroke) {
