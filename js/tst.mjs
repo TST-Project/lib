@@ -62,8 +62,10 @@ const init = function() {
     // check for GitHub commit history
     GitHubFunctions.latestCommits();
 
-    if(document.querySelector('.app'))
+    if(document.querySelector('.app')) {
         ApparatusViewer.init();
+        ApparatusViewer.setTransliterator(Transliterate);
+    }
 
     recordcontainer.addEventListener('click',events.docClick);
     recordcontainer.addEventListener('copy',events.removeHyphens);

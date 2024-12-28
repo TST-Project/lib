@@ -1,13 +1,17 @@
+var Transliterate;
+const setTransliterator = (obj) => Transliterate = obj;
+var Debugging = false;
+
 const nextSibling = (node) => {
     let start = node;
     while(start) {
-        let sib = start.nextSibling;
+        const sib = start.nextSibling;
         if(sib) return sib;
         else start = start.parentElement; 
     }
-    return false;
+    return null;
 };
-
+/*
 const nextTextNode = (start) => {
     let next = nextSibling(start);
     while(next) {
@@ -17,39 +21,48 @@ const nextTextNode = (start) => {
     return null;
 };
 
-const countpos = (str, pos) => {
-    if(pos === 0) return 0;
-    let realn = 0;
-    for(let n=1;n<=str.length;n++) {
-       if(str[n] !== '\u00AD')
-           realn = realn + 1;
-        if(realn === pos) return n;
+const prevSibling = (node) => {
+    let start = node;
+    while(start) {
+        const sib = start.previousSibling;
+        if(sib) return sib;
+        else start = start.parentElement; 
     }
+    return null;
+};
+
+const prevTextNode = (start) => {
+    let prev = prevSibling(start);
+    while(prev) {
+        if(prev.nodeType === 3) return prev;
+        else prev = prev.lastChild || prevSibling(prev);
+    }
+    return null;
+};
+*/
+const countpos = (str, pos) => {
+    if(pos === 0) {
+        return str[0].match(/[\u00AD\s]/) ? 1 : 0;
+    }
+    let realn = 0;
+    for(let n=0;n<str.length;n++) {
+        if(realn === pos) {
+            if(str[n].match(/[\u00AD\s]/))
+                return n+1;
+            else 
+                return n;
+        }
+        if(str[n].match(/[\u00AD\s]/) === null)
+           realn = realn + 1;
+    }
+    return str.length;
 };
 
 const findEls = (range) => {
     const container = range.cloneContents();
     if(container.firstElementChild) return true;
     return false;
-    /*
-    const walk = document.createTreeWalker(container,NodeFilter.SHOW_ELEMENT,null,false);
-    if(walk.nextNode()) return true;
-    return false;
-    */
 };
-
-const getNextNode = function(node,skipKids = false) {
-    if(node.firstChild && !skipKids)
-        return node.firstChild;
-    while(node) {
-        if(node.nextSibling) return node.nextSibling;
-        node = node.parentNode;
-    }
-    return null;
-};
-
-var Transliterate;
-const setTransliterator = (obj) => Transliterate = obj;
 
 const highlight = {
     inline(targ) {
@@ -65,13 +78,12 @@ const highlight = {
     apparatus(targ) {
         const par = targ.closest('div.apparatus-block');
         if(!par) return;
-
         const left = par.parentElement.querySelector('.text-block'); // or .edition?
         if(targ.dataset.corresp) {
             if(document.getElementById('transbutton').lang === 'en') {
                 Transliterate.revert(left);
             }
-            highlightcoords(targ.dataset.corresp,left);
+            highlightcoords(targ,left);
             if(document.getElementById('transbutton').lang === 'en') {
                 Transliterate.refreshCache(left);
                 Transliterate.activate(left);
@@ -81,165 +93,183 @@ const highlight = {
             const allright = [...par.querySelectorAll(':scope > .app > .lem')];
             const pos = allright.indexOf(targ);
             const allleft = left.querySelectorAll('.lem-inline');
-            allleft[pos].classList.add('highlit');
+            if(allleft.length !== 0)
+               allleft[pos].classList.add('highlit');
         }
     },
 };
 
-const textPosInElement = (el,pos) => {
-    const walker = document.createTreeWalker(el,NodeFilter.SHOW_TEXT);
-    let start = 0;
-    let cur = walker.currentNode;
-    while(walker.nextNode()) {
-        cur = walker.currentNode;
-        const clean = cur.data.replaceAll('\u00AD','');
-        const end = start + clean.length;
-        if(pos <= end)
-            return [cur,countpos(cur.data,pos-start)];
-        start = end;
-    }
-    return [cur,cur.data.length];
-};
-
-const highlightcoords = (coords,target) => {
-    const positions = coords.split(',');
+const rangeFromCoords = (positions, lem, target) => {
     const range = document.createRange();
 
-    /*
-    const walker = document.createTreeWalker(target,NodeFilter.SHOW_TEXT);
+    const realNextSibling = (walker) => {
+        let cur = walker.currentNode;
+        while(cur) {
+            const sib = walker.nextSibling();
+            if(sib) return sib;
+            cur = walker.parentNode();
+        }
+        return null;
+    };
+
+    const walker = document.createTreeWalker(target,NodeFilter.SHOW_ALL, { acceptNode() {return NodeFilter.FILTER_ACCEPT;}});
     let start = 0;
     let started = false;
-    while(walker.nextNode()) {
-        const cur = walker.currentNode;
-        const clean = cur.data.replaceAll('\u00AD','');
-        const end = start + clean.length;
-        if(!started && positions[0] <= end) {
-            const realpos = countpos(cur.data,positions[0]-start);
-            range.setStart(cur,realpos);
-            started = true;
-        }
-        if(positions[1] <= end) {
-            const realpos = countpos(cur.data,positions[1]-start);
-            range.setEnd(cur,realpos);
-            break;
-        }
-        start = end;
-    }
-    */
-    const walker = document.createTreeWalker(target,NodeFilter.SHOW_ALL);
-    let start = 0;
-    let oldstart = 0;
-    let started = false;
+    //let last;
     let cur = walker.nextNode();
     while(cur) {
         if(cur.nodeType === 1) {
-            if(!cur.myOldContent) {
-                cur = walker.nextNode();
+            if(cur.classList.contains('choiceseg') && 
+               cur !== cur.parentNode.firstChild) {
+
+                cur = realNextSibling(walker);
                 continue;
             }
-            const clean = cur.myOldContent.textContent.replaceAll('\u00AD','');
-            const newclean = cur.textContent.replaceAll('\u00AD','');
-            if(clean.length === newclean.length) {
-                cur = walker.nextNode();
+            
+            if(cur.classList.contains('ignored')) {
+                cur = realNextSibling(walker);
                 continue;
             }
-            const oldend = oldstart + clean.length;
-            const newend = start + clean.length;
-            if(!started && positions[0] <= oldend) {
-                const realpos = countpos(cur.myOldContent.textContent,positions[0]-oldstart);
-                const [textnode, textnodepos] = textPosInElement(cur,realpos);
-                range.setStart(textnode,textnodepos);
-                started = true;
-            }
-            if(positions[1] <= oldend) {
-                const realpos = countpos(cur.myOldContent.textContent,positions[1]-oldstart);
-                const [textnode, textnodepos] = textPosInElement(cur,realpos);
-                range.setEnd(textnode,textnodepos);
-                break;
-            }
-            start = newend;
-            oldstart = oldend;
-            cur = walker.nextSibling();
         }
+        
         else if(cur.nodeType === 3) {
-            const clean = cur.data.replaceAll('\u00AD','');
-            const end = start + clean.length;
+            const nodecount = cur.data.trim().replaceAll(/[\s\u00AD]/g,'').length;
+            const end = start + nodecount;
             if(!started && positions[0] <= end) {
                 const realpos = countpos(cur.data,positions[0]-start);
+                // TODO: if realpos === cur.data.length, move to beginning of next node
+                // then if next node starts with a space, +1
+                // then if the node consists only of spaces, move again to beginning of next node
                 range.setStart(cur,realpos);
                 started = true;
             }
             if(positions[1] <= end) {
                 const realpos = countpos(cur.data,positions[1]-start);
-                range.setEnd(cur,realpos);
+                if(cur.data[realpos-1] === ' ')
+                    range.setEnd(cur,realpos-1);
+                else
+                    range.setEnd(cur,realpos);
                 break;
             }
             start = end;
-            oldstart = oldstart + clean.length;
-            cur = walker.nextNode();
+            //last = cur;
         }
+        cur = walker.nextNode();
     }
-    if(range.startOffset === range.startContainer.data.length) {
-        // move to the beginning of the next text node
-        range.setStart(nextTextNode(range.startContainer),0);
-        // if there is no next text node something is wrong
-    }
-    if(!findEls(range))
-        highlightrange(range);
-    else {
-        const toHighlight = [];
-        const start = (range.startContainer.nodeType === 3) ?
-            range.startContainer :
-            range.startContainer.childNodes[range.startOffset];
-   
-        const end = (range.endContainer.nodeType === 3) ?
-            range.endContainer :
-            range.endContainer.childNodes[range.endOffset-1];
-  
-        if(start.nodeType === 3 && range.startOffset !== start.length) {
-            const textRange = start.ownerDocument.createRange();
-            textRange.setStart(start,range.startOffset);
-            textRange.setEnd(start,start.length);
-            toHighlight.push(textRange);
-        }
-
-        for(let node = getNextNode(start); node !== end; node = getNextNode(node)) {
-            if(node.nodeType === 3) {
-                const textRange = node.ownerDocument.createRange();
-                textRange.selectNode(node);
-                toHighlight.push(textRange);
-            }
-        }
-
-        if(end.nodeType === 3 && range.endOffset > 0) {
-            const textRange = end.ownerDocument.createRange();
-            textRange.setStart(end,0);
-            textRange.setEnd(end,range.endOffset);
-            toHighlight.push(textRange);
-        }
-        for(const hiNode of toHighlight)
-            highlightrange(hiNode);
-    }
-    target.normalize();
+    //if(range.collapsed) range.setEnd(last,last.data.length);
+    // shouldn't need this
+    return range;
 };
 
-const highlightrange = (range) => {
+const highlightcoords = (lem,target) => {
+    const multiple = lem.dataset.corresp.split(';').reverse();
+    for(const coord of multiple) highlightcoord(coord.split(','), lem, target);
+};
+
+const wrongSeg = (txtnode) => {
+    const ignored = txtnode.parentNode.closest('.ignored');
+    if(ignored) return ignored;
+    const el = txtnode.parentNode.closest('.choiceseg');
+    return el && el !== el.parentNode.firstChild;
+};
+
+const highlightrange = (range,classname = 'highlit') => {
     const lemma = document.createElement('span');
-    lemma.className = 'highlit temporary';
+    lemma.className = `${classname} temporary`;
     lemma.append(range.extractContents());
+    if(lemma.innerHTML.trim() === '') return; // avoid highlighting blank spaces/lines
+
     range.insertNode(lemma);
     lemma.lang = lemma.parentElement.lang;
+    return lemma;
+};
+
+const matchCounts = (alignment,m,pos='start') => {
+    let matchcount = 0;
+    for(let n=0;n<alignment[0].length;n++) {
+        if(matchcount === m) {
+            if(pos === 'start' && alignment[0][n] === 'G') n = n + 1; // |vēḻa_|vēṇ|, |vēḻam|veḷ|
+
+            const line2 = alignment[1].slice(0,n);
+            const matches = [...line2].reduce((acc, cur) => cur === 'M' ?  acc + 1 : acc,0);
+            return matches;
+        }
+        if(alignment[0][n] === 'M') matchcount = matchcount + 1;
+    }
+    
+    // no match; go to end of the block
+    const matches = [...alignment[1]].reduce((acc, cur) => cur === 'M' ?  acc + 1 : acc,0); //-1;
+    // why was there -1 here??
+    return matches;
+};
+
+const highlightcoord = (positions, lem, target, highlightfn = highlightrange) => {
+    // if there is an alignment, update coords 
+    if(target.dataset.alignment) {
+        const alignment = target.dataset.alignment.split(',');
+        positions = [matchCounts(alignment,parseInt(positions[0]),'start'),
+                     matchCounts(alignment,parseInt(positions[1]),'end')
+                    ];
+    }
+    const range = rangeFromCoords(positions, lem, target);
+    if(!findEls(range))
+        return highlightfn(range);
+
+    const toHighlight = [];
+    const start = (range.startContainer.nodeType === 3) ?
+        range.startContainer :
+        range.startContainer.childNodes[range.startOffset];
+
+    const end = (range.endContainer.nodeType === 3) ?
+        range.endContainer :
+        range.endContainer.childNodes[range.endOffset-1];
+
+    if(start.nodeType === 3 && range.startOffset !== start.length && !wrongSeg(start)) {
+        const textRange = document.createRange();
+        textRange.setStart(start,range.startOffset);
+        textRange.setEnd(start,start.length);
+        toHighlight.push(textRange);
+    }
+    
+    const getNextNode = (n) => n.firstChild || nextSibling(n);
+
+    for(let node = getNextNode(start); node !== end; node = getNextNode(node)) {
+        if(node.nodeType === 3 && !wrongSeg(node)) {
+            const textRange = document.createRange();
+            textRange.selectNode(node);
+            toHighlight.push(textRange);
+        }
+    }
+
+    if(end.nodeType === 3 && range.endOffset > 0 && !wrongSeg(end)) {
+        const textRange = document.createRange();
+        textRange.setStart(end,0);
+        textRange.setEnd(end,range.endOffset);
+        toHighlight.push(textRange);
+    }
+    
+    const firsthighlit = highlightfn(toHighlight.shift());
+
+    for(const hiNode of toHighlight)
+        highlightfn(hiNode);
+    target.normalize();
+    return firsthighlit;
 };
 
 const unhighlight = (targ) => {
-    const par = targ.closest('div.wide').querySelector('.text-block'); // or .edition?
+    let highlit = /*par*/document.querySelectorAll('.highlit');
+    if(highlit.length === 0) return;
+    
+    targ = targ ? targ.closest('div.wide') : highlit[0].closest('div.wide');
+    const par = targ.querySelector('.text-block'); // or .edition?
     if(!par) return;
-    const transbutton = document.getElementById('transbutton');
-    if(transbutton.style.display === 'block' && transbutton.lang === 'en') {
+    
+    if(document.getElementById('transbutton').lang === 'en') {
         Transliterate.revert(par);
+        highlit = document.querySelectorAll('.highlit'); // in case things changed (via jiggle)
     }
-    //for(const h of par.querySelectorAll('.highlit')) {
-    for(const h of document.querySelectorAll('.highlit')) {
+    
+    for(const h of highlit) {
         if(h.classList.contains('temporary')) {
             while(h.firstChild)
                 h.after(h.firstChild);
@@ -248,20 +278,89 @@ const unhighlight = (targ) => {
         else h.classList.remove('highlit');
     }
     par.normalize();
-    if(transbutton.style.display === 'block')
-        Transliterate.refreshCache(par);
-    if(transbutton.style.display === 'block' && transbutton.lang === 'en') {
+    Transliterate.refreshCache(par);
+    
+    if(document.getElementById('transbutton').lang === 'en')
+        Transliterate.activate(par);
+};
+
+const unpermalight = () => {
+    const highlit = /*par*/document.querySelectorAll('.permalit');
+    if(highlit.length === 0) return;
+    
+    const targ = highlit[0].closest('div.wide');
+    const par = targ.querySelector('.text-block'); // or .edition?
+    if(!par) return;
+    if(document.getElementById('transbutton').lang === 'en') {
+        Transliterate.revert(par);
+    }
+    for(const h of highlit) {
+        if(h.classList.contains('temporary')) {
+            while(h.firstChild)
+                h.after(h.firstChild);
+            h.remove();
+        }
+        else h.classList.remove('permalit');
+    }
+    par.normalize();
+    Transliterate.refreshCache(par);
+    if(document.getElementById('transbutton').lang === 'en') {
         Transliterate.activate(par);
     }
+};
+
+const switchReading = (par, id) => {
+    par.querySelector('.rdg-text').style.display = 'none';
+    par.querySelector(`.rdg-alt[data-wit~="${id}"]`).style.display = 'inline';
+};
+
+const restoreReading = (par) => {
+    par.querySelector('.rdg-text').style.display = 'inline';
+    for(const alt of par.querySelectorAll('.rdg-alt'))
+        alt.style.display = 'none';
 };
 
 const Events = { 
     docMouseover(e) {
         const lem_inline = e.target.closest('.lem-inline');
-        if(lem_inline) highlight.inline(lem_inline);
+        if(lem_inline) {
+            highlight.inline(lem_inline);
+            return;
+        }
         const lem = e.target.closest('.lem');
         if(lem) {
             highlight.apparatus(lem);
+            return;
+        }
+        const msid = e.target.closest('.mshover');
+        if(msid) {
+            const rdg = e.target.closest('.rdg');
+            switchReading(rdg,msid.dataset.id);
+            msid.addEventListener('mouseout',restoreReading.bind(null,rdg),{once: true});
+        }
+        const anchor = e.target.closest('.anchor');
+        if(anchor) {
+            const note = document.querySelector(`[data-target='#${anchor.id}']`);
+            if(note) {
+                anchor.classList.add('highlit');
+                note.classList.add('highlit');
+                document.addEventListener('mouseout',() => {
+                    anchor.classList.remove('highlit');
+                    note.classList.remove('highlit');
+                },{once: true});
+            }
+        }
+        const note = e.target.closest('.anchored-note');
+        if(note) {
+            const anchor = document.querySelector(note.dataset.target);
+            if(anchor) {
+                anchor.classList.add('highlit');
+                note.classList.add('highlit');
+                document.addEventListener('mouseout',() => {
+                    anchor.classList.remove('highlit');
+                    note.classList.remove('highlit');
+                },{once: true});
+            }
         }
     },
 
@@ -270,50 +369,35 @@ const Events = {
            e.target.closest('.lem-inline'))
             unhighlight(e.target);
     },
-    
-    toggleApparatus(e) {
-        const apparatussvg = document.getElementById('apparatussvg');
-        const translationsvg = document.getElementById('translationsvg');
-        const apparati = document.querySelectorAll('.apparatus-block');
+    docClick(e) {
+        for(const tooltip of document.querySelectorAll('.coord-suggestion'))
+            tooltip.remove();
+        unpermalight(); 
 
-        if(!translationsvg.checkVisibility()) {
-            for(const apparatus of apparati) {
-                apparatus.previousElementSibling.style.width = '60%';
-                apparatus.previousElementSibling.classList.remove('nolemmata');
-                const translation = apparatus.parentNode.nextElementSibling;
-                if(translation) translation.classList.add('hidden');
-                apparatus.classList.remove('hidden');
-            }
-            apparatussvg.style.display = 'none';
-            translationsvg.style.display = 'block';
-        }
-        else {
-            for(const apparatus of apparati) {
-                apparatus.previousElementSibling.style.width = 'unset';
-                apparatus.previousElementSibling.classList.add('nolemmata');
-                const translation = apparatus.parentNode.nextElementSibling;
-                if(translation) translation.classList.remove('hidden');
-                apparatus.classList.add('hidden');
-            }
-            translationsvg.style.display = 'none';
-            apparatussvg.style.display = 'block';
-        }
-    }
+        const msid = e.target.closest('.mshover');
+        if(msid) restoreReading.bind(msid.closest('.rdg'));
+
+        const targ = e.target.closest('.lemmalookup');
+        if(!targ) return;
+        const par = targ.closest('div.apparatus-block');
+        if(!par) return;
+        const left = par.parentElement.querySelector('.text-block');
+        const lemma = targ.nextSibling;
+        suggestLemmata(lemma,left);
+
+    },
 };
 
 const init = () => {
-    if(document.querySelector('.apparatus-block.hidden')) {
-        const apparatusbutton = document.getElementById('apparatusbutton');
-        apparatusbutton.style.display = 'block';
-        apparatusbutton.addEventListener('click',Events.toggleApparatus);
-    }
     document.addEventListener('mouseover',Events.docMouseover);
     document.addEventListener('mouseout',Events.docMouseout);
+    if(Debugging) document.addEventListener('click',Events.docClick);
 };
 
 const ApparatusViewer = {
     init: init,
-    setTransliterator: setTransliterator
+    setTransliterator: setTransliterator,
+    debug: () => Debugging = true
 };
 
 export { ApparatusViewer };
