@@ -40,7 +40,9 @@ section div.wide {
 .apparatus-block span.note {
     font-size: 90%;
 }
-
+.ignoredtags {
+    display: none;
+}
 .app {
     margin-right: 2em;
 }

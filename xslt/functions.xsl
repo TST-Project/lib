@@ -153,7 +153,11 @@
         </xsl:when>
         <xsl:otherwise>
             <xsl:choose>
-                <xsl:when test="$start[not(node())]">
+                <xsl:when test="$start[not(node())] and (
+                        local-name($start) = 'lb' or
+                        local-name($start) = 'pb' or
+                        local-name($start) = 'cb' or
+                        local-name($start) = 'milestone')">
                     <xsl:copy-of select="$start"/> <!-- found milestone -->
                 </xsl:when>
                 <xsl:otherwise>

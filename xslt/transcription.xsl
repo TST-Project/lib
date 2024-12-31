@@ -775,7 +775,7 @@
 <xsl:template match="x:caesura">
 <xsl:variable name="pretext" select="preceding::text()[1]"/>
 <xsl:if test="normalize-space(substring($pretext,string-length($pretext))) != ''">
-    <span class="caesura">-</span>
+    <span class="caesura" data-teiname="caesura">-</span>
 </xsl:if>
     <xsl:element name="br">
     <xsl:attribute name="class">caesura</xsl:attribute>
@@ -812,6 +812,7 @@
 <xsl:template match="x:note[@place='foot']">
     <xsl:variable name="anchor" select="./x:c[@type='anchor']"/>
     <xsl:element name="span">
+        <xsl:attribute name="teiname">note</xsl:attribute>
         <xsl:attribute name="data-anno"/>
         <xsl:attribute name="class">footnote</xsl:attribute>
         <xsl:choose>
@@ -829,6 +830,7 @@
 <xsl:template match="x:note">
 <xsl:element name="span">
     <xsl:call-template name="lang"/>
+    <xsl:attribute name="teiname">note</xsl:attribute>
     <xsl:attribute name="class">note
         <xsl:choose>
             <xsl:when test="@place='above' or @place='top-margin' or @place='left-margin'"> super</xsl:when>

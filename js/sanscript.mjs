@@ -323,7 +323,7 @@ var schemes = Sanscript.schemes = {
             'l̥','l̥̄',
             'e','ē','ai',
             'o','ō','au',
-            'ê','aî','ô','aû', // Devanāgarī pṛṣthamātrās
+            'ê','aî','ô','aû', // Devanāgarī pṛṣṭhamātrās
             'æ','ǣ'],
             other_marks: ['ṃ','ḥ','m̐','ẖ','ḫ','ḵ'],
             virama: [''],
