@@ -22,7 +22,7 @@
     </svg>
 </xsl:template>
 <xsl:template name="splitwit">
-    <xsl:param name="mss" select="@wit"/>
+    <xsl:param name="mss" select="@wit | @select"/>
     <xsl:param name="corresp"/>
         <!--xsl:if test="string-length($mss)"-->
         <!--xsl:if test="not($mss=@wit)"><xsl:text>,</xsl:text></xsl:if-->
@@ -454,7 +454,7 @@
             <xsl:text>text-block p </xsl:text>
             <xsl:choose>
                 <xsl:when test="@type='translation'"><xsl:text>translation</xsl:text></xsl:when>
-                <xsl:when test="@corresp and translate(@corresp,'#','') = preceding-sibling::x:lg/@xml:id"><xsl:text>translation</xsl:text></xsl:when>
+                <xsl:when test="../@rend = 'parallel' and @xml:lang"><xsl:text>translation</xsl:text></xsl:when>
                 <xsl:otherwise><xsl:text>edition nolemmaunderline</xsl:text></xsl:otherwise>
             </xsl:choose>
         </xsl:attribute>
@@ -469,7 +469,7 @@
             <xsl:text>text-block lg </xsl:text>
             <xsl:choose>
                 <xsl:when test="@type='translation'"><xsl:text>translation</xsl:text></xsl:when>
-                <xsl:when test="@corresp and translate(@corresp,'#','') = preceding-sibling::x:lg/@xml:id"><xsl:text>translation</xsl:text></xsl:when>
+                <xsl:when test="../@rend = 'parallel' and @xml:lang"><xsl:text>translation</xsl:text></xsl:when>
                 <xsl:otherwise><xsl:text>edition nolemmaunderline</xsl:text></xsl:otherwise>
             </xsl:choose>
         </xsl:attribute>
@@ -481,7 +481,7 @@
     <xsl:param name="parallels"/>
     <xsl:variable name="xmlid" select="./x:lg/@xml:id | ./x:p/@xml:id"/>
     <xsl:variable name="idname" select="concat('#',$xmlid)"/>
-    <xsl:variable name="hideapp" select="./*[@type='translation'] or ./x:lg[@corresp=$idname] or ./x:p[@corresp=$idname]"/>
+    <xsl:variable name="hideapp" select="./*[@type='translation'] or ./x:lg[@xml:lang] or ./x:p[@xml:lang]"/>
     <xsl:element name="div">
         <xsl:attribute name="class">
             <xsl:text>apparatus-block</xsl:text>
@@ -528,12 +528,12 @@
 <xsl:template match="x:interp[@type='normalization']">
     <xsl:apply-templates/>
 </xsl:template>
-<xsl:template match="x:ab[@type='tagfilters']">
+<xsl:template match="x:desc[@type='tagfilters']">
     <div class="ignoredtags" lang="en">
         <xsl:apply-templates select="x:tag[@subtype='ignore']"/>
     </div>
 </xsl:template>
-<xsl:template match="x:ab[@type='tagfilters']/x:tag">
+<xsl:template match="x:desc[@type='tagfilters']/x:tag">
     <div class="tagselector"><xsl:apply-templates/></div>
 </xsl:template>
 
