@@ -102,9 +102,11 @@
 
 <xsl:template match="x:emph">
     <xsl:element name="em">
-        <xsl:attribute name="class">
-            <xsl:value-of select="@rend"/>
-        </xsl:attribute>
+        <xsl:if test="@rend">
+            <xsl:attribute name="class">
+                <xsl:value-of select="@rend"/>
+            </xsl:attribute>
+        </xsl:if>
         <xsl:call-template name="lang"/>
         <xsl:apply-templates/>
     </xsl:element>
@@ -147,4 +149,10 @@
     <xsl:apply-templates/>
 </xsl:template>
 
+<xsl:template match="x:label">
+    <xsl:element name="span">
+        <xsl:attribute name="class">label</xsl:attribute>
+        <xsl:call-template name="lang"/>
+    </xsl:element>
+</xsl:template>
 </xsl:stylesheet>
