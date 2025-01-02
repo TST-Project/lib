@@ -421,7 +421,7 @@
 </xsl:template>
 
 <xsl:template name="reading">
-    <xsl:variable name="corresp" select="ancestor::*[@corresp]/@corresp"/>
+    <xsl:param name="corresp" select="ancestor::*[@corresp]/@corresp"/>
     <span>
         <xsl:attribute name="class">rdg</xsl:attribute>
         <span>
