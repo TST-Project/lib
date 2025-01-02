@@ -106,6 +106,7 @@ section div.wide {
     font-size: 0.9rem;
     margin-right: 0.2rem;
     word-break: normal;
+    white-space: nowrap;
 }
 
 .msid a:link, .msid a:active,
