@@ -7,7 +7,16 @@
 <xsl:output method="html" encoding="UTF-8" omit-xml-declaration="yes"/>
 
 <xsl:template match="x:text">
-    <xsl:variable name="textid" select="substring-after(@corresp,'#')"/>
+    <xsl:variable name="textid">
+        <xsl:choose>
+            <xsl:when test="@corresp">
+                <xsl:value-of select="substring-after(@corresp,'#')"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="//x:idno[@type='siglum']"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:variable>
     <xsl:element name="hr">
         <xsl:attribute name="id">
             <xsl:text>text-</xsl:text>
