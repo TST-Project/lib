@@ -123,7 +123,27 @@
 </xsl:template>
 
 <xsl:template match="x:text//x:p">
+    <xsl:variable name="xmlid" select="@xml:id"/>
+    <xsl:variable name="id"><xsl:text>#</xsl:text><xsl:value-of select="$xmlid"/></xsl:variable>
+    <xsl:variable name="apparatus" select="//x:standOff[@type='apparatus' and @corresp=$id]"/>
+    <xsl:variable name="parallels" select="//x:standOff[@type='parallels' and @corresp=$id]"/>
     <xsl:choose>
+        <xsl:when test="$apparatus or $parallels">
+            <div class="lg wide">
+                <div>
+                    <xsl:call-template name="lang"/>
+                    <xsl:attribute name="class">
+                        <xsl:text>text-block p edition</xsl:text>
+                    </xsl:attribute>
+                    <xsl:apply-templates/>
+                    <xsl:attribute name="id"><xsl:value-of select="$xmlid"/></xsl:attribute>
+                </div>
+                <xsl:call-template name="apparatus-standoff">
+                    <xsl:with-param name="apparatus" select="$apparatus"/>
+                    <xsl:with-param name="parallels" select="$parallels"/>
+                </xsl:call-template>
+            </div>
+        </xsl:when>
         <xsl:when test=".//x:app and not(//x:facsimile/x:graphic)">
             <div>
                 <xsl:attribute name="class">para wide</xsl:attribute>
@@ -180,8 +200,28 @@
     </xsl:choose>
 </xsl:template>
 
-<xsl:template match="x:text//x:lg"> <!-- not child of x:div[@parallel] -->
+<xsl:template match="x:text//x:lg"> <!-- not child of x:div[@rend='parallel'] -->
+    <xsl:variable name="xmlid" select="@xml:id"/>
+    <xsl:variable name="id"><xsl:text>#</xsl:text><xsl:value-of select="$xmlid"/></xsl:variable>
+    <xsl:variable name="apparatus" select="//x:standOff[@type='apparatus' and @corresp=$id]"/>
+    <xsl:variable name="parallels" select="//x:standOff[@type='parallels' and @corresp=$id]"/>
     <xsl:choose>
+        <xsl:when test="$apparatus or $parallels">
+            <div class="lg wide">
+                <div>
+                    <xsl:call-template name="lang"/>
+                    <xsl:attribute name="class">
+                        <xsl:text>text-block lg edition</xsl:text>
+                    </xsl:attribute>
+                    <xsl:apply-templates/>
+                    <xsl:attribute name="id"><xsl:value-of select="$xmlid"/></xsl:attribute>
+                </div>
+                <xsl:call-template name="apparatus-standoff">
+                    <xsl:with-param name="apparatus" select="$apparatus"/>
+                    <xsl:with-param name="parallels" select="$parallels"/>
+                </xsl:call-template>
+            </div>
+        </xsl:when>
         <xsl:when test=".//x:app and not(//x:facsimile/x:graphic)">
             <div>
                 <xsl:attribute name="class">lg wide</xsl:attribute>
@@ -430,7 +470,7 @@
         <xsl:variable name="apparatus" select="//x:standOff[@type='apparatus' and @corresp=$id]"/>
         <xsl:variable name="parallels" select="//x:standOff[@type='parallels' and @corresp=$id]"/>
         <xsl:choose>
-            <xsl:when test="$apparatus">
+            <xsl:when test="$apparatus or $parallels">
                 <xsl:call-template name="apparatus-standoff">
                     <xsl:with-param name="apparatus" select="$apparatus"/>
                     <xsl:with-param name="parallels" select="$parallels"/>
