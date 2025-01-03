@@ -28,11 +28,11 @@ const init = function() {
     if(viewer) {
         _state.manifest = viewer.dataset.manifest;
         const param = params.get('facs');
-        const page = facs || (param ? parseInt(param) - 1 : null);
+        const page = facs || (param ? parseInt(param) - 1 : null) || viewer.dataset.start;
         if(_state.mirador)
-            MiradorWrapper.refresh(_state.mirador,viewer.dataset.manifest, page || viewer.dataset.start);
+            MiradorWrapper.refresh(_state.mirador,viewer.dataset.manifest, page);
         else
-            _state.mirador = MiradorWrapper.start('viewer',viewer.dataset.manifest,page || viewer.dataset.start);
+            _state.mirador = MiradorWrapper.start('viewer',viewer.dataset.manifest, page);
     }
     
     // initialize events for the record text
@@ -48,11 +48,8 @@ const init = function() {
         const lb = teitext?.querySelector('.lb, .pb');
         if(!lb)
             l.style.display = 'none';
-        else {
-            if(teitext.classList.contains('edition'))
-                l.classList.add('diplo'); // lineView will then switch it to paragraph mode
+        else
             lineView(l);
-        }
     }
     for(const excerpt of recordcontainer.querySelectorAll('.excerpt')) {
         for(const el of excerpt.querySelectorAll('p,.lg,.l,.ab,.caesura'))
