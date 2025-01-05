@@ -139,7 +139,7 @@ const events = {
 
     docClick: function(e) {
         const locel = e.target.closest('[data-loc]');
-        if(locel) {
+        if(locel && !e.target.closest('.app')) {
             MiradorWrapper.jumpTo(_state.mirador,_state.manifest,locel.dataset.loc);
             return;
         }
