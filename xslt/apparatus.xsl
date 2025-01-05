@@ -441,7 +441,7 @@
                 </xsl:otherwise>
             </xsl:choose>
         </span>
-        <xsl:for-each select="./x:rdg[@type='sandhi']">
+        <xsl:for-each select="./x:rdg[@type='minor']">
             <span class="rdg-alt">
                 <xsl:attribute name="data-wit">
                     <xsl:value-of select="translate(@wit,'#','')"/>
