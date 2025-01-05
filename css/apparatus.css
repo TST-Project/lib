@@ -88,6 +88,14 @@ section div.wide {
 .rdg {
 }
 
+.rdg-alt {
+    display: none;
+}
+
+.mshover {
+    border-bottom: 2px dotted rgb(168,81,16);
+}
+
 .rdg:not(:last-child) .rdg-wit .msid:last-child::after, .lem-wit > .msid:last-child::after {
     content: ';';
 }

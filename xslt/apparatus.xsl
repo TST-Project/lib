@@ -31,7 +31,10 @@
              <xsl:variable name="msstring" select="substring-before(
                                         concat($mss,' '),
                                       ' ')"/>
+
              <xsl:variable name="cleanstr" select="substring-after($msstring,'#')"/>
+             <xsl:attribute name="data-id"><xsl:value-of select="$cleanstr"/></xsl:attribute>
+
              <xsl:variable name="witness" select="/x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:listWit//x:witness[@xml:id=$cleanstr]"/>
              <xsl:variable name="siglum" select="$witness/x:abbr/node()"/>
              <xsl:variable name="anno" select="$witness/x:expan"/>
