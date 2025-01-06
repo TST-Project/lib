@@ -500,9 +500,15 @@ transliterator.jiggle = node => {
 
         const txt = kid.textContent.trim();
         if(txt === '') continue;
+        if(txt.textContent === '_' || txt.textContent === '·') {
+            const virama = Sanscript.schemes[_state.isoToScript.get(script)].virama;
+            text.textContent = virama;
+        }
         if(txt === 'a') { 
+            /*
             if(kid.nodeType === 1)
                 add_virama.push(kid);
+            */
             kid.textContent = '';
             continue;
         }
@@ -512,6 +518,7 @@ transliterator.jiggle = node => {
         }
 
         if(txt.match(ends_with_consonant)) {
+            console.log(txt);
             // add 'a' if node ends in a consonant
             const last_txt = findTextNode(kid,true);
             last_txt.textContent = last_txt.textContent.replace(/\s+$/,'') + 'a';
@@ -635,7 +642,7 @@ transliterator.jiggle = node => {
     for (const el of add_at_beginning) {
         node.insertBefore(el,node.firstChild);
     }
-    
+    /* 
     const virama = Sanscript.schemes[_state.isoToScript.get(script)].virama;
     for (const el of add_virama) {
         const newel = el.nodeName === 'DEL' ? 
@@ -649,7 +656,7 @@ transliterator.jiggle = node => {
         newel.append(virama);
         el.replaceWith(newel);
     }
-
+    */
     if(telugu_del_headstroke) {
         for (const el of telugu_kids) {
             const lasttxtnode = findTextNode(el,true);
