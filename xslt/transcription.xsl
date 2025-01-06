@@ -786,10 +786,10 @@
 <xsl:template match="x:caesura">
 <xsl:variable name="pretext" select="preceding::text()[1]"/>
 <xsl:if test="normalize-space(substring($pretext,string-length($pretext))) != ''">
-    <span class="caesura" data-teiname="caesura">-</span>
+    <span class="caesura ignored" data-teiname="caesura">-</span>
 </xsl:if>
     <xsl:element name="br">
-    <xsl:attribute name="class">caesura</xsl:attribute>
+    <xsl:attribute name="class">caesura ignored</xsl:attribute>
     </xsl:element>
 </xsl:template>
 
