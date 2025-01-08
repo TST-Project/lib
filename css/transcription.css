@@ -149,7 +149,7 @@ span.lb, span.cb {
     white-space: nowrap;
 }
 
-.app span.lb, span.pb {
+.app span.lb, .app span.pb {
     cursor: unset;
 }
 .lb.diplo::after, .pb.diplo::after, .cb.diplo::after {
