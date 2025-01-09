@@ -637,7 +637,7 @@
         </xsl:attribute>
         <xsl:attribute name="lang">en</xsl:attribute>
         <xsl:variable name="facs" select="@facs"/>
-        <xsl:variable name="unit" select="ancestor::x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:physDesc/x:objectDesc/x:supportDesc/x:extent/x:measure/@unit"/>
+        <xsl:variable name="unit" select="ancestor::x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:physDesc/x:objectDesc/x:supportDesc/x:extent/x:measure/@unit | @type"/>
         <!--xsl:if test="$excerpt = 'no' and @break = 'no'">
             <xsl:attribute name="data-nobreak"/>
         </xsl:if-->
