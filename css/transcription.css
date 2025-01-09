@@ -572,11 +572,7 @@ blockquote > span.milestone.diplo:first-child::before {
     content: "";
 }
 
-br.caesura.diplo {
-    display: none;
-}
-
-span.caesura.diplo {
+br.caesura.diplo, span.caesura.diplo, .app .caesura {
     display: none;
 }
 
