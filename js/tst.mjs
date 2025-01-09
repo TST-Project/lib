@@ -48,8 +48,11 @@ const init = function() {
         const lb = teitext?.querySelector('.lb, .pb');
         if(!lb)
             l.style.display = 'none';
-        else
+        else {
+            if(teitext.classList.contains('edition'))
+                l.classList.add('diplo'); // lineView will then switch it to paragraph mode
             lineView(l);
+        }
     }
     for(const excerpt of recordcontainer.querySelectorAll('.excerpt')) {
         for(const el of excerpt.querySelectorAll('p,.lg,.l,.ab,.caesura'))
@@ -72,9 +75,12 @@ const init = function() {
 };
 
 const findCorresp = (corresps) => {
-    const str = corresps.map(c => `[data-corresp~='${c}']`).join(' ');
-    const el = document.querySelector(str);
-    return el || false;
+    let res = document;
+    for(const c of corresps) {
+        res = res.querySelector(`[data-corresp~='${c}'], [id='${c}']`);
+        if(!res) return false;
+    }
+    return res;
 };
 
 const scrollTo = (el) => {
