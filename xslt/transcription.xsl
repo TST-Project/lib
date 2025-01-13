@@ -1062,4 +1062,10 @@
     </xsl:element>
 </xsl:template>
 
+<xsl:template match="x:retrace">
+    <span class="retrace" data-anno="retraced">
+        <xsl:call-template name="lang"/>
+        <xsl:apply-templates/>
+    </span>
+</xsl:template>
 </xsl:stylesheet>
