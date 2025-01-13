@@ -408,7 +408,7 @@ transliterator.revert = (par = _state.parEl) => {
 };
     
 transliterator.activate = (par = _state.parEl) => {
-    const subst = par.querySelectorAll('span.subst, span.choice, span.expan');
+    const subst = par.querySelectorAll('span.subst, span.choice, span.expan, span.damage');
     for(const s of subst)
         if(s.lang.startsWith('sa') || s.lang.startsWith('ta')) transliterator.jiggle(s);
         //TODO: Also other languages?
@@ -468,7 +468,7 @@ transliterator.activate = (par = _state.parEl) => {
 };
 
 transliterator.jiggle = node => {
-    if(node.firstChild.nodeType !== 3 && node.lastChild.nodeType !== 3) 
+    if(node.firstChild.nodeType !== 3 && node.lastChild.nodeType !== 3 && !node.firstChild.classList.contains('gap'))
         return;
     
     transliterator.unjiggle(node);
@@ -518,7 +518,6 @@ transliterator.jiggle = node => {
         }
 
         if(txt.match(ends_with_consonant)) {
-            console.log(txt);
             // add 'a' if node ends in a consonant
             const last_txt = findTextNode(kid,true);
             last_txt.textContent = last_txt.textContent.replace(/\s+$/,'') + 'a';
