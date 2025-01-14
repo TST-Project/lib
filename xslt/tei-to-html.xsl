@@ -15,6 +15,7 @@
 <xsl:output method="html" encoding="UTF-8" omit-xml-declaration="yes"/>
 
 <xsl:param name="root">https://tst-project.github.io/lib/</xsl:param>
+<xsl:param name="injectedscript"/>
 
 <xsl:template name="TEI">
     <xsl:element name="html">
@@ -108,6 +109,14 @@
                         <xsl:text>);</xsl:text>
                 </xsl:if>
             </xsl:element>
+            <xsl:if test="$injectedscript">
+                <xsl:element name="script">
+                    <xsl:attribute name="type">module</xsl:attribute>
+                    <xsl:attribute name="src">
+                        <xsl:value-of select="$injectedscript"/>
+                    </xsl:attribute>
+                </xsl:element>
+            </xsl:if>
         </xsl:element>
         <xsl:element name="body">
             <xsl:attribute name="lang">en</xsl:attribute>   
