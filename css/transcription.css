@@ -363,6 +363,10 @@ del {color: grey;
      text-decoration-color: #CC0000;
 }
 
+del .pb, del .lb {
+    text-decoration: none;
+}
+
 span.orig::before {
     content: '¡';
     color: #CC0000;
