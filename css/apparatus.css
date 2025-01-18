@@ -176,6 +176,7 @@ a.alignment-pointer:link, a.alignment-pointer:active {
     left: 0;
     text-align: left;
     writing-mode: horizontal-tb;
+    word-break: keep-all;
 }
 
 #alignment-viewer td {
@@ -209,13 +210,18 @@ a.alignment-pointer:link, a.alignment-pointer:active {
     position: relative;
     border: 1px solid black;
     padding: 5px;
-    cursor: pointer;
     display: none;
     height: 36px;
     width: 34px;
     box-sizing: border-box;
     flex-shrink: 0;
 }
+
+#apparatusbutton:hover {
+    background: #ff9900;
+    border: 1px solid #ff9900;
+}
+
 #translationsvg {
     display: none;
 }
