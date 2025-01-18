@@ -386,7 +386,7 @@
             </xsl:otherwise>
         </xsl:choose>
         <xsl:if test="x:rdg | x:rdgGrp">
-            <span>
+            <span class="rdgs">
                 <xsl:for-each select="./x:rdg | ./x:rdgGrp">
                     <xsl:call-template name="reading">
                         <xsl:with-param name="corresp" select="$corresp"/>
@@ -425,7 +425,7 @@
 
 <xsl:template name="reading">
     <xsl:param name="corresp" select="ancestor::*[@corresp]/@corresp"/>
-    <span class="rdgs">
+    <span>
         <xsl:attribute name="class">rdg</xsl:attribute>
         <span>
             <xsl:attribute name="class">rdg-text</xsl:attribute>
