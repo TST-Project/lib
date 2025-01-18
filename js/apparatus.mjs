@@ -1,6 +1,5 @@
 var Transliterate;
 const setTransliterator = (obj) => Transliterate = obj;
-var Debugging = false;
 
 const nextSibling = (node) => {
     let start = node;
@@ -293,31 +292,6 @@ const unhighlight = (targ) => {
         Transliterate.activate(par);
 };
 
-const unpermalight = () => {
-    const highlit = /*par*/document.querySelectorAll('.permalit');
-    if(highlit.length === 0) return;
-    
-    const targ = highlit[0].closest('div.wide');
-    const par = targ.querySelector('.text-block'); // or .edition?
-    if(!par) return;
-    if(document.getElementById('transbutton').lang === 'en') {
-        Transliterate.revert(par);
-    }
-    for(const h of highlit) {
-        if(h.classList.contains('temporary')) {
-            while(h.firstChild)
-                h.after(h.firstChild);
-            h.remove();
-        }
-        else h.classList.remove('permalit');
-    }
-    par.normalize();
-    Transliterate.refreshCache(par);
-    if(document.getElementById('transbutton').lang === 'en') {
-        Transliterate.activate(par);
-    }
-};
-
 const switchReading = (par, id) => {
     par.querySelector('.rdg-text').style.display = 'none';
     par.querySelector(`.rdg-alt[data-wit~="${id}"]`).style.display = 'inline';
@@ -379,21 +353,8 @@ const Events = {
             unhighlight(e.target);
     },
     docClick(e) {
-        for(const tooltip of document.querySelectorAll('.coord-suggestion'))
-            tooltip.remove();
-        unpermalight(); 
-
         const msid = e.target.closest('.mshover');
         if(msid) restoreReading.bind(msid.closest('.rdg'));
-
-        const targ = e.target.closest('.lemmalookup');
-        if(!targ) return;
-        const par = targ.closest('div.apparatus-block');
-        if(!par) return;
-        const left = par.parentElement.querySelector('.text-block');
-        const lemma = targ.nextSibling;
-        suggestLemmata(lemma,left);
-
     },
     toggleApparatus(e) {
         const apparatussvg = document.getElementById('apparatussvg');
@@ -428,7 +389,7 @@ const Events = {
 const init = () => {
     document.addEventListener('mouseover',Events.docMouseover);
     document.addEventListener('mouseout',Events.docMouseout);
-    if(Debugging) document.addEventListener('click',Events.docClick);
+    document.addEventListener('click',Events.docClick);
     if(document.querySelector('.apparatus-block.hidden')) {
         const apparatusbutton = document.getElementById('apparatusbutton');
         apparatusbutton.style.display = 'block';
@@ -439,7 +400,6 @@ const init = () => {
 const ApparatusViewer = {
     init: init,
     setTransliterator: setTransliterator,
-    debug: () => Debugging = true
 };
 
 export { ApparatusViewer };
