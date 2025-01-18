@@ -106,7 +106,7 @@ body {
 }
 
 @media (max-width: 800px) {
-    #transbutton {
+    #buttoncontainer {
         left: -12.5%;
     }
 }
