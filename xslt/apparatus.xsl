@@ -425,7 +425,7 @@
 
 <xsl:template name="reading">
     <xsl:param name="corresp" select="ancestor::*[@corresp]/@corresp"/>
-    <span>
+    <span class="rdgs">
         <xsl:attribute name="class">rdg</xsl:attribute>
         <span>
             <xsl:attribute name="class">rdg-text</xsl:attribute>
@@ -459,7 +459,13 @@
     </span>
     <xsl:text> </xsl:text>
 </xsl:template>
-
+<xsl:template match="x:anchor">
+    <span>
+        <xsl:attribute name="class">anchor</xsl:attribute>
+        <xsl:attribute name="data-teiname">anchor</xsl:attribute>
+        <xsl:attribute name="id"><xsl:value-of select="@xml:id"/></xsl:attribute>
+    </span>
+</xsl:template>
 <xsl:template match="x:text//x:div[@xml:id] | x:text//x:div[@rend='parallel']">
     <xsl:element name="div">
         <xsl:attribute name="class">lg wide</xsl:attribute>
