@@ -45,6 +45,7 @@ section div.wide {
 }
 .app {
     margin-right: 2em;
+    white-space: nowrap;
 }
 
 .lem-inline:not(.lem-anchor) {
@@ -76,6 +77,7 @@ section div.wide {
 .lem {
     font-weight: bold;
     margin-right: 0.5em;
+    white-space: normal;
 }
 
 .lem:not(.lem-anchor)::after {
@@ -83,6 +85,7 @@ section div.wide {
 }
 
 .rdg-text {
+    white-space: normal;
 }
 
 .rdg {
