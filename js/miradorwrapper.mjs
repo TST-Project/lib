@@ -59,6 +59,7 @@ const newMirador = function(id,manifest,start = 0,annoMap = _state.annoMap, anno
             sideBarOpenByDefault: false,
             imageToolsEnabled: true,
             imageToolsOpen: false,
+            defaultView: 'single',
         },
         workspace: {
             showZoomControls: true,
@@ -67,6 +68,9 @@ const newMirador = function(id,manifest,start = 0,annoMap = _state.annoMap, anno
         workspaceControlPanel: {
             enabled: false,
         },
+        osdConfig: {
+            crossOriginPolicy: 'Anonymous'
+        }
     };
     opts.annotation = {
         adapter: (canvasId) => new TSTStorageAdapter(canvasId,annoMap),
