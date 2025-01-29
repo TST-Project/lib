@@ -835,7 +835,7 @@
 <xsl:template match="x:note[@place='foot']">
     <xsl:variable name="anchor" select="./x:c[@type='anchor']"/>
     <xsl:element name="span">
-        <xsl:attribute name="teiname">note</xsl:attribute>
+        <xsl:attribute name="data-teiname">note</xsl:attribute>
         <xsl:attribute name="data-anno"/>
         <xsl:attribute name="class">footnote</xsl:attribute>
         <xsl:choose>
@@ -853,7 +853,7 @@
 <xsl:template match="x:note">
 <xsl:element name="span">
     <xsl:call-template name="lang"/>
-    <xsl:attribute name="teiname">note</xsl:attribute>
+    <xsl:attribute name="data-teiname">note</xsl:attribute>
     <xsl:attribute name="class">note
         <xsl:choose>
             <xsl:when test="@place='above' or @place='top-margin' or @place='left-margin'"> super</xsl:when>
