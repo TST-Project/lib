@@ -39,6 +39,7 @@ section div.wide {
 
 .apparatus-block span.note {
     font-size: 90%;
+    white-space: normal;
 }
 .ignoredtags {
     display: none;
