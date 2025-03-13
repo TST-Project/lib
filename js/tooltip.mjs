@@ -42,10 +42,13 @@ const ToolTip = {
         }
 
         tBox.style.top = (e.clientY + 10) + 'px';
-        tBox.style.left = e.clientX + 'px';
+        tBox.style.left = (e.clientX + 1) + 'px';
         tBoxDiv.append(toolText);
         tBoxDiv.myTarget = targ;
         tBox.appendChild(tBoxDiv);
+        const ydiff = tBox.getBoundingClientRect().bottom - document.documentElement.clientHeight;
+        if(ydiff > 0)
+            tBox.style.top = (e.clientY - ydiff + 10) + 'px';
         targ.addEventListener('mouseleave',ToolTip.remove,{once: true});
 
         //window.getComputedStyle(tBox).opacity;
