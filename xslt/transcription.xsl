@@ -392,8 +392,12 @@
                 </xsl:otherwise>
                 </xsl:choose>
             </xsl:if>
-            <xsl:if test="@rend">
-                <xsl:text> (</xsl:text><xsl:value-of select="@rend"/><xsl:text>)</xsl:text>
+            <xsl:if test="@rend or @place">
+                <xsl:text> (</xsl:text>
+                <xsl:if test="@rend"><xsl:value-of select="@rend"/></xsl:if>
+                <xsl:if test="@rend and @place"><xsl:text> </xsl:text></xsl:if>
+                <xsl:if test="@place"><xsl:value-of select="@place"/></xsl:if>
+                <xsl:text>)</xsl:text>
             </xsl:if>
         </xsl:attribute>
         <xsl:choose>
@@ -442,8 +446,16 @@
             <xsl:attribute name="class">
                 <xsl:text>gaiji</xsl:text>
                 <xsl:if test="$rend">
+                    <xsl:variable name="entityrend" select="$TST//tst:entityrend/tst:entry[@key=$rend]"/>
                     <xsl:text> </xsl:text>
-                    <xsl:value-of select="$TST//tst:entityrend/tst:entry[@key=$rend]"/>
+                    <xsl:choose>
+                        <xsl:when test="$entityrend">
+                            <xsl:value-of select="$entityrend"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="$rend"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
                 </xsl:if>
                 <xsl:if test="$cname">
                     <xsl:text> </xsl:text><xsl:value-of select="$cname"/>
