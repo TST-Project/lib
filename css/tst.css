@@ -302,6 +302,7 @@ div.teitext {
     width: 100%;
     top: 0;
     padding-bottom: 1rem;
+    position: sticky;
     z-index: 2;
     backdrop-filter: blur(2px);
     background: linear-gradient(rgb(255,255,248) 60%, rgba(255,255,255,0));
