@@ -358,8 +358,8 @@ span.type {
     vertical-align: middle;
     padding: 0.5em 1em;
     margin-bottom: 11px;
-    max-width: 200px;
-    z-index: 3;
+    max-width: 300px;
+    z-index: 10;
 }
 
 #tooltip hr {
