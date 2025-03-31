@@ -317,7 +317,7 @@ const Events = {
         }
         const msid = e.target.closest('.mshover');
         if(msid) {
-            const rdg = e.target.closest('.rdg');
+            const rdg = e.target.closest('.rdg') || e.target.closest('.app').querySelector('.lem');
             switchReading(rdg,msid.dataset.id);
             msid.addEventListener('mouseout',restoreReading.bind(null,rdg),{once: true});
         }
