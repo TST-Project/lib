@@ -110,6 +110,9 @@ body {
     #buttoncontainer {
         left: -12.5%;
     }
+    html {
+        font-size: 12px;
+    }
 }
 
 #transbutton:lang(en) {

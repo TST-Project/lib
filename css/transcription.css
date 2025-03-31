@@ -72,7 +72,7 @@ div.lg {
     /*padding-left: 0.5em;*/
 }
 
-.text-block .text-block {
+.text-block + .text-block {
     padding-left: 0.5em;
 }
 
