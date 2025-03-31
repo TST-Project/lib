@@ -390,11 +390,11 @@ const init = () => {
     document.addEventListener('mouseover',Events.docMouseover);
     document.addEventListener('mouseout',Events.docMouseout);
     document.addEventListener('click',Events.docClick);
-    if(document.querySelector('.apparatus-block.hidden')) {
-        const apparatusbutton = document.getElementById('apparatusbutton');
+
+    const apparatusbutton = document.getElementById('apparatusbutton');
+    apparatusbutton.addEventListener('click',Events.toggleApparatus);
+    if(document.querySelector('.apparatus-block.hidden'))
         apparatusbutton.style.display = 'block';
-        apparatusbutton.addEventListener('click',Events.toggleApparatus);
-    }
 };
 
 const ApparatusViewer = {
