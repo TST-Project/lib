@@ -68,6 +68,7 @@ section div.wide {
 
 .lightlit {
     background: rgba(255,255,128,0.5);
+    width: fit-content;
 }
 /*
 .app-inline:hover .rdgs-inline, .app-inline:hover .lem-wit {
@@ -99,6 +100,13 @@ section div.wide {
 
 .rdg-alt {
     display: none;
+    font-variant: normal;
+    margin-left: 0.2rem;
+    white-space: normal;
+}
+
+.rdg-alt:before {
+    content: ': ';
 }
 
 .mshover {
@@ -124,6 +132,7 @@ section div.wide {
     margin-right: 0.2rem;
     word-break: normal;
     white-space: nowrap;
+    position: relative;
 }
 
 .msid a:link, .msid a:active,
