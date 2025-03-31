@@ -292,15 +292,24 @@ const unhighlight = (targ) => {
         Transliterate.activate(par);
 };
 
-const switchReading = (par, id) => {
-    par.querySelector('.rdg-text').style.display = 'none';
-    par.querySelector(`.rdg-alt[data-wit~="${id}"]`).style.display = 'inline';
+const switchReading = el => {
+    if(el.querySelector('.rdg-alt')) return;
+    const par = el.closest('.rdg') || el.closest('.app').querySelector('.lem');
+    const id = el.dataset.id;
+    //par.querySelector('.rdg-text').style.display = 'none';
+    //par.querySelector(`.rdg-alt[data-wit~="${id}"]`).style.display = 'block';
+    const rdgalt = par.querySelector(`.rdg-alt[data-wit~="${id}"]`).cloneNode(true);
+    rdgalt.style.display = 'inline';
+    el.appendChild(rdgalt);
 };
 
-const restoreReading = (par) => {
+const restoreReading = par => {
+    /*
     par.querySelector('.rdg-text').style.display = 'inline';
     for(const alt of par.querySelectorAll('.rdg-alt'))
         alt.style.display = 'none';
+    */
+    par.querySelector('.rdg-alt')?.remove();
 };
 
 const Events = { 
@@ -317,9 +326,8 @@ const Events = {
         }
         const msid = e.target.closest('.mshover');
         if(msid) {
-            const rdg = e.target.closest('.rdg') || e.target.closest('.app').querySelector('.lem');
-            switchReading(rdg,msid.dataset.id);
-            msid.addEventListener('mouseout',restoreReading.bind(null,rdg),{once: true});
+            switchReading(msid);
+            msid.addEventListener('mouseleave',restoreReading.bind(null,msid),{once: true});
         }
         const anchor = e.target.closest('.anchor');
         if(anchor) {
@@ -354,7 +362,7 @@ const Events = {
     },
     docClick(e) {
         const msid = e.target.closest('.mshover');
-        if(msid) restoreReading.bind(msid.closest('.rdg'));
+        if(msid) restoreReading.bind(msid);
     },
     toggleApparatus(e) {
         const apparatussvg = document.getElementById('apparatussvg');
@@ -371,6 +379,7 @@ const Events = {
             }
             apparatussvg.style.display = 'none';
             translationsvg.style.display = 'block';
+            translationsvg.parentNode.dataset.anno = 'translation';
         }
         else {
             for(const apparatus of apparati) {
@@ -382,6 +391,7 @@ const Events = {
             }
             translationsvg.style.display = 'none';
             apparatussvg.style.display = 'block';
+            translationsvg.parentNode.dataset.anno = 'apparatus of variants';
         }
     }
 };
