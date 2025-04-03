@@ -16,6 +16,7 @@
 
 <xsl:param name="root">https://tst-project.github.io/lib/</xsl:param>
 <xsl:param name="injectedscript"/>
+<xsl:param name="injectedroot"/>
 
 <xsl:template name="TEI">
     <xsl:element name="html">
@@ -115,6 +116,8 @@
                     <xsl:attribute name="src">
                         <xsl:value-of select="$injectedscript"/>
                     </xsl:attribute>
+                    <xsl:attribute name="id">injectedscript</xsl:attribute>
+                    <xsl:attribute name="data-root"><xsl:value-of select="$injectedroot"/></xsl:attribute>
                 </xsl:element>
             </xsl:if>
         </xsl:element>
