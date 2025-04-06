@@ -303,7 +303,7 @@ span.space {background-color: rgba(132,132,10,0.3);
 }
 
 span.editor {
-    font-size: 0.8rem;
+    /*font-size: 0.8rem;*/
     font-variant: small-caps;
 }
 
