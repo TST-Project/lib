@@ -422,15 +422,22 @@
             </span>
         </xsl:for-each>
     </xsl:element> 
-    <xsl:if test="./x:lem/@wit | ./x:rdgGrp[@type='lemma']/@select">
-        <span>
-            <xsl:attribute name="class">lem-wit</xsl:attribute>
-            <xsl:call-template name="splitwit">
-                <xsl:with-param name="mss" select="x:lem/@wit | ./x:rdgGrp[@type='lemma']/@select"/>
-                <xsl:with-param name="corresp" select="$corresp"/>
-            </xsl:call-template>
-        </span>
-    </xsl:if>
+    <xsl:choose>
+        <xsl:when test="./x:lem/@wit | ./x:rdgGrp[@type='lemma']/@select">
+            <span>
+                <xsl:attribute name="class">lem-wit</xsl:attribute>
+                <xsl:call-template name="splitwit">
+                    <xsl:with-param name="mss" select="x:lem/@wit | ./x:rdgGrp[@type='lemma']/@select"/>
+                    <xsl:with-param name="corresp" select="$corresp"/>
+                </xsl:call-template>
+            </span>
+        </xsl:when>
+        <xsl:otherwise>
+            <xsl:if test="//x:text[@type='edition']">
+                <span class="lem-wit"><span lang="en">[em.]</span></span>
+            </xsl:if>
+        </xsl:otherwise>
+    </xsl:choose>
     <xsl:text> </xsl:text>
 </xsl:template>
 
