@@ -434,7 +434,7 @@
         </xsl:when>
         <xsl:otherwise>
             <xsl:if test="//x:text[@type='edition']">
-                <span class="lem-wit"><span class="editor" lang="en">[em.]</span></span>
+                <span class="lem-wit"><span class="editor" lang="en">em.</span></span>
             </xsl:if>
         </xsl:otherwise>
     </xsl:choose>
@@ -455,7 +455,7 @@
                     <xsl:apply-templates select="./node()"/>
                 </xsl:when>
                 <xsl:otherwise>
-                    <span class="editor" lang="en">[om.]</span>
+                    <span class="editor" lang="en">om.</span>
                 </xsl:otherwise>
             </xsl:choose>
         </span>
