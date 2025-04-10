@@ -70,4 +70,11 @@
         <xsl:apply-templates/>
     </xsl:element>
 </xsl:template>
+
+<xsl:template match="x:num">
+    <xsl:element name="num">
+        <xsl:apply-templates/>
+    </xsl:element>
+</xsl:template>
+
 </xsl:stylesheet>

@@ -12,8 +12,12 @@
     font-family: 'Noto Serif Tamil';
     src: url('TSTTamil.woff');
 }
+@font-face {
+    font-family: 'Pedantic Devanagari';
+    src: url('PedanticDevanagariLight.woff');
+}
 body {
-    font-family:"Noto Serif Grantha", "Noto Serif Tamil";
+    font-family:"Noto Serif Grantha", "Noto Serif Tamil", "Pedantic Devanagari";
     hyphens: auto;
     font-feature-settings: "aalt" 0;
     font-variant-ligatures: none;
@@ -48,5 +52,6 @@ th {
 <tr><th>normal</th><td>ணோ</td><td><img src="fonttest-no.png"></td></tr>
 <tr><th>hlig</th><td class="hlig">ணோ</td><td><img src="fonttest-no-ligature.png"></td></tr>
 </table>
+<p>&#x093D;&#x200D;&#x0902;</p>
 </body>
 </html>
