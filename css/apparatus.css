@@ -46,7 +46,7 @@ section div.wide {
 }
 .app {
     margin-right: 2em;
-    white-space: nowrap;
+    white-space: normal;
 }
 
 .lem-inline:not(.lem-anchor) {
@@ -61,7 +61,7 @@ section div.wide {
 .lem .caesura {
     display: none;
 }
-.lem-inline:hover, .lem-inline:hover *, .lem:hover, .highlit, .highlit * {
+.lem-inline:hover, .lem-inline:hover *, .lem .rdg-text:hover, .highlit, .highlit * {
     text-decoration: none;
     background: rgba(255,255,128,1);
 }
@@ -77,13 +77,21 @@ section div.wide {
 */
 
 .lem {
+    white-space: nowrap;
+}
+
+.lem .rdg-text {
     font-weight: bold;
     margin-right: 0.5em;
     white-space: normal;
 }
 
-.lem:not(.lem-anchor)::after {
+.lem .rdg-text::after {
     content: ']';
+}
+
+.lem-wit {
+    white-space: normal;
 }
 
 .rdg-text {
