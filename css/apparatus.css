@@ -98,6 +98,10 @@ section div.wide {
     white-space: nowrap;
 }
 
+.rdg-wit {
+    white-space: normal;
+}
+
 .rdg-alt {
     display: none;
     font-variant: normal;
