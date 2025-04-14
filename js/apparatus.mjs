@@ -86,7 +86,7 @@ const highlight = {
         const par = targ.closest('div.apparatus-block');
         if(!par) return;
         const left = par.parentElement.querySelector('.text-block'); // or .edition?
-        if(targ.dataset.corresp) {
+        if(targ.dataset.loc) {
             const ignoretags = getIgnoreTags(par);
             if(document.getElementById('transbutton').lang === 'en') {
                 Transliterate.revert(left);
@@ -170,7 +170,7 @@ const rangeFromCoords = (positions, lem, target, ignoretags=new Set()) => {
 };
 
 const highlightcoords = (lem,target,ignoretags) => {
-    const multiple = lem.dataset.corresp.split(';').reverse();
+    const multiple = lem.dataset.loc.split(';').reverse();
     for(const coord of multiple) highlightcoord(coord.split(','), lem, target, ignoretags);
 };
 
@@ -364,7 +364,7 @@ const Events = {
         const msid = e.target.closest('.mshover');
         if(msid) restoreReading.bind(msid);
     },
-    toggleApparatus(e) {
+    toggleApparatus() {
         const apparatussvg = document.getElementById('apparatussvg');
         const translationsvg = document.getElementById('translationsvg');
         const apparati = document.querySelectorAll('.apparatus-block');
