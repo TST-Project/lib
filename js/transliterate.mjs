@@ -96,6 +96,14 @@ const events = {
     },
 };
 
+const getEditionScript = () => {
+    const textlang = document.querySelector('.teitext')?.getAttribute('lang');
+    if(!textlang) return null;
+    const script = textlang.split('-').pop();
+    if(_state.isonames.has(script)) return script;
+    
+};
+
 const init = (par = document.body) => {
 
     // reset state
@@ -110,7 +118,7 @@ const init = (par = document.body) => {
 
     if(foundOther) {
         const scripttags = par.getElementsByClassName('record_scripts');
-        const defaultSanscript = getSanscript(scripttags);
+        const defaultSanscript = getSanscript(scripttags) || getEditionScript();
         if(!defaultSanscript && !foundTamil) {
             // hyphenate text even if no transliteration available
             const walker = document.createTreeWalker(par,NodeFilter.SHOW_ALL);
