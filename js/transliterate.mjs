@@ -451,8 +451,8 @@ transliterator.activate = (par = _state.parEl) => {
             const rev = _state.reverselangs.get(curnode.lang);
             if(rev) curnode.lang = rev;
         }
-        else if(curnode.nodeType === Node.TEXT_NODE) {
-           
+        else if(curnode.nodeType === Node.TEXT_NODE && curnode.parentNode.lang) {
+            // ignore svgs that have no lang attribute
             const [lang, script] = curnode.parentNode.lang.split('-');
 
             if(_state.availlangs.includes(lang)) {

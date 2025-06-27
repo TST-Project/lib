@@ -108,6 +108,7 @@ body {
 #transbutton {
     display: none;
     border: 1px solid black;
+    border-radius: 0.2rem;
     padding: 0.1rem 0.5rem 0.1rem 0.5rem;
     height: 36px;
     width: 34px;
@@ -121,8 +122,17 @@ body {
     html {
         font-size: 12px;
     }
+    #topbar {
+        z-index: 3;
     #buttoncontainer {
         font-size: 1.17rem;
+        left: 0;
+    }
+    #record-thin {
+        padding-left: 1rem;
+    }
+    .line-view-icon {
+        margin-right: 0.8rem;
     }
 }
 
