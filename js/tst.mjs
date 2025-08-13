@@ -40,7 +40,7 @@ const init = () => {
     
     initRecordContainer();
 
-    document.getElementById('togglers').addEventListener('click',events.toggleClick);
+    document.getElementById('togglers')?.addEventListener('click',events.toggleClick);
 
     if(scrollel) scrollTo(scrollel);
 
