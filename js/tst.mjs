@@ -38,6 +38,18 @@ const init = () => {
             _state.mirador = MiradorWrapper.start('viewer',viewer.dataset.manifest, page);
     }
     
+    initRecordContainer();
+
+    document.getElementById('togglers').addEventListener('click',events.toggleClick);
+
+    if(scrollel) scrollTo(scrollel);
+
+    // check for GitHub commit history
+    GitHubFunctions.latestCommits();
+
+};
+
+const initRecordContainer = () => {
     // initialize events for the record text
     const recordcontainer = document.getElementById('recordcontainer');
 
@@ -67,15 +79,9 @@ const init = () => {
     //}
 
     recordcontainer.addEventListener('click',events.docClick);
-    document.getElementById('togglers').addEventListener('click',events.toggleClick);
 
     Transliterate.init(recordcontainer);
     
-    if(scrollel) scrollTo(scrollel);
-
-    // check for GitHub commit history
-    GitHubFunctions.latestCommits();
-
 };
 
 const findCorresp = (corresps) => {
@@ -342,6 +348,7 @@ const showRecord = () => {
 
 const TSTViewer = Object.freeze({
     init: init,
+    initRecordContainer: initRecordContainer,
     newMirador: MiradorWrapper.start,
     killMirador: (which) => {
         const win = which || _state.mirador;
