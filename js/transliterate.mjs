@@ -21,6 +21,7 @@ const _state = Object.seal({
         ['sarada','Shrd'],
         ['sinhala','Sinh'],
         ['telugu','Telu'],
+        ['kannada','Knda'],
         ['nandinagari','Nand'],
         ['dbumed','Tibt'],
         ['dbucan','Tibt'],
@@ -44,8 +45,14 @@ const _state = Object.seal({
         ['te-Gran-t-te-Latn','te-Latn-t-te-Gran'],
         ['ml-Mlym-t-ml-Latn','ml-Latn-t-ml-Mlym'],
         ['ml-Latn-t-ml-Mlym','ml-Mlym-t-ml-Latn'],
+        ['te-Telu-t-te-Latn','te-Latn-t-te-Telu'],
+        ['te-Latn-t-te-Telu','te-Telu-t-te-Latn'],
+        ['kn-Knda-t-kn-Latn','kn-Latn-t-kn-Knda'],
+        ['kn-Latn-t-kn-Knda','kn-Knda-t-kn-Latn'],
         ['pi-Sinh-t-pi-Latn','pi-Latn-t-pi-Sinh'],
         ['pi-Latn-t-pi-Sinh','pi-Sinh-t-pi-Latn'],
+        ['si-Sinh-t-si-Latn','si-Latn-t-si-Sinh'],
+        ['si-Latn-t-si-Sinh','si-Sinh-t-si-Latn'],
         ['bo-Latn-t-bo-Tibt','bo-Tibt-t-bo-Latn'],
         ['bo-Tibt-t-bo-Latn','bo-Latn-t-bo-Tibt'],
         /*
@@ -62,7 +69,7 @@ const _state = Object.seal({
     button: null
 });
 
-_state.availlangs = Object.freeze(['sa','ta','ml','pi','te','bo',..._state.hindic]);
+_state.availlangs = Object.freeze(['sa','ta','kn','ml','pi','te','si','bo',..._state.hindic]);
 
 _state.hindic.forEach(code => {
     _state.hyphenator[`${code}-Latn`] = _state.hyphenator['sa-Latn'];
@@ -940,7 +947,16 @@ const to = {
 
         return Sanscript.t(posttext,'iast','telugu');
     },
+
+    kannada: txt => {
+
+        const smushedtext = to.smush(txt);
+        const replacedtext = smushedtext.replace(/r(?=[kgcjṭḍṇtdnpbmyvlh])/,'ṙ');
+
+        return Sanscript.t(replacedtext,'iast','kannada');
+    },
     
+
     newa: function(txt) {
 
         const pretext = txt//.replace(/ṙ/g, 'r')

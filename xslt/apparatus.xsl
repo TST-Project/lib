@@ -35,7 +35,7 @@
              <xsl:variable name="cleanstr" select="substring-after($msstring,'#')"/>
              <xsl:attribute name="data-id"><xsl:value-of select="$cleanstr"/></xsl:attribute>
 
-             <xsl:variable name="witness" select="/x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:listWit//x:witness[@xml:id=$cleanstr]"/>
+             <xsl:variable name="witness" select="//x:listWit//x:witness[@xml:id=$cleanstr]"/>
              <xsl:variable name="siglum" select="$witness/x:abbr/node()"/>
              <xsl:variable name="anno" select="$witness/x:expan"/>
 
@@ -146,8 +146,8 @@
                     <xsl:apply-templates/>
                 </div>
                 <xsl:call-template name="apparatus-standoff">
-                    <xsl:with-param name="apparatus" select="$apparatus"/>
                     <xsl:with-param name="notes1" select="$notes1"/>
+                    <xsl:with-param name="apparatus" select="$apparatus"/>
                     <xsl:with-param name="notes2" select="$notes2"/>
                     <xsl:with-param name="notes3" select="$notes3"/>
                     <xsl:with-param name="notes4" select="$notes4"/>
@@ -227,11 +227,21 @@
                         <xsl:text>text-block lg edition</xsl:text>
                     </xsl:attribute>
                     <xsl:attribute name="id"><xsl:value-of select="$xmlid"/></xsl:attribute>
+                    <xsl:if test="@n">
+                        <xsl:attribute name="style">
+                            <xsl:text>counter-reset: line-numb </xsl:text>
+                            <xsl:value-of select="@n - 1"/>
+                            <xsl:text>;</xsl:text>
+                        </xsl:attribute>
+                        <xsl:attribute name="data-offset">
+                            <xsl:value-of select="@n mod 5"/>
+                        </xsl:attribute>
+                    </xsl:if>
                     <xsl:apply-templates/>
                 </div>
                 <xsl:call-template name="apparatus-standoff">
-                    <xsl:with-param name="apparatus" select="$apparatus"/>
                     <xsl:with-param name="notes1" select="$notes1"/>
+                    <xsl:with-param name="apparatus" select="$apparatus"/>
                     <xsl:with-param name="notes2" select="$notes2"/>
                     <xsl:with-param name="notes3" select="$notes3"/>
                     <xsl:with-param name="notes4" select="$notes4"/>
@@ -541,7 +551,7 @@
             <xsl:choose>
                 <xsl:when test="@type='translation'"><xsl:text>translation</xsl:text></xsl:when>
                 <xsl:when test="../@rend = 'parallel' and @xml:lang"><xsl:text>translation</xsl:text></xsl:when>
-                <xsl:otherwise><xsl:text>edition nolemmaunderline</xsl:text></xsl:otherwise>
+                <xsl:otherwise><xsl:text>edition nolemmata</xsl:text></xsl:otherwise>
             </xsl:choose>
         </xsl:attribute>
         <xsl:call-template name="lang"/>
@@ -556,15 +566,25 @@
             <xsl:choose>
                 <xsl:when test="@type='translation'"><xsl:text>translation</xsl:text></xsl:when>
                 <xsl:when test="../@rend = 'parallel' and @xml:lang"><xsl:text>translation</xsl:text></xsl:when>
-                <xsl:otherwise><xsl:text>edition nolemmaunderline</xsl:text></xsl:otherwise>
+                <xsl:otherwise><xsl:text>edition nolemmata</xsl:text></xsl:otherwise>
             </xsl:choose>
         </xsl:attribute>
+            <xsl:if test="@n">
+                <xsl:attribute name="style">
+                    <xsl:text>counter-reset: line-numb </xsl:text>
+                    <xsl:value-of select="@n - 1"/>
+                    <xsl:text>;</xsl:text>
+                </xsl:attribute>
+                <xsl:attribute name="data-offset">
+                    <xsl:value-of select="@n mod 5"/>
+                </xsl:attribute>
+            </xsl:if>
         <xsl:apply-templates/>
     </xsl:element>
 </xsl:template>
 <xsl:template name="apparatus-standoff">
-    <xsl:param name="apparatus"/>
     <xsl:param name="notes1"/>
+    <xsl:param name="apparatus"/>
     <xsl:param name="notes2"/>
     <xsl:param name="notes3"/>
     <xsl:param name="notes4"/>

@@ -847,11 +847,12 @@
     <xsl:element name="span">
         <xsl:attribute name="data-teiname">note</xsl:attribute>
         <xsl:attribute name="data-anno"/>
-        <xsl:attribute name="class">footnote</xsl:attribute>
-        <xsl:choose>
+        <xsl:attribute name="class">footnote ignored<xsl:if test="not($anchor)"> numbered</xsl:if></xsl:attribute>
+        <!--xsl:choose>
             <xsl:when test="$anchor"><xsl:value-of select="$anchor"/></xsl:when>
             <xsl:otherwise><xsl:text>†</xsl:text></xsl:otherwise>
-        </xsl:choose>
+        </xsl:choose-->
+        <xsl:if test="$anchor"><xsl:value-of select="$anchor"/></xsl:if>
         <xsl:element name="span">
             <xsl:attribute name="class">anno-inline</xsl:attribute>
             <xsl:call-template name="lang"/>

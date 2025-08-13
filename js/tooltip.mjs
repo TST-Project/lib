@@ -4,7 +4,7 @@ const Events = {
         while(targ && targ.hasAttribute('data-anno')) {
            
             //ignore if apparatus is already on the side
-            if(document.getElementById('record-fat') && 
+            if(document.querySelector('.record.fat') && 
                targ.classList.contains('app-inline') &&
                !targ.closest('.teitext').querySelector('.diplo') ) {
                 targ = targ.parentNode;
@@ -57,6 +57,7 @@ const ToolTip = {
             {opacity: 0 },
             {opacity: 1, easing: 'ease-in'}
             ], 200);
+        
     },
     remove: function(e) {
         const tBox = document.getElementById('tooltip');

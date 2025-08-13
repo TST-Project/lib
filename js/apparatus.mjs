@@ -75,12 +75,21 @@ const highlight = {
     inline(targ) {
         const par = targ.closest('div.text-block');
         if(!par) return;
-
-        const allleft = [...par.querySelectorAll('.lem-inline')];
+        if(targ.dataset.hasOwnProperty('lemmaId')) {
+            const lemmaId = targ.dataset.lemmaId;
+            const others = [...par.querySelectorAll(`.lem-inline[data-lemma-id="${lemmaId}"]`)];
+            for(const other of others)
+                other.classList.add('highlit');
+            if(targ.classList.contains('lem-following'))
+                targ = others[0];
+        }
+        const allleft = [...par.querySelectorAll('.lem-inline:not(.lem-following)')];
         const pos = allleft.indexOf(targ);
         const right = par.parentElement.querySelector('.apparatus-block');
-        const allright = right.querySelectorAll(':scope > .app > .lem');
-        allright[pos].classList.add('highlit');
+        const allright = right.querySelectorAll(':scope > .app > .lem .rdg-text');
+        const el = allright[pos];
+        el.classList.add('highlit');
+        el.scrollIntoView({behavior: 'smooth', block: 'nearest', container: 'nearest'});
     },
     apparatus(targ) {
         const par = targ.closest('div.apparatus-block');
@@ -91,7 +100,9 @@ const highlight = {
             if(document.getElementById('transbutton').lang === 'en') {
                 Transliterate.revert(left);
             }
-            highlightcoords(targ,left,ignoretags);
+            const els = highlightCoords(targ,left,ignoretags);
+            const el = Array.isArray(els[0]) ? els[0][0] : els[0];
+            el.scrollIntoView({behavior: 'smooth', block: 'nearest', container: 'nearest'});
             if(document.getElementById('transbutton').lang === 'en') {
                 Transliterate.refreshCache(left);
                 Transliterate.activate(left);
@@ -101,15 +112,23 @@ const highlight = {
             const allright = [...par.querySelectorAll(':scope > .app > .lem')];
             const pos = allright.indexOf(targ);
             const allleft = left.querySelectorAll('.lem-inline');
-            if(allleft.length !== 0)
-               allleft[pos].classList.add('highlit');
+            if(allleft.length !== 0) {
+               const el = allleft[pos];
+               el.classList.add('highlit');
+               el.scrollIntoView({behavior: 'smooth', block: 'nearest', container: 'nearest'});
+            }
         }
     },
 };
 
-const rangeFromCoords = (positions, lem, target, ignoretags=new Set()) => {
-    const range = document.createRange();
-
+/**
+ * @param {Array.<int[]>} positions - array of [start,end]
+ * @param {string} lem
+ * @param {DOMElement} target
+ * @param {Set} ignoretags
+ * @returns {Array.<Range>}
+ */
+const rangesFromCoords = (positions, target, ignoretags=new Set()) => {
     const realNextSibling = (walker) => {
         let cur = walker.currentNode;
         while(cur) {
@@ -119,7 +138,44 @@ const rangeFromCoords = (positions, lem, target, ignoretags=new Set()) => {
         }
         return null;
     };
+    
+    const retRanges = [];
 
+    let curRange = document.createRange();
+    positions = [...positions];
+    let curPositions = positions.shift();
+    
+    /*
+     * returns false if not finished; true if finished
+     */
+    const checkNode = (start, end, cur) => {
+        if(!started && curPositions[0] <= end) {
+            const realpos = countpos(cur.data,curPositions[0]-start);
+            // TODO: if realpos === cur.data.length, move to beginning of next node
+            // then if next node starts with a space, +1
+            // then if the node consists only of spaces, move again to beginning of next node
+            curRange.setStart(cur,realpos);
+            started = true;
+        }
+        if(!started) return false;
+        if(curPositions[1] <= end) {
+            const realpos = countpos(cur.data,curPositions[1]-start);
+            if(cur.data[realpos-1] === ' ')
+                curRange.setEnd(cur,realpos-1);
+            else
+                curRange.setEnd(cur,realpos);
+
+            retRanges.push(curRange);
+
+            if(positions.length === 0)
+                return true;
+
+            curPositions = positions.shift();
+            curRange = document.createRange();
+            started = false;
+            return checkNode(start,end,cur);
+        }
+    };
     const walker = document.createTreeWalker(target,NodeFilter.SHOW_ALL, { acceptNode() {return NodeFilter.FILTER_ACCEPT;}});
     let start = 0;
     let started = false;
@@ -143,22 +199,10 @@ const rangeFromCoords = (positions, lem, target, ignoretags=new Set()) => {
         else if(cur.nodeType === 3) {
             const nodecount = cur.data.trim().replaceAll(/[\s\u00AD]/g,'').length;
             const end = start + nodecount;
-            if(!started && positions[0] <= end) {
-                const realpos = countpos(cur.data,positions[0]-start);
-                // TODO: if realpos === cur.data.length, move to beginning of next node
-                // then if next node starts with a space, +1
-                // then if the node consists only of spaces, move again to beginning of next node
-                range.setStart(cur,realpos);
-                started = true;
-            }
-            if(positions[1] <= end) {
-                const realpos = countpos(cur.data,positions[1]-start);
-                if(cur.data[realpos-1] === ' ')
-                    range.setEnd(cur,realpos-1);
-                else
-                    range.setEnd(cur,realpos);
-                break;
-            }
+            
+            const done = checkNode(start,end,cur);
+            if(done) break;
+
             start = end;
             //last = cur;
         }
@@ -166,12 +210,76 @@ const rangeFromCoords = (positions, lem, target, ignoretags=new Set()) => {
     }
     //if(range.collapsed) range.setEnd(last,last.data.length);
     // shouldn't need this
-    return range;
+    return retRanges;
 };
 
-const highlightcoords = (lem,target,ignoretags) => {
-    const multiple = lem.dataset.loc.split(';').reverse();
-    for(const coord of multiple) highlightcoord(coord.split(','), lem, target, ignoretags);
+const highlightrange = (range,classname = 'highlit temporary') => {
+    if(range.toString().trim() === '') return; // avoid highlighting blank spaces/lines
+
+    const lemma = document.createElement('span');
+    lemma.className = classname;
+    lemma.append(range.extractContents());
+
+    range.insertNode(lemma);
+    lemma.lang = lemma.parentElement.lang;
+    return lemma;
+};
+
+const permalightrange = (range) => highlightrange(range,'permalit temporary');
+
+const highlightCoords = (lem,target,ignoretags,highlightfn = highlightrange) => {
+    const alignment = target.dataset.alignment?.split(',');
+    const multiple = lem.dataset.loc.split(';').map(str => {
+        const split = str.split(',');
+        if(alignment) {
+            return [matchCounts(alignment,parseInt(split[0]),'start'),
+                    matchCounts(alignment,parseInt(split[1]),'end')];
+        }
+        return split;
+    });
+    const ranges = rangesFromCoords(multiple, target, ignoretags);
+    return highlightRanges(ranges,target,highlightfn);
+};
+
+
+const markLemmata = () => {
+
+    let lemmaid = 0;
+
+    const markLemmaRange = range => highlightrange(range,'lem-inline');
+    // TODO: this doesn't support xx,xx;xx,xx anymore 
+    const doOne = (lemmata,left,ignoretags,alignment) => {
+        const parsed = [...lemmata].map(el => {
+            const split = el.dataset.loc.split(',');
+            if(alignment) {
+                return [matchCounts(alignment,parseInt(split[0]),'start'),
+                        matchCounts(alignment,parseInt(split[1]),'end')];
+            }
+            return split;
+        });
+        const ranges = rangesFromCoords(parsed, left, ignoretags);
+        const highlit = highlightRanges(ranges,left,markLemmaRange);
+        for(const els of highlit) {
+            if(Array.isArray(els)) {
+                for(let n=0;n < els.length;n++) {
+                    els[n].dataset.lemmaId = lemmaid; 
+                    if(n > 0) els[n].classList.add('lem-following');
+                }
+                lemmaid = lemmaid + 1;
+            }
+        }
+    };
+
+    const apparati = document.querySelectorAll('div.apparatus-block');
+    for(const apparatus of apparati) {
+
+        const lemmata = apparatus.querySelectorAll('.lem[data-loc]');
+        if(lemmata.length === 0) continue;
+        const left = apparatus.parentElement.querySelector('.text-block');
+        const ignoretags = getIgnoreTags(apparatus);
+        const alignment = left.dataset.alignment?.split(',');
+        doOne(lemmata,left,ignoretags,alignment);
+    }
 };
 
 const wrongSeg = (txtnode) => {
@@ -179,17 +287,6 @@ const wrongSeg = (txtnode) => {
     if(ignored) return ignored;
     const el = txtnode.parentNode.closest('.choiceseg');
     return el && el !== el.parentNode.firstChild;
-};
-
-const highlightrange = (range,classname = 'highlit') => {
-    const lemma = document.createElement('span');
-    lemma.className = `${classname} temporary`;
-    lemma.append(range.extractContents());
-    if(lemma.innerHTML.trim() === '') return; // avoid highlighting blank spaces/lines
-
-    range.insertNode(lemma);
-    lemma.lang = lemma.parentElement.lang;
-    return lemma;
 };
 
 const matchCounts = (alignment,m,pos='start') => {
@@ -211,57 +308,62 @@ const matchCounts = (alignment,m,pos='start') => {
     return matches;
 };
 
-const highlightcoord = (positions, lem, target, ignoretags, highlightfn = highlightrange) => {
-    // if there is an alignment, update coords 
-    if(target.dataset.alignment) {
-        const alignment = target.dataset.alignment.split(',');
-        positions = [matchCounts(alignment,parseInt(positions[0]),'start'),
-                     matchCounts(alignment,parseInt(positions[1]),'end')
-                    ];
-    }
-    const range = rangeFromCoords(positions, lem, target, ignoretags);
-    if(!findEls(range))
-        return highlightfn(range);
+const highlightRanges = (ranges, target, highlightfn) => {
+    const ret = [];
+    for(const range of ranges.toReversed()) { //TODO: toReversed() is still needed for adjacent ranges
+        if(!findEls(range)) {
+            const el = highlightfn(range);
+            ret.push(el);
+            continue;
+        }
 
-    const toHighlight = [];
-    const start = (range.startContainer.nodeType === 3) ?
-        range.startContainer :
-        range.startContainer.childNodes[range.startOffset];
+        const toHighlight = [];
+        const start = (range.startContainer.nodeType === 3) ?
+            range.startContainer :
+            range.startContainer.childNodes[range.startOffset];
 
-    const end = (range.endContainer.nodeType === 3) ?
-        range.endContainer :
-        range.endContainer.childNodes[range.endOffset-1];
+        const end = (range.endContainer.nodeType === 3) ?
+            range.endContainer :
+            range.endContainer.childNodes[range.endOffset-1];
 
-    if(start.nodeType === 3 && range.startOffset !== start.length && !wrongSeg(start)) {
-        const textRange = document.createRange();
-        textRange.setStart(start,range.startOffset);
-        textRange.setEnd(start,start.length);
-        toHighlight.push(textRange);
-    }
-    
-    const getNextNode = (n) => n.firstChild || nextSibling(n);
-
-    for(let node = getNextNode(start); node !== end; node = getNextNode(node)) {
-        if(node.nodeType === 3 && !wrongSeg(node)) {
+        if(start.nodeType === 3 && range.startOffset !== start.length && !wrongSeg(start)) {
             const textRange = document.createRange();
-            textRange.selectNode(node);
+            textRange.setStart(start,range.startOffset);
+            textRange.setEnd(start,start.length);
             toHighlight.push(textRange);
         }
+        
+        const getNextNode = (n) => n.firstChild || nextSibling(n);
+
+        for(let node = getNextNode(start); node !== end; node = getNextNode(node)) {
+            if(node.nodeType === 3 && !wrongSeg(node)) {
+                const textRange = document.createRange();
+                textRange.selectNode(node);
+                toHighlight.push(textRange);
+            }
+        }
+
+        if(end.nodeType === 3 && range.endOffset > 0 && !wrongSeg(end)) {
+            const textRange = document.createRange();
+            textRange.setStart(end,0);
+            textRange.setEnd(end,range.endOffset);
+            toHighlight.push(textRange);
+        }
+        
+        //const firsthighlit = highlightfn(toHighlight.shift());
+        
+        const nodearr = [];
+        for(const hiNode of toHighlight) {
+            const node = highlightfn(hiNode);
+            if(node) nodearr.push(node); // highlightrange returns undefined if range is empty
+        }
+        if(nodearr.length > 1) ret.push(nodearr);
+        else ret.push(nodearr[0]);
     }
 
-    if(end.nodeType === 3 && range.endOffset > 0 && !wrongSeg(end)) {
-        const textRange = document.createRange();
-        textRange.setStart(end,0);
-        textRange.setEnd(end,range.endOffset);
-        toHighlight.push(textRange);
-    }
-    
-    const firsthighlit = highlightfn(toHighlight.shift());
-
-    for(const hiNode of toHighlight)
-        highlightfn(hiNode);
     target.normalize();
-    return firsthighlit;
+
+    return ret;
 };
 
 const unhighlight = (targ) => {
@@ -292,6 +394,31 @@ const unhighlight = (targ) => {
         Transliterate.activate(par);
 };
 
+const unpermalight = () => {
+    const highlit = /*par*/document.querySelectorAll('.permalit');
+    if(highlit.length === 0) return;
+    
+    const targ = highlit[0].closest('div.wide');
+    const par = targ.querySelector('.text-block'); // or .edition?
+    if(!par) return;
+    if(document.getElementById('transbutton').lang === 'en') {
+        Transliterate.revert(par);
+    }
+    for(const h of highlit) {
+        if(h.classList.contains('temporary')) {
+            while(h.firstChild)
+                h.after(h.firstChild);
+            h.remove();
+        }
+        else h.classList.remove('permalit');
+    }
+    par.normalize();
+    Transliterate.refreshCache(par);
+    if(document.getElementById('transbutton').lang === 'en') {
+        Transliterate.activate(par);
+    }
+};
+
 const switchReading = el => {
     if(el.querySelector('.rdg-alt')) return;
     const par = el.closest('.lem') || el.closest('.rdg');
@@ -317,7 +444,7 @@ const Events = {
             switchReading(msid);
             msid.addEventListener('mouseleave',restoreReading.bind(null,msid),{once: true});
         }
-        const lem = e.target.closest('.lem');
+        const lem = e.target.closest('.rdg-text')?.closest('.lem');
         if(lem) {
             highlight.apparatus(lem);
             return;
@@ -365,7 +492,7 @@ const Events = {
         if(!translationsvg.checkVisibility()) {
             for(const apparatus of apparati) {
                 //apparatus.previousElementSibling.style.width = '60%';
-                apparatus.parentNode.querySelector('.edition').classList.remove('nolemmaunderline');
+                apparatus.parentNode.querySelector('.edition').classList.remove('nolemmata');
                 const translation = apparatus.parentNode.querySelector('.translation');
                 if(translation) translation.classList.add('hidden');
                 apparatus.classList.remove('hidden');
@@ -377,7 +504,7 @@ const Events = {
         else {
             for(const apparatus of apparati) {
                 //apparatus.previousElementSibling.style.width = 'unset';
-                apparatus.parentNode.querySelector('.edition').classList.add('nolemmaunderline');
+                apparatus.parentNode.querySelector('.edition').classList.add('nolemmata');
                 const translation = apparatus.parentNode.querySelector('.translation');
                 if(translation) translation.classList.remove('hidden');
                 apparatus.classList.add('hidden');
@@ -393,11 +520,14 @@ const init = () => {
     document.addEventListener('mouseover',Events.docMouseover);
     document.addEventListener('mouseout',Events.docMouseout);
     document.addEventListener('click',Events.docClick);
-
+    
+    markLemmata();
     const apparatusbutton = document.getElementById('apparatusbutton');
-    apparatusbutton.addEventListener('click',Events.toggleApparatus);
-    if(document.querySelector('.apparatus-block.hidden'))
-        apparatusbutton.style.display = 'block';
+    if(apparatusbutton) {
+        apparatusbutton.addEventListener('click',Events.toggleApparatus);
+        if(document.querySelector('.apparatus-block.hidden'))
+            apparatusbutton.style.display = 'block';
+    }
 };
 
 const ApparatusViewer = {
