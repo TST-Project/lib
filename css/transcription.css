@@ -629,7 +629,7 @@ rb {
     font-style: normal;
 }
 
-.note em.title {
+.note em.title, .anchored-note em.title {
     font-style: italic;
 }
 
