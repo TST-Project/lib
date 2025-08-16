@@ -203,7 +203,7 @@ span.lb, span.cb {
     content: "\a\a(" attr(data-n) ")";
 }
 
-.pb.diplo.nobreak::after, .pb.diplo:first-child::after {
+.pb.diplo.nobreak::after, td > .pb.diplo:first-child::after {
     content: "(" attr(data-n) ")";
 }
 
