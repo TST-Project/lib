@@ -46,6 +46,7 @@ const newMirador = function(id,manifest,start = 0,annoMap = _state.annoMap, anno
     const opts = {
         id: id,
         osdConfig: {
+            crossOriginPolicy: 'Anonymous',
             maxZoomLevel: 10
         },
         windows: [{
@@ -70,9 +71,6 @@ const newMirador = function(id,manifest,start = 0,annoMap = _state.annoMap, anno
         },
         workspaceControlPanel: {
             enabled: false,
-        },
-        osdConfig: {
-            crossOriginPolicy: 'Anonymous'
         }
     };
     opts.annotation = {

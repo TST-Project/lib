@@ -355,6 +355,7 @@ const TSTViewer = Object.freeze({
         if(win) MiradorWrapper.kill(win);
     },
     getMirador: () => _state.mirador,
+    setMirador: (mirador, manifest) => {_state.mirador = mirador; _state.manifest = manifest;},
     getMiradorCanvasId: MiradorWrapper.getMiradorCanvasId,
     refreshMirador: MiradorWrapper.refresh,
     jumpToId: MiradorWrapper.jumpToId,
