@@ -5,11 +5,12 @@ const set = function(par,middle) {
 };
 
 const get = function(par) {
-    const els = par.querySelectorAll('p,div');
+    /* some elements have a weird top value in diplo mode */
+    const els = par.querySelectorAll('section:not(.teitext) tr, p, div.l');
     //const els = par.querySelectorAll('#summary,tr,span.milestone,span.lb,span.locus');
-    var midEl = null;
-    var lastDist;
-    var currDist = null;
+    let midEl = null;
+    let lastDist;
+    let currDist = null;
     const ellen = els.length;
     for(let i=0;i<ellen;i++) {
         lastDist = currDist;
