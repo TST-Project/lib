@@ -33,9 +33,9 @@ const init = () => {
         const page = facs !== undefined ? facs :
             (param ? parseInt(param) - 1 : null) || viewer.dataset.start;
         if(_state.mirador)
-            MiradorWrapper.refresh(_state.mirador,viewer.dataset.manifest, page);
+            MiradorWrapper.refresh(_state.mirador,_state.manifest, page);
         else
-            _state.mirador = MiradorWrapper.start('viewer',viewer.dataset.manifest, page);
+            _state.mirador = MiradorWrapper.start('viewer',_state.manifest, page);
     }
     
     initRecordContainer();
@@ -81,7 +81,7 @@ const initRecordContainer = () => {
     recordcontainer.addEventListener('click',events.docClick);
 
     Transliterate.init(recordcontainer);
-    
+
 };
 
 const findCorresp = (corresps) => {
@@ -277,10 +277,6 @@ const rotatePage = e => {
         togglers.style.width = 'auto';
         for(const toggler of togglers.querySelectorAll('div'))
             toggler.classList.remove('horizontal');
-        /*
-        const viewertoggle = document.getElementById('viewertoggle');
-        viewertoggle.style.borderRadius = '0 0.3rem 0.3rem 0';
-        */
         const rec = document.querySelector('.record.fat');
         if(rec) rec.className = 'record thin';
     }
