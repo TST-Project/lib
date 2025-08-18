@@ -242,7 +242,8 @@ var schemes = Sanscript.schemes = {
             'ऌ','ॡ', // l̥ l̥̄
             'ऎ','ए','ऐ', // e ē ai
             'ऒ','ओ','औ' ,// o ō au
-            'ऎ','ऐ','ओ','औ' // pṛṣṭhamātrās
+            'ऎ','ऐ','ओ','औ', // pṛṣṭhamātrās
+            'ऍ'
             ],
             vowel_marks: ['ा', // ā
             'ि','ी', // i ī
@@ -251,7 +252,8 @@ var schemes = Sanscript.schemes = {
             'ॢ','ॣ', // l̥ l̥̄
             'ॆ','े','ै', // e ē ai
             'ॊ','ो','ौ', // o ō au
-            'ॎ','ॎे','ॎा','ॎो' // e ai o au
+            'ॎ','ॎे','ॎा','ॎो' , // e ai o au
+            'ॅ'
             ],
             
             other_marks: ['ं','ः','ँ','ᳵ','ᳶ',''], // ṃ ḥ m̐ ẖ ḫ ḵ 
@@ -354,6 +356,7 @@ var schemes = Sanscript.schemes = {
             'e','ē','ai',
             'o','ō','au',
             'ê','aî','ô','aû', // Devanāgarī pṛṣṭhamātrās
+            'ě',
             'æ','ǣ'],
             other_marks: ['ṃ','ḥ','m̐','ẖ','ḫ','ḵ'],
             virama: [''],
@@ -378,6 +381,7 @@ var schemes = Sanscript.schemes = {
             'එ','ඒ','ඓ',
             'ඔ','ඕ','ඖ',
             '','','','', // Devanāgarī pṛṣthamātrās
+            '',
             'ඇ','ඈ'],
             vowel_marks: ['\u0DCF',
             '\u0DD2','\u0DD3',
