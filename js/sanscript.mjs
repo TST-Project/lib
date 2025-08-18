@@ -356,7 +356,7 @@ var schemes = Sanscript.schemes = {
             'e','ē','ai',
             'o','ō','au',
             'ê','aî','ô','aû', // Devanāgarī pṛṣṭhamātrās
-            'ě',
+            'ĕ',
             'æ','ǣ'],
             other_marks: ['ṃ','ḥ','m̐','ẖ','ḫ','ḵ'],
             virama: [''],
