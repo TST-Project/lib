@@ -569,7 +569,7 @@
     </xsl:call-template>
 </xsl:template>
 
-<xsl:template match="x:rubric/x:lb[1] | x:incipit/x:lb[1] | x:explicit/x:lb[1] | x:finalRubric/x:lb[1] | x:colophon/x:lb[1]">
+<xsl:template match="x:rubric/child::*[1][local-name() = 'lb'] | x:incipit/child::*[1][local-name() = 'lb'] | x:explicit/child::*[1][local-name() = 'lb'] | x:finalRubric/child::*[1][local-name() = 'lb'] | x:colophon/child::*[1][local-name() = 'lb']">
     <xsl:call-template name="lb">
         <xsl:with-param name="hyphen">no</xsl:with-param>
         <xsl:with-param name="excerpt">yes</xsl:with-param>
@@ -651,7 +651,7 @@
         <xsl:with-param name="excerpt"><xsl:value-of select="$excerpt"/></xsl:with-param>
     </xsl:call-template>
 </xsl:template>
-<xsl:template match="x:rubric/x:pb[1] | x:incipit/x:pb[1] | x:explicit/x:pb[1] | x:finalRubric/x:pb[1] | x:colophon/x:pb[1]">
+<xsl:template match="x:rubric/child::*[1][local-name() = 'pb'] | x:incipit/child::*[1][local-name() = 'pb'] | x:explicit/child::*[1][local-name() = 'pb'] | x:finalRubric/child::*[1][local-name() = 'pb'] | x:colophon/child::*[1][local-name() = 'pb']">
     <xsl:param name="excerpt">yes</xsl:param>
     <xsl:call-template name="pb">
         <xsl:with-param name="excerpt"><xsl:value-of select="$excerpt"/></xsl:with-param>
