@@ -248,7 +248,7 @@ a.alignment-pointer:link, a.alignment-pointer:active {
 }
 
 .anchor::after, .anchored-note::before {
-    content: '*';
+    content: '†';
     color: rgb(168,81,16);
     cursor: default;
 }
