@@ -39,7 +39,7 @@
              <xsl:variable name="siglum" select="$witness/x:abbr/node()"/>
              <xsl:variable name="anno" select="$witness/x:expan"/>
 
-             <xsl:variable name="parwit" select="$witness/ancestor::x:witness"/>
+             <xsl:variable name="parwit" select="$witness/ancestor::x:witness[@source]"/>
 
              <xsl:variable name="mysource" select="$witness/@source"/>
              <xsl:variable name="parsource" select="$parwit/@source"/>
@@ -324,7 +324,7 @@
          <xsl:variable name="witness" select="//x:listWit//x:witness[@xml:id=$cleanstr]"/>
          <xsl:variable name="siglum" select="$witness/x:abbr/node()"/>
          <xsl:variable name="anno" select="$witness/x:expan"/>
-         <xsl:variable name="parwit" select="$witness/ancestor::x:witness"/>
+         <xsl:variable name="parwit" select="$witness/ancestor::x:witness[@source]"/>
 
          <xsl:variable name="mysource" select="$witness/@source"/>
          <xsl:variable name="parsource" select="$parwit/@source"/>
