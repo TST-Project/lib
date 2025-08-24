@@ -494,6 +494,7 @@
 <xsl:template match="x:milestone">
     <xsl:param name="excerpt">no</xsl:param>
     <xsl:variable name="unit" select="@unit"/>
+    <xsl:variable name="form" select="ancestor::x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:physDesc/x:objectDesc/@form"/>
     <xsl:element name="span">
         <xsl:attribute name="class">
             <xsl:text>milestone diplo</xsl:text>
@@ -516,10 +517,10 @@
             </xsl:choose>
             <xsl:if test="@n"><xsl:text> </xsl:text></xsl:if>
         </xsl:when>
-        <xsl:when test="ancestor::x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:physDesc/x:objectDesc[@form = 'pothi']">
+        <xsl:when test="$form = 'pothi'">
             <xsl:text>folio </xsl:text>
         </xsl:when>
-<xsl:when test="ancestor::x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:physDesc/x:objectDesc[@form = 'book']">
+        <xsl:when test="$form = 'codex'">
             <xsl:text>page </xsl:text>
         </xsl:when>
         </xsl:choose>
