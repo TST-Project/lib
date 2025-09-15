@@ -119,7 +119,7 @@ const init = (par = document.body) => {
 
     // find if there are any Tamil or Sanskrit passages
     const foundTamil = par.querySelector('[lang|="ta"]');
-    const foundOther = par.querySelector('[lang|="sa"],[lang|="hi"],[lang|="ml"],[lang|="mr"],[lang|="bo"]');
+    const foundOther = par.querySelector('[lang|="sa"],[lang|="hi"],[lang|="ml"],[lang|="mr"],[lang|="bo"],[lang|="pi"]');
     // add Telugu, etc.
     if(!foundTamil && !foundOther) return;
 
