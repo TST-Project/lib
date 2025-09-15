@@ -203,6 +203,7 @@ a.alignment-pointer:link, a.alignment-pointer:active {
 }
 #alignment-viewer {
     max-width: 60%;
+    max-height: 90vh;
     overflow: scroll;
     background-color: #fffff8;
     padding: 10px 10px 10px 0;
