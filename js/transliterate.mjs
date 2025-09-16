@@ -143,10 +143,7 @@ const init = (par = document.body) => {
     button.init(foundTamil);
 
     // listen for refresh events
-    window.addEventListener('message', e => {
-        if(e.origin !== window.location.origin) return;
-        if(typeof e.data !== 'object') return;
-        if(e.data.type !== 'transliterator-refresh') return;
+    (new BroadcastChannel('transliterator')).addEventListener('message', e => {
         refreshCache(document.getElementById(e.data.id));
     });
 
