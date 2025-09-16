@@ -100,7 +100,7 @@
             <xsl:text> by </xsl:text>
             <xsl:apply-templates select="x:publisher"/> 
             <xsl:if test="x:pubPlace">
-                <xsl:text>in </xsl:text><xsl:apply-templates select="x:pubPlace"/>
+                <xsl:text> in </xsl:text><xsl:apply-templates select="x:pubPlace"/>
             </xsl:if>
             <xsl:text>.</xsl:text>
         </xsl:element>

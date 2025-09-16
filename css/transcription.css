@@ -641,6 +641,10 @@ rb {
     background: rgba(239,239,61,0.5);
 }
 
+.teitext.edition .invisible {
+    display: none;
+}
+
 div.fw {
     background-color: rgba(132,132,10,0.15);
     /*background: rgba(0,0,0,0.1);*/

@@ -233,7 +233,7 @@
     </xsl:choose>
 </xsl:template>
 
-<xsl:template match="x:text//x:lg"> <!-- not child of x:div[@rend='parallel'] -->
+<xsl:template match="x:text//x:lg | x:text//x:l[@xml:id]"> <!-- not child of x:div[@rend='parallel'] -->
     <xsl:variable name="xmlid" select="@xml:id"/>
     <xsl:variable name="id"><xsl:text>#</xsl:text><xsl:value-of select="$xmlid"/></xsl:variable>
     <xsl:variable name="apparatus" select="//x:standOff[@type='apparatus' and @corresp=$id]"/>

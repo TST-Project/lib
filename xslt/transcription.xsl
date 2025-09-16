@@ -625,12 +625,48 @@
 </xsl:template>
 
 <xsl:template match="x:cb">
+    <xsl:param name="hyphen">yes</xsl:param>
+    <xsl:call-template name="cb">
+        <xsl:with-param name="hyphen"><xsl:value-of select="$hyphen"/></xsl:with-param>
+    </xsl:call-template>
+</xsl:template>
+
+<xsl:template match="x:rubric/child::*[1][local-name() = 'cb'] | x:incipit/child::*[1][local-name() = 'cb'] | x:explicit/child::*[1][local-name() = 'cb'] | x:finalRubric/child::*[1][local-name() = 'cb'] | x:colophon/child::*[1][local-name() = 'cb']">
+    <xsl:call-template name="cb">
+        <xsl:with-param name="hyphen">no</xsl:with-param>
+        <xsl:with-param name="excerpt">yes</xsl:with-param>
+    </xsl:call-template>
+</xsl:template>
+
+<xsl:template match="x:q[@rend='block']//x:lg//x:cb | x:quote[@rend='block']//x:lg//x:cb | x:q[not(@rend)]//x:cb | x:quote[not(@rend)]//x:cb | x:standOff[@type='apparatus']//x:cb">
+    <xsl:call-template name="cb">
+        <xsl:with-param name="diplo">false</xsl:with-param>
+    </xsl:call-template>
+</xsl:template>
+
+<xsl:template name="cb">
+    <xsl:param name="diplo">true</xsl:param>
+    <xsl:param name="hyphen">yes</xsl:param>
+    <xsl:param name="excerpt">no</xsl:param>
     <xsl:element name="span">
-        <xsl:attribute name="class">cb diplo</xsl:attribute>
+        <xsl:attribute name="class">
+            <xsl:text>cb</xsl:text>
+            <xsl:if test="$diplo = 'true'"><xsl:text> diplo</xsl:text></xsl:if>
+            <xsl:if test="$excerpt = 'yes'"><xsl:text> nobreak</xsl:text></xsl:if>
+            <xsl:if test="not(@n)"><xsl:text> unnumbered</xsl:text></xsl:if>
+        </xsl:attribute>
         <xsl:attribute name="lang">en</xsl:attribute>
-        <xsl:if test="@break = 'no'">
-            <xsl:attribute name="data-nobreak"/>
-        </xsl:if>
+        <xsl:choose>
+            <xsl:when test="@break = 'no' and $hyphen = 'yes'">
+                <xsl:attribute name="data-nobreak"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:variable name="pretext" select="preceding::text()[1]"/>
+                <xsl:if test="position() != 1 and normalize-space(substring($pretext,string-length($pretext))) != ''">
+                    <xsl:attribute name="data-nobreak"/>
+                </xsl:if>
+            </xsl:otherwise>
+        </xsl:choose>
         <xsl:if test="@n">
             <xsl:attribute name="data-n">
                 <xsl:text>col. </xsl:text>
