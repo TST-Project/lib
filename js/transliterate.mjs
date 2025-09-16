@@ -141,6 +141,15 @@ const init = (par = document.body) => {
     // initialize button
     _state.button = document.getElementById('transbutton');
     button.init(foundTamil);
+
+    // listen for refresh events
+    window.addEventListener('message', e => {
+        if(e.origin !== window.location.origin) return;
+        if(typeof e.data !== 'object') return;
+        if(e.data.type !== 'transliterator-refresh') return;
+        refreshCache(document.getElementById(e.data.id));
+    });
+
 };
 
 const button = {
