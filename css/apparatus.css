@@ -199,7 +199,8 @@ a.alignment-pointer:link, a.alignment-pointer:active {
     top: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(50,50,50,.5);
+    background: none;
+    backdrop-filter: blur(5px) brightness(60%) saturate(150%);
 }
 #alignment-viewer {
     max-width: 60%;
