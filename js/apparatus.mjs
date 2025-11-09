@@ -564,6 +564,12 @@ const init = () => {
     document.addEventListener('mouseout',Events.docMouseout);
     document.addEventListener('click',Events.docClick);
     
+    const params = new URLSearchParams(window.location.search);
+    if(params.has('negative')) {
+      for(const teitext of document.querySelectorAll('.teitext'))
+        teitext.classsList.add('negapp');
+    }
+
     markLemmata();
     const apparatusbutton = document.getElementById('apparatusbutton');
     if(apparatusbutton) {

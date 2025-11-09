@@ -93,8 +93,8 @@ section div.wide {
     content: ']';
 }
 
-.lem-wit {
-    white-space: normal;
+.negapp .lem-wit {
+  display: none;
 }
 
 .rdg-text {
