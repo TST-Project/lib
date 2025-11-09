@@ -567,7 +567,7 @@ const init = () => {
     const params = new URLSearchParams(window.location.search);
     if(params.has('negative')) {
       for(const teitext of document.querySelectorAll('.teitext'))
-        teitext.classsList.add('negapp');
+        teitext.classList.add('negapp');
     }
 
     markLemmata();
