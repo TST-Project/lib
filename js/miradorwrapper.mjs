@@ -47,7 +47,7 @@ const newMirador = function(id,manifest,start = 0,annoMap = _state.annoMap, anno
         id: id,
         osdConfig: {
             crossOriginPolicy: 'Anonymous',
-            maxZoomLevel: 10
+            maxZoomPixelRatio: 5
         },
         windows: [{
             id: _state.winname,
