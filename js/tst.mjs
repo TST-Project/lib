@@ -41,12 +41,30 @@ const init = () => {
     initRecordContainer();
 
     document.getElementById('togglers')?.addEventListener('click',events.toggleClick);
-
+    fixTogglers();
+    window.addEventListener('resize',fixTogglers);
     if(scrollel) scrollTo(scrollel);
 
     // check for GitHub commit history
     GitHubFunctions.latestCommits();
 
+};
+
+const fixTogglers = () => {
+  // TODO: this could be better
+  const rotator = document.getElementById('rotator');
+  if(window.innerWidth < 600) {
+    for(const toggler of document.querySelectorAll('.toggle'))
+      toggler.classList.add('horizontal');
+    if(rotator.textContent === '↺')
+        rotator.textContent = '⟳';
+  }
+  else {
+    for(const toggler of document.querySelectorAll('.toggle'))
+      toggler.classList.remove('horizontal');
+    if(rotator.textContent === '⟳')
+        rotator.textContent = '↺';
+  }
 };
 
 const initRecordContainer = () => {
@@ -253,10 +271,11 @@ const toggleRecord = e => {
         showRecord();
 };
 
-const rotatePage = e => {
-    if(e.target.textContent === '↺') {
+const rotatePage = () => {
+    const targ = document.getElementById('rotator');
+    if(targ.textContent === '↺') {
         document.body.style.flexDirection = 'column';
-        e.target.textContent = '⟳';
+        targ.textContent = '⟳';
         const togglers = document.getElementById('togglers');
         togglers.style.transform = 'rotate(180deg)';
         togglers.style.writingMode = 'vertical-lr';
@@ -269,7 +288,7 @@ const rotatePage = e => {
     }
     else {
         document.body.style.flexDirection = 'row-reverse';
-        e.target.textContent = '↺';
+        targ.textContent = '↺';
         const togglers = document.getElementById('togglers');
         togglers.style.transform = 'unset';
         togglers.style.writingMode = 'unset';
