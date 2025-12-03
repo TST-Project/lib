@@ -39,10 +39,13 @@ const init = () => {
     }
     
     initRecordContainer();
-
-    document.getElementById('togglers')?.addEventListener('click',events.toggleClick);
-    fixTogglers();
-    window.addEventListener('resize',fixTogglers);
+    
+    const togglers = document.getElementById('togglers');
+    if(togglers) {
+      togglers.addEventListener('click',events.toggleClick);
+      fixTogglers();
+      window.addEventListener('resize',fixTogglers);
+    }
     if(scrollel) scrollTo(scrollel);
 
     // check for GitHub commit history
