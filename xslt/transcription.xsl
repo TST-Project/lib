@@ -1112,6 +1112,7 @@
 <xsl:template match="x:num">
     <xsl:element name="span">
         <xsl:call-template name="lang"/>
+        <xsl:attribute name="data-teiname">num</xsl:attribute>
         <xsl:choose>
             <xsl:when test="@rend='traditional'">
                 <xsl:attribute name="class">num trad</xsl:attribute>
