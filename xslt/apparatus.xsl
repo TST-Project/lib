@@ -532,7 +532,12 @@
     <span>
         <xsl:attribute name="class">anchor</xsl:attribute>
         <xsl:attribute name="data-teiname">anchor</xsl:attribute>
-        <xsl:attribute name="id"><xsl:value-of select="@xml:id"/></xsl:attribute>
+        <xsl:if test="@xml:id">
+          <xsl:attribute name="id"><xsl:value-of select="@xml:id"/></xsl:attribute>
+        </xsl:if>
+        <xsl:if test="@n">
+          <xsl:attribute name="data-n"><xsl:value-of select="@n"/></xsl:attribute>
+        </xsl:if>
     </span>
 </xsl:template>
 <xsl:template match="x:text//x:div[@xml:id] | x:text//x:div[@rend='parallel']">
@@ -668,9 +673,16 @@
     </xsl:element>
     <xsl:for-each select="$standOff/x:note">
         <span class="anchored-note">
-            <xsl:attribute name="data-target">
-                    <xsl:value-of select="@target"/>
-            </xsl:attribute>
+            <xsl:if test="@target">
+              <xsl:attribute name="data-target">
+                <xsl:value-of select="@target"/>
+              </xsl:attribute>
+            </xsl:if>
+            <xsl:if test="@n">
+              <xsl:attribute name="data-n">
+                <xsl:value-of select="@n"/>
+              </xsl:attribute>
+            </xsl:if>
             <xsl:call-template name="lang"/>
             <xsl:apply-templates/>
         </span>
