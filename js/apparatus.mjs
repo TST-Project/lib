@@ -575,7 +575,8 @@ const init = () => {
         teitext.classList.add('negapp');
     }
 
-    markLemmata();
+    if(!params.has('nounderline')) markLemmata();
+
     const apparatusbutton = document.getElementById('apparatusbutton');
     if(apparatusbutton) {
         apparatusbutton.addEventListener('click',Events.toggleApparatus);
