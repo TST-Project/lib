@@ -345,7 +345,7 @@
          <xsl:attribute name="lang">en</xsl:attribute>
          <!--xsl:variable name="witness" select="/x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:listWit//x:witness[@xml:id=$cleanstr]"/-->
          <xsl:variable name="witness" select="$witlist/x:witness[@id=$cleanstr]"/>
-         <xsl:variable name="siglum" select ="$witness/x:abbr/node()"/>
+         <xsl:variable name="siglum" select="$witness/x:abbr/node()"/>
          <xsl:variable name="anno" select="$witness/x:expan"/>
          <xsl:variable name="source" select="$witness/@source"/>
          <xsl:variable name="parwit" select="$witness/@parid"/>
