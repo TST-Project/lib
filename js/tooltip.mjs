@@ -35,7 +35,9 @@ const Events = {
 
 const ToolTip = {
     make: function(e,targ) {
-        const toolText = targ.dataset.anno || targ.querySelector(':scope > .anno-inline')?.cloneNode(true);
+        const toolText = targ.classList.contains('msid') ?
+          document.getElementById(targ.dataset.id).querySelector('.expan').cloneNode(true) :
+          targ.dataset.anno || targ.querySelector(':scope > .anno-inline')?.cloneNode(true);
         if(!toolText) return;
 
         var tBox = document.getElementById('tooltip');

@@ -1018,16 +1018,16 @@
     </em>
 </xsl:template>
 <xsl:template match="x:hi[@rend='superscript']">
-    <sup>
+    <xsl:element name="sup">
         <xsl:call-template name="lang"/>
         <xsl:apply-templates/>
-    </sup>
+    </xsl:element>
 </xsl:template>
 <xsl:template match="x:hi[@rend='subscript']">
-    <sub>
+    <xsl:element name="sub">
         <xsl:call-template name="lang"/>
         <xsl:apply-templates/>
-    </sub>
+    </xsl:element>
 </xsl:template>
 
 <xsl:template name="texthead">
