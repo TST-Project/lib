@@ -98,17 +98,13 @@
             </xsl:element-->
             <xsl:element name="script">
                 <xsl:attribute name="type">module</xsl:attribute>
-                <xsl:text>import { TSTViewer } from '</xsl:text>
-                <xsl:value-of select="$root"/>
-                <xsl:text>js/tst.mjs';
-                window.addEventListener('load',TSTViewer.init);
-                </xsl:text>
-                <xsl:variable name="annos" select="x:teiHeader/x:xenoData[@type='webannotation']"/>
+          <xsl:attribute name="src"><xsl:value-of select="$root"/>js/tst-init.mjs</xsl:attribute>
+                <!--xsl:variable name="annos" select="x:teiHeader/x:xenoData[@type='webannotation']"/>
                 <xsl:if test="$annos">
                         <xsl:text>TSTViewer.setAnnotations(</xsl:text>
                         <xsl:value-of select="$annos"/>
                         <xsl:text>);</xsl:text>
-                </xsl:if>
+                </xsl:if-->
             </xsl:element>
             <xsl:if test="$injectedscript">
                 <xsl:element name="script">
