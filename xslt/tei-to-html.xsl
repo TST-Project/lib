@@ -2,6 +2,7 @@
                 xmlns:exsl="http://exslt.org/common"
                 xmlns:x="http://www.tei-c.org/ns/1.0"
                 xmlns:tst="https://github.com/tst-project"
+                xmlns:xhtml="http://www.w3.org/1999/xhtml"
                 exclude-result-prefixes="x tst">
 
 <xsl:import href="copy.xsl"/>
@@ -17,6 +18,8 @@
 <xsl:param name="root">https://tst-project.github.io/lib/</xsl:param>
 <xsl:param name="injectedscript"/>
 <xsl:param name="injectedroot"/>
+
+<xsl:template match="xhtml:script"/>
 
 <xsl:template name="TEI">
     <xsl:element name="html">
