@@ -524,7 +524,7 @@ transliterator.jiggle = node => {
         if(txt === '') continue;
         if(txt.textContent === '_' || txt.textContent === '·') {
             const virama = Sanscript.schemes[_state.isoToScript.get(script)].virama;
-            text.textContent = virama;
+            txt.textContent = virama;
         }
         if(txt === 'a') { 
             /*

@@ -33,7 +33,6 @@
      <xsl:variable name="parid" select="$parwit/@xml:id"/>
      <xsl:variable name="source" select="$mysource[$mysource] | $parsource[not($mysource)]"/>
     <x:witness>
-      <xsl:attribute name="id"><xsl:value-of select="@xml:id"/></xsl:attribute> 
       <xsl:attribute name="hashid"><xsl:value-of select="concat('#',@xml:id)"/></xsl:attribute> 
       <xsl:if test="$parwit">
         <xsl:attribute name="parid"><xsl:value-of select="$parid"/></xsl:attribute>
@@ -64,52 +63,64 @@
   </xsl:param>
   <xsl:param name="rdggrp" select="local-name() = 'rdgGrp'"/>
   <xsl:param name="corresp"/>
-  <xsl:element name="span">
-     <xsl:attribute name="lang">en</xsl:attribute>
-     <xsl:variable name="msstring" select="substring-before($mss,' ')"/>
-     <xsl:variable name="witness" select="$witlist/x:witness[@hashid=$msstring]"/>
-     <xsl:variable name="siglum" select ="$witness/x:abbr/node()"/>
-     <xsl:variable name="source" select="$witness/@source"/>
-     <xsl:variable name="parwit" select="$witness/@parid"/>
+  <xsl:variable name="msstring" select="substring-before($mss,' ')"/>
+  <xsl:variable name="witness" select="$witlist/x:witness[@hashid=$msstring]"/>
+  <xsl:variable name="siglum" select ="$witness/x:abbr/node()"/>
+  <xsl:variable name="source" select="$witness/@source"/>
+  <xsl:variable name="parwit" select="$witness/@parid"/>
 
-     <xsl:attribute name="class">
-      <xsl:text>msid</xsl:text>
-      <xsl:if test="$rdggrp and ./x:rdg[@type='minor'][contains(concat(normalize-space(@wit), ' '),concat($msstring,' '))]">
-        <xsl:text> mshover</xsl:text>
-      </xsl:if>
-     </xsl:attribute>
+  <xsl:choose>
+    <xsl:when test="$source">
+      <xsl:element name="a">
+         <xsl:attribute name="lang">en</xsl:attribute>
+          <xsl:attribute name="data-id"><xsl:value-of select="$witness/@id"/></xsl:attribute>
+         <xsl:attribute name="class">
+          <xsl:text>msid</xsl:text>
+          <xsl:if test="$rdggrp and ./x:rdg[@type='minor'][contains(concat(normalize-space(@wit), ' '),concat($msstring,' '))]">
+            <xsl:text> mshover</xsl:text>
+          </xsl:if>
+        </xsl:attribute>
+        <xsl:if test="$witness/x:expan">
+          <xsl:attribute name="data-anno"/>
+        </xsl:if>
+        <xsl:attribute name="href">
+          <xsl:value-of select="$source"/>
+          <xsl:if test="$corresp">
+            <xsl:text>&amp;corresp=</xsl:text>
+            <xsl:value-of select="$corresp"/>
+          </xsl:if>
+        </xsl:attribute>
+        <xsl:apply-templates select="$siglum"/>
+      </xsl:element>
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:element name="span">
+         <xsl:attribute name="lang">en</xsl:attribute>
+         <xsl:attribute name="class">
+          <xsl:text>msid</xsl:text>
+          <xsl:if test="$rdggrp and ./x:rdg[@type='minor'][contains(concat(normalize-space(@wit), ' '),concat($msstring,' '))]">
+            <xsl:text> mshover</xsl:text>
+          </xsl:if>
+         </xsl:attribute>
+         <xsl:if test="$witness/x:expan">
+           <xsl:attribute name="data-anno"/>
+         </xsl:if>
+         <xsl:choose>
+          <xsl:when test="$siglum">
+            <xsl:attribute name="data-id"><xsl:value-of select="$witness/@id"/></xsl:attribute>
 
-     <xsl:if test="$witness/x:expan">
-       <xsl:attribute name="data-anno"/>
-     </xsl:if>
-
-     <xsl:choose>
-      <xsl:when test="$siglum">
-        <xsl:attribute name="data-id"><xsl:value-of select="$witness/@id"/></xsl:attribute>
-        <xsl:choose>
-        <xsl:when test="$source">
-          <xsl:element name="a">
-            <xsl:attribute name="href">
-              <xsl:value-of select="$source"/>
-              <xsl:if test="$corresp">
-                <xsl:text>&amp;corresp=</xsl:text>
-                <xsl:value-of select="$corresp"/>
-              </xsl:if>
-            </xsl:attribute>
             <xsl:apply-templates select="$siglum"/>
-          </xsl:element>
-        </xsl:when>
-        <xsl:otherwise><xsl:apply-templates select="$siglum"/></xsl:otherwise>
-        </xsl:choose>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:variable name="cleanstr" select="substring-after($msstring,'#')"/>
-        <xsl:attribute name="data-id"><xsl:value-of select="$cleanstr"/></xsl:attribute>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:variable name="cleanstr" select="substring-after($msstring,'#')"/>
+            <xsl:attribute name="data-id"><xsl:value-of select="$cleanstr"/></xsl:attribute>
 
-        <xsl:value-of select="$cleanstr"/>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:element>
+            <xsl:value-of select="$cleanstr"/>
+          </xsl:otherwise>
+        </xsl:choose>
+        </xsl:element>
+    </xsl:otherwise>
+  </xsl:choose>
   <xsl:variable name="nextstr" select="substring-after($mss, ' ')"/>
   <xsl:if test="$nextstr != ''">
     <xsl:text>&#x200B;</xsl:text>
@@ -141,12 +152,12 @@
 
 <xsl:template match="x:text//x:p">
   <xsl:variable name="xmlid" select="@xml:id"/>
-  <xsl:variable name="id" select="concat('#',$xmlid)"/>
-  <xsl:variable name="apparatus" select="//x:standOff[@type='apparatus' and @corresp=$id]"/>
-  <xsl:variable name="notes1" select="//x:standOff[@type='notes1' and @corresp=$id]"/>
-  <xsl:variable name="notes2" select="//x:standOff[@type='notes2' and @corresp=$id]"/>
-  <xsl:variable name="notes3" select="//x:standOff[@type='notes3' and @corresp=$id]"/>
-  <xsl:variable name="notes4" select="//x:standOff[@type='notes4' and @corresp=$id]"/>
+  <xsl:variable name="hashid" select="concat('#',$xmlid)"/>
+  <xsl:variable name="apparatus" select="//x:standOff[@type='apparatus' and @corresp=$hashid]"/>
+  <xsl:variable name="notes1" select="//x:standOff[@type='notes1' and @corresp=$hashid]"/>
+  <xsl:variable name="notes2" select="//x:standOff[@type='notes2' and @corresp=$hashid]"/>
+  <xsl:variable name="notes3" select="//x:standOff[@type='notes3' and @corresp=$hashid]"/>
+  <xsl:variable name="notes4" select="//x:standOff[@type='notes4' and @corresp=$hashid]"/>
   <xsl:choose>
     <xsl:when test="$apparatus or $notes1 or $notes2 or notes3 or $notes4">
       <div class="lg wide">
@@ -228,12 +239,12 @@
 
 <xsl:template match="x:text//x:lg | x:text//x:l[@xml:id]"> <!-- not child of x:div[@rend='parallel'] -->
   <xsl:variable name="xmlid" select="@xml:id"/>
-  <xsl:variable name="id"><xsl:text>#</xsl:text><xsl:value-of select="$xmlid"/></xsl:variable>
-  <xsl:variable name="apparatus" select="//x:standOff[@type='apparatus' and @corresp=$id]"/>
-  <xsl:variable name="notes1" select="//x:standOff[@type='notes1' and @corresp=$id]"/>
-  <xsl:variable name="notes2" select="//x:standOff[@type='notes2' and @corresp=$id]"/>
-  <xsl:variable name="notes3" select="//x:standOff[@type='notes3' and @corresp=$id]"/>
-  <xsl:variable name="notes4" select="//x:standOff[@type='notes4' and @corresp=$id]"/>
+  <xsl:variable name="hashid" select="concat('#',$xmlid)"/>
+  <xsl:variable name="apparatus" select="//x:standOff[@type='apparatus' and @corresp=$hashid]"/>
+  <xsl:variable name="notes1" select="//x:standOff[@type='notes1' and @corresp=$hashid]"/>
+  <xsl:variable name="notes2" select="//x:standOff[@type='notes2' and @corresp=$hashid]"/>
+  <xsl:variable name="notes3" select="//x:standOff[@type='notes3' and @corresp=$hashid]"/>
+  <xsl:variable name="notes4" select="//x:standOff[@type='notes4' and @corresp=$hashid]"/>
   <xsl:choose>
     <xsl:when test="$apparatus or $notes1 or $notes2 or notes3 or $notes4">
       <div class="lg wide">
@@ -521,6 +532,7 @@
     </xsl:if>
   </span>
 </xsl:template>
+
 <xsl:template match="x:text//x:div[@xml:id] | x:text//x:div[@rend='parallel']">
   <xsl:element name="div">
     <xsl:attribute name="class">lg wide</xsl:attribute>
@@ -529,13 +541,15 @@
     <xsl:if test="$xmlid">
       <xsl:attribute name="id"><xsl:value-of select="$xmlid"/></xsl:attribute>
     </xsl:if>
+
     <xsl:apply-templates/>
-    <xsl:variable name="id"><xsl:text>#</xsl:text><xsl:value-of select="$xmlid"/></xsl:variable>
-    <xsl:variable name="apparatus" select="//x:standOff[@type='apparatus' and @corresp=$id]"/>
-    <xsl:variable name="notes1" select="//x:standOff[@type='notes1' and @corresp=$id]"/>
-    <xsl:variable name="notes2" select="//x:standOff[@type='notes2' and @corresp=$id]"/>
-    <xsl:variable name="notes3" select="//x:standOff[@type='notes3' and @corresp=$id]"/>
-    <xsl:variable name="notes4" select="//x:standOff[@type='notes4' and @corresp=$id]"/>
+
+    <xsl:variable name="hashid" select="concat('#',$xmlid)"/> 
+    <xsl:variable name="apparatus" select="//x:standOff[@type='apparatus' and @corresp=$hashid]"/>
+    <xsl:variable name="notes1" select="//x:standOff[@type='notes1' and @corresp=$hashid]"/>
+    <xsl:variable name="notes2" select="//x:standOff[@type='notes2' and @corresp=$hashid]"/>
+    <xsl:variable name="notes3" select="//x:standOff[@type='notes3' and @corresp=$hashid]"/>
+    <xsl:variable name="notes4" select="//x:standOff[@type='notes4' and @corresp=$hashid]"/>
     <xsl:choose>
       <xsl:when test="$apparatus or $notes1 or $notes2 or notes3 or $notes4">
         <xsl:call-template name="apparatus-standoff">
@@ -572,6 +586,7 @@
     <xsl:apply-templates/>
   </xsl:element>
 </xsl:template>
+
 <xsl:template match="x:div[@xml:id]/x:lg | x:div[@rend='parallel']/x:lg">
   <xsl:element name="div">
     <xsl:call-template name="lang"/>

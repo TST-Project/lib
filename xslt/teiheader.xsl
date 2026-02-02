@@ -21,17 +21,20 @@
 <xsl:template match="x:xenoData"/>
 
 <xsl:template match="x:titleStmt/x:title">
-    <xsl:element name="h1">
-        <xsl:call-template name="lang"/>
-        <xsl:apply-templates/>
-    </xsl:element>
-</xsl:template>
-
-<xsl:template match="x:titleStmt/x:title[@type='sub']">
-    <xsl:element name="h3">
-        <xsl:call-template name="lang"/>
-        <xsl:apply-templates/>
-    </xsl:element>
+  <xsl:choose>
+    <xsl:when test="@type='sub'">
+      <xsl:element name="h3">
+          <xsl:call-template name="lang"/>
+          <xsl:apply-templates/>
+      </xsl:element>
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:element name="h1">
+          <xsl:call-template name="lang"/>
+          <xsl:apply-templates/>
+      </xsl:element>
+    </xsl:otherwise>
+  </xsl:choose>
 </xsl:template>
 
 <xsl:template name="editors">
@@ -1109,7 +1112,7 @@
                         <xsl:text>)</xsl:text>
                     </xsl:if>
                     <xsl:call-template name="moretypes">
-                        <xsl:with-param name="node" select="."/>
+                        <xsl:with-param name="typenode" select="."/>
                     </xsl:call-template>
                 </span>
             </span>
@@ -1128,8 +1131,8 @@
 </xsl:template>
 
 <xsl:template name="moretypes">
-    <xsl:param name="node"/>
-    <xsl:variable name="moretypes" select="$node//x:seg"/>
+    <xsl:param name="typenode"/>
+    <xsl:variable name="moretypes" select="$typenode//x:seg"/>
     <xsl:if test="$moretypes/@function">
         <xsl:text>: </xsl:text>
         <xsl:for-each select="$moretypes/@function">
@@ -1140,27 +1143,6 @@
             </xsl:call-template>
             <xsl:if test="position() != last()"><xsl:text>, </xsl:text></xsl:if>
         </xsl:for-each>
-        <!--xsl:variable name="uniquetypes">
-            <xsl:for-each select="$moretypes">
-                <xsl:sort select="@function"/>
-                <xsl:copy-of select="."/>
-            </xsl:for-each>
-        </xsl:variable>
-        <xsl:for-each select="exsl:node-set($uniquetypes)/x:seg">
-            <xsl:variable name="pos" select="position()"/>
-            <xsl:variable name="notdup" select="not(@function=following-sibling::x:seg/@function)"/>
-            <xsl:if test="$pos = last() or $notdup">
-                <xsl:variable name="func" select="@function"/>
-                <xsl:variable name="addname" select="$TST/tst:additiontype//tst:entry[@key=$func]"/>
-                <xsl:choose>
-                    <xsl:when test="$addname"><xsl:value-of select="$addname"/></xsl:when>
-                    <xsl:otherwise><xsl:value-of select="$func"/></xsl:otherwise>
-                </xsl:choose>
-                <xsl:if test="not($pos = last()) and $func">
-                    <xsl:text>, </xsl:text>
-                </xsl:if>
-            </xsl:if>
-        </xsl:for-each-->
     </xsl:if>
 </xsl:template>
 
@@ -1182,7 +1164,7 @@
                 </xsl:call-template>
             </xsl:if>
             <xsl:call-template name="moretypes">
-                <xsl:with-param name="node" select="."/>
+                <xsl:with-param name="typenode" select="."/>
             </xsl:call-template>
             <xsl:if test="@subtype">
                 <xsl:text> (</xsl:text>

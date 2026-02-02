@@ -119,13 +119,15 @@ section div.wide {
     font-variant: normal;
     margin-left: 0.2rem;
     white-space: normal;
+    cursor: text;
+    color: black;
 }
 
 .rdg-alt:before {
     content: ': ';
 }
 
-.mshover {
+.mshover, a:link.mshover {
     text-decoration-line: underline;
     text-decoration-style: dotted;
     text-decoration-thickness: 1px;
