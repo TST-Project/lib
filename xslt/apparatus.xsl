@@ -1,10 +1,14 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
                               xmlns:exsl="http://exslt.org/common"
+                              xmlns:str="http://exslt.org/strings"
                               xmlns:x="http://www.tei-c.org/ns/1.0"
                               xmlns:tst="https://github.com/tst-project"
-                              exclude-result-prefixes="x tst exsl">
+                              exclude-result-prefixes="x tst exsl str">
 
 <xsl:output method="html" encoding="UTF-8" omit-xml-declaration="yes"/>
+
+<!--xsl:variable name="nativesplit" select="function-available('str:split')"/-->
+<xsl:variable name="nativesplit" select="false()"/>
 
 <xsl:template name="pointersvg">
   <svg width="235.08" height="188" version="1.1" viewBox="0 0 235.08 188" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
@@ -25,14 +29,16 @@
 <xsl:variable name="isedition" select="//x:text[@type='edition']"/>
 
 <xsl:variable name="listwit">
-   <xsl:variable name="witness" select="//x:witness"/>
-   <xsl:for-each select="$witness">
-     <xsl:variable name="parwit" select="ancestor::x:witness[@source]"/>
-     <xsl:variable name="mysource" select="@source"/>
-     <xsl:variable name="parsource" select="$parwit/@source"/>
-     <xsl:variable name="parid" select="$parwit/@xml:id"/>
-     <xsl:variable name="source" select="$mysource[$mysource] | $parsource[not($mysource)]"/>
+  <xsl:variable name="witness" select="//x:witness"/>
+  <xsl:for-each select="$witness">
+    <xsl:variable name="parwit" select="ancestor::x:witness[@source]"/>
+    <xsl:variable name="mysource" select="@source"/>
+    <xsl:variable name="parsource" select="$parwit/@source"/>
+    <xsl:variable name="parid" select="$parwit/@xml:id"/>
+    <xsl:variable name="source" select="$mysource[$mysource] | $parsource[not($mysource)]"/>
+
     <x:witness>
+      <xsl:attribute name="id"><xsl:value-of select="@xml:id"/></xsl:attribute> 
       <xsl:attribute name="hashid"><xsl:value-of select="concat('#',@xml:id)"/></xsl:attribute> 
       <xsl:if test="$parwit">
         <xsl:attribute name="parid"><xsl:value-of select="$parid"/></xsl:attribute>
@@ -46,13 +52,17 @@
             <xsl:otherwise><xsl:value-of select="@xml:id"/></xsl:otherwise>
           </xsl:choose>
         </xsl:attribute>
+        </xsl:if>
+      <xsl:if test="x:abbr">
+        <x:abbr>
+          <xsl:apply-templates select="x:abbr/node()"/>
+        </x:abbr>
       </xsl:if>
-      <xsl:copy-of select="x:abbr"/>
-      <xsl:copy-of select="x:expan"/>
     </x:witness>
    </xsl:for-each>
 </xsl:variable>
 <xsl:variable name="witlist" select="exsl:node-set($listwit)"/>
+
 <xsl:template name="splitwit">
   <xsl:param name="mss">
     <xsl:choose>
@@ -63,64 +73,11 @@
   </xsl:param>
   <xsl:param name="rdggrp" select="local-name() = 'rdgGrp'"/>
   <xsl:param name="corresp"/>
-  <xsl:variable name="msstring" select="substring-before($mss,' ')"/>
-  <xsl:variable name="witness" select="$witlist/x:witness[@hashid=$msstring]"/>
-  <xsl:variable name="siglum" select ="$witness/x:abbr/node()"/>
-  <xsl:variable name="source" select="$witness/@source"/>
-  <xsl:variable name="parwit" select="$witness/@parid"/>
-
-  <xsl:choose>
-    <xsl:when test="$source">
-      <xsl:element name="a">
-         <xsl:attribute name="lang">en</xsl:attribute>
-          <xsl:attribute name="data-id"><xsl:value-of select="$witness/@id"/></xsl:attribute>
-         <xsl:attribute name="class">
-          <xsl:text>msid</xsl:text>
-          <xsl:if test="$rdggrp and ./x:rdg[@type='minor'][contains(concat(normalize-space(@wit), ' '),concat($msstring,' '))]">
-            <xsl:text> mshover</xsl:text>
-          </xsl:if>
-        </xsl:attribute>
-        <xsl:if test="$witness/x:expan">
-          <xsl:attribute name="data-anno"/>
-        </xsl:if>
-        <xsl:attribute name="href">
-          <xsl:value-of select="$source"/>
-          <xsl:if test="$corresp">
-            <xsl:text>&amp;corresp=</xsl:text>
-            <xsl:value-of select="$corresp"/>
-          </xsl:if>
-        </xsl:attribute>
-        <xsl:apply-templates select="$siglum"/>
-      </xsl:element>
-    </xsl:when>
-    <xsl:otherwise>
-      <xsl:element name="span">
-         <xsl:attribute name="lang">en</xsl:attribute>
-         <xsl:attribute name="class">
-          <xsl:text>msid</xsl:text>
-          <xsl:if test="$rdggrp and ./x:rdg[@type='minor'][contains(concat(normalize-space(@wit), ' '),concat($msstring,' '))]">
-            <xsl:text> mshover</xsl:text>
-          </xsl:if>
-         </xsl:attribute>
-         <xsl:if test="$witness/x:expan">
-           <xsl:attribute name="data-anno"/>
-         </xsl:if>
-         <xsl:choose>
-          <xsl:when test="$siglum">
-            <xsl:attribute name="data-id"><xsl:value-of select="$witness/@id"/></xsl:attribute>
-
-            <xsl:apply-templates select="$siglum"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:variable name="cleanstr" select="substring-after($msstring,'#')"/>
-            <xsl:attribute name="data-id"><xsl:value-of select="$cleanstr"/></xsl:attribute>
-
-            <xsl:value-of select="$cleanstr"/>
-          </xsl:otherwise>
-        </xsl:choose>
-        </xsl:element>
-    </xsl:otherwise>
-  </xsl:choose>
+  <xsl:call-template name="splitloop">
+    <xsl:with-param name="rdggrp" select="$rdggrp"/>
+    <xsl:with-param name="corresp" select="$corresp"/>
+    <xsl:with-param name="thisms" select="substring-before($mss,' ')"/>
+  </xsl:call-template>
   <xsl:variable name="nextstr" select="substring-after($mss, ' ')"/>
   <xsl:if test="$nextstr != ''">
     <xsl:text>&#x200B;</xsl:text>
@@ -131,6 +88,75 @@
   </xsl:if>
 </xsl:template>
 
+<xsl:template name="splitwit2">
+  <xsl:param name="mss" select="@wit | @select"/>
+  <xsl:param name="rdggrp" select="local-name() = 'rdgGrp'"/>
+  <xsl:param name="corresp"/>
+  <xsl:for-each select="str:split($mss,' ')">
+    <xsl:call-template name="splitloop">
+      <xsl:with-param name="rdggrp" select="$rdggrp"/>
+      <xsl:with-param name="corresp" select="$corresp"/>
+    </xsl:call-template>
+    <xsl:if test="position() != last()">
+      <xsl:text>&#x200B;</xsl:text>
+    </xsl:if>
+  </xsl:for-each>
+</xsl:template>
+
+<xsl:template name="splitloop">
+  <xsl:param name="rdggrp"/>
+  <xsl:param name="corresp"/>
+  <xsl:param name="thisms" select="."/>
+  <xsl:variable name="witness" select="$witlist/x:witness[@hashid=$thisms]"/>
+  <xsl:variable name="siglum" select ="$witness/x:abbr/node()"/>
+  <xsl:variable name="source" select="$witness/@source"/>
+  <xsl:choose>
+    <xsl:when test="$source">
+      <xsl:element name="a">
+         <xsl:attribute name="lang">en</xsl:attribute>
+          <xsl:attribute name="data-id"><xsl:value-of select="$witness/@id"/></xsl:attribute>
+         <xsl:attribute name="class">
+          <xsl:text>msid</xsl:text>
+          <xsl:if test="$rdggrp and ./x:rdg[@type='minor'][contains(concat(normalize-space(@wit), ' '),concat($thisms,' '))]">
+            <xsl:text> mshover</xsl:text>
+          </xsl:if>
+        </xsl:attribute>
+        <xsl:attribute name="data-anno"/>
+        <xsl:attribute name="href">
+          <xsl:value-of select="$source"/>
+          <xsl:if test="$corresp">
+            <xsl:text>&amp;corresp=</xsl:text>
+            <xsl:value-of select="$corresp"/>
+          </xsl:if>
+        </xsl:attribute>
+        <xsl:copy-of select="$siglum"/>
+      </xsl:element>
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:element name="span">
+         <xsl:attribute name="lang">en</xsl:attribute>
+         <xsl:attribute name="class">
+          <xsl:text>msid</xsl:text>
+          <xsl:if test="$rdggrp and ./x:rdg[@type='minor'][contains(concat(normalize-space(@wit), ' '),concat($thisms,' '))]">
+            <xsl:text> mshover</xsl:text>
+          </xsl:if>
+         </xsl:attribute>
+         <xsl:attribute name="data-anno"/>
+         <xsl:choose>
+          <xsl:when test="$siglum">
+            <xsl:attribute name="data-id"><xsl:value-of select="$witness/@id"/></xsl:attribute>
+            <xsl:copy-of select="$siglum"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:variable name="cleanstr" select="substring-after($thisms,'#')"/>
+            <xsl:attribute name="data-id"><xsl:value-of select="$cleanstr"/></xsl:attribute>
+            <xsl:value-of select="$cleanstr"/>
+          </xsl:otherwise>
+        </xsl:choose>
+        </xsl:element>
+    </xsl:otherwise>
+  </xsl:choose>
+</xsl:template>
 <xsl:template match="x:listWit">
   <xsl:element name="div">
     <xsl:attribute name="class">listWit</xsl:attribute>
@@ -426,30 +452,41 @@
   <xsl:variable name="lemgrp" select="./x:rdgGrp[@type='lemma']"/>
   <xsl:choose>
     <xsl:when test="$lem">
-      <xsl:choose>
-        <xsl:when test="$lem/@wit">
-          <xsl:element name="span">
-            <xsl:attribute name="class">lem</xsl:attribute>
-            <xsl:attribute name="data-loc"><xsl:value-of select="@loc"/></xsl:attribute>
-            <span class="rdg-text">
-              <xsl:apply-templates select="$lem/node()"/>
-            </span>
+      <xsl:element name="span">
+        <xsl:attribute name="class">lem</xsl:attribute>
+        <xsl:attribute name="data-loc"><xsl:value-of select="@loc"/></xsl:attribute>
+        <span class="rdg-text">
+          <xsl:apply-templates select="$lem/node()"/>
+        </span>
+        <xsl:choose>
+          <xsl:when test="$lem/@wit">
             <span>
               <xsl:attribute name="class">lem-wit</xsl:attribute>
-              <xsl:call-template name="splitwit">
-                <xsl:with-param name="mss" select="concat($lem/@wit,' ')"/>
-                <xsl:with-param name="corresp" select="$corresp"/>
-                <xsl:with-param name="rdggrp"/>
-              </xsl:call-template>
+              <xsl:choose>
+                <xsl:when test="$nativesplit">
+                  <xsl:call-template name="splitwit2">
+                    <xsl:with-param name="mss" select="$lem/@wit"/>
+                    <xsl:with-param name="corresp" select="$corresp"/>
+                    <xsl:with-param name="rdggrp"/>
+                  </xsl:call-template>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:call-template name="splitwit">
+                    <xsl:with-param name="mss" select="concat($lem/@wit,' ')"/>
+                    <xsl:with-param name="corresp" select="$corresp"/>
+                    <xsl:with-param name="rdggrp"/>
+                  </xsl:call-template>
+                </xsl:otherwise>
+              </xsl:choose>
             </span>
-          </xsl:element>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:if test="$isedition">
-            <span class="lem-wit"><span class="editor" lang="en" data-anno="emendation">em.</span></span>
-          </xsl:if>
-        </xsl:otherwise>
-      </xsl:choose>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:if test="$isedition">
+              <span class="lem-wit"><span class="editor" lang="en" data-anno="emendation">em.</span></span>
+            </xsl:if>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:element>
       </xsl:when>
       <xsl:when test="$lemgrp">
           <xsl:element name="span">
@@ -468,11 +505,22 @@
             </xsl:for-each>
             <span>
               <xsl:attribute name="class">lem-wit</xsl:attribute>
-              <xsl:call-template name="splitwit">
-                <xsl:with-param name="mss" select="concat($lemgrp/@select,' ')"/>
-                <xsl:with-param name="corresp" select="$corresp"/>
-                <xsl:with-param name="rdggrp" select="true()"/>
-              </xsl:call-template>
+              <xsl:choose>
+                <xsl:when test="$nativesplit">
+                  <xsl:call-template name="splitwit2">
+                    <xsl:with-param name="mss" select="$lemgrp/@select"/>
+                    <xsl:with-param name="corresp" select="$corresp"/>
+                    <xsl:with-param name="rdggrp"/>
+                  </xsl:call-template>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:call-template name="splitwit">
+                    <xsl:with-param name="mss" select="concat($lemgrp/@select,' ')"/>
+                    <xsl:with-param name="corresp" select="$corresp"/>
+                    <xsl:with-param name="rdggrp"/>
+                  </xsl:call-template>
+                </xsl:otherwise>
+              </xsl:choose>
             </span>
           </xsl:element>
         </xsl:when>
@@ -511,10 +559,20 @@
     <xsl:text> </xsl:text>
     <span>
       <xsl:attribute name="class">rdg-wit</xsl:attribute>
-      <xsl:call-template name="splitwit">
-        <xsl:with-param name="corresp" select="$corresp"/>
-        <xsl:with-param name="rdggrp" select="$rdggrp"/>
-      </xsl:call-template>
+      <xsl:choose>
+        <xsl:when test="$nativesplit">
+          <xsl:call-template name="splitwit2">
+            <xsl:with-param name="corresp" select="$corresp"/>
+            <xsl:with-param name="rdggrp"/>
+          </xsl:call-template>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:call-template name="splitwit">
+            <xsl:with-param name="corresp" select="$corresp"/>
+            <xsl:with-param name="rdggrp"/>
+          </xsl:call-template>
+        </xsl:otherwise>
+      </xsl:choose>
     </span>
   </span>
   <xsl:text> </xsl:text>
