@@ -53,10 +53,12 @@ const ToolTip = {
         else {
             tBox = document.createElement('div');
             tBox.id = 'tooltip';
-            //tBox.style.opacity = 0;
-            //tBox.style.transition = 'opacity 0.2s ease-in';
             document.body.appendChild(tBox);
             tBoxDiv.myTarget = targ;
+            tBox.animate([
+                {opacity: 0 },
+                {opacity: 1, easing: 'ease-in'}
+                ], 200);
         }
 
         tBox.style.top = (e.clientY + 10) + 'px';
@@ -68,15 +70,8 @@ const ToolTip = {
         if(ydiff > 0)
             tBox.style.top = (e.clientY - ydiff + 10) + 'px';
         targ.addEventListener('mouseleave',ToolTip.remove,{once: true});
-
-        //window.getComputedStyle(tBox).opacity;
-        //tBox.style.opacity = 1;
-        tBox.animate([
-            {opacity: 0 },
-            {opacity: 1, easing: 'ease-in'}
-            ], 200);
-        
     },
+
     remove: function(e) {
         clearTimeout(_state.tooltipTimeout);
 
