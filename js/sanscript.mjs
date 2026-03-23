@@ -383,7 +383,7 @@ var schemes = Sanscript.schemes = {
             'ඇ','ඈ'],
             vowel_marks: ['\u0DCF',
             '\u0DD2','\u0DD3',
-            '\u0DD4','\u0DD5',
+            '\u0DD4','\u0DD6',
             '\u0DD8','\u0DF2',
             '\u0DDF','\u0DF3',
             '\u0DD9','\u0DDA','\u0DDB',
