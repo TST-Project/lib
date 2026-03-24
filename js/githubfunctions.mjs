@@ -1,4 +1,16 @@
-const latestCommits = () => {
+const fetchtry = async urls => {
+    for(const url of urls) {
+      const res = await fetch(url);
+      if(res.ok) {
+        const data = await res.json();
+        if(data && data[0])
+          return data[0];
+      }
+    }
+    return null;
+};
+
+const latestCommits = async () => {
     const loc = window.location;
     const span = document.getElementById('latestcommit');
     if(span && loc.hostname.endsWith('.github.io')) {
@@ -7,24 +19,19 @@ const latestCommits = () => {
         pathsplit.shift(); // pathname starts with a slash
         const repo = pathsplit.shift();
         const path = pathsplit.join('/');
-        const apiurl = `https://api.github.com/repos/${sub}/${repo}/commits?path=${path}`;
-        fetch(apiurl)
-            .then((resp) => {
-                if(resp.ok)
-                    return resp.json();
-            })
-            .then((data) => {
-                if(data) {
-                    const date = new Date(data[0].commit.committer.date);
-                    const datestr = date.toLocaleString('en-GB', {
-                        weekday: 'long',
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                    });
-                    span.innerHTML = `Last updated <a href="${data[0].html_url}">${datestr}</a>.`;
-                }
-            });
+        const urls = [
+          `https://api.github.com/repos/${sub}/${repo}/commits?path=${path}`,
+          `https://api.github.com/repos/${sub}/${repo}/commits?path=docs/${path}`
+        ];
+        const res = await fetchtry(urls);
+        const date = new Date(res.commit.committer.date);
+        const datestr = date.toLocaleString('en-GB', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+        span.innerHTML = `Last updated <a href="${res.html_url}">${datestr}</a>.`;
     }
 };
 
