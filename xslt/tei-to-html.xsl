@@ -103,13 +103,15 @@
                 <xsl:attribute name="type">module</xsl:attribute>
                 <xsl:attribute name="src"><xsl:value-of select="$root"/>js/tst-init.mjs</xsl:attribute>
                 <xsl:text> </xsl:text>
-                <!--xsl:variable name="annos" select="x:teiHeader/x:xenoData[@type='webannotation']"/>
-                <xsl:if test="$annos">
-                        <xsl:text>TSTViewer.setAnnotations(</xsl:text>
-                        <xsl:value-of select="$annos"/>
-                        <xsl:text>);</xsl:text>
-                </xsl:if-->
             </xsl:element>
+            <xsl:variable name="annos" select="x:teiHeader/x:xenoData[@type='webannotation']"/>
+            <xsl:if test="$annos">
+              <xsl:element name="script">
+                <xsl:attribute name="type">application/json</xsl:attribute>
+                <xsl:attribute name="id">tst-annotations</xsl:attribute>
+                <xsl:value-of select="$annos"/>
+              </xsl:element>
+            </xsl:if>
             <xsl:if test="$injectedscript">
                 <xsl:element name="script">
                     <xsl:attribute name="type">module</xsl:attribute>

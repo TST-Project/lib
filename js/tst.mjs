@@ -28,6 +28,9 @@ const init = () => {
         }
     }
     if(viewer) {
+        const annotag = document.getElementById('tst-annotations');
+        if(annotag) MiradorWrapper.setAnnotations(JSON.parse(annotag.innerHTML));
+
         _state.manifest = viewer.dataset.manifest;
         const param = params.get('facs');
         const page = facs !== undefined ? facs :
