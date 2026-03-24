@@ -29,6 +29,10 @@ section div.wide {
     line-height: 1.3rem;
     position: sticky;
 }
+.apparatus-block[lang^='bo-Tibt'] {
+  line-height: 2rem;
+}
+
 .hidden {
     display: none;
 }
@@ -48,6 +52,9 @@ section div.wide {
     /*margin-right: 2em;*/
     white-space: normal;
 }
+.app::after {
+  content: ' ';
+}
 
 .lem-inline:not(.lem-anchor) {
     /*display: inline-block;*/
@@ -55,6 +62,9 @@ section div.wide {
     text-decoration-style: wavy;
     text-decoration-color: rgb(180,184,196);
     text-decoration-thickness: from-font;
+}
+.lem-inline:not(.lem-anchor)[lang^='bo-Tibt'] {
+  text-underline-offset: -0.3rem;
 }
 
 .lem-anchor {

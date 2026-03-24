@@ -71,6 +71,9 @@ div.lg {
     padding-bottom: 0.5em;
     /*padding-left: 0.5em;*/
 }
+div.lg[lang^='bo-Tibt'] {
+  line-height: 2.5rem;
+}
 
 .text-block + .text-block {
     padding-left: 0.5em;

@@ -443,7 +443,6 @@
       <xsl:apply-templates />
     </xsl:for-each>
   </xsl:element>
-  <xsl:text> </xsl:text>
 </xsl:template>
 
 <xsl:template name="lemma">

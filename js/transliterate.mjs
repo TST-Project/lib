@@ -375,12 +375,12 @@ const transliterator = {};
 
 transliterator.toggle = () => {
     if(_state.button.lang === 'en') {
-        transliterator.revert();
         button.revert();
+        transliterator.revert();
     }
     else {
-        transliterator.activate();
         button.transliterate();
+        transliterator.activate();
     }
 };
     
@@ -795,11 +795,15 @@ const to = {
     },
     dbumed: text => {
         const ewts = new EwtsConverter();
-        return ewts.to_unicode(text);
+        if(text.endsWith(' '))
+          return ewts.to_unicode(text);
+        else return ewts.to_unicode(text + ' ');
     },
     dbucan: text => {
         const ewts = new EwtsConverter();
-        return ewts.to_unicode(text);
+        if(text.endsWith(' '))
+          return ewts.to_unicode(text);
+        else return ewts.to_unicode(text + ' ');
     },
     tamil: text => {
         const txt = to.smush(text);
