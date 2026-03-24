@@ -24,7 +24,7 @@ const _state = Object.seal({
         ['kannada','Knda'],
         ['nandinagari','Nand'],
         ['dbumed','Tibt'],
-        ['dbucan','Tibt'],
+        ['dbucan','Tibt']
     ]),
     cachedtext: new Map(),
     parEl: null,
@@ -107,6 +107,7 @@ const getEditionScript = () => {
     const textlang = document.querySelector('.teitext')?.getAttribute('lang');
     if(!textlang) return null;
     const script = textlang.split('-').pop();
+    if(script === 'Tibt') return 'dbucan';
     if(_state.isonames.has(script)) return script;
     
 };
@@ -775,8 +776,7 @@ const to = {
     
     ewts: text => {
         const ewts = new EwtsConverter({fix_spacing: true, pass_through: true,fix_sloppy: false});
-        return ewts.to_ewts(text.toLowerCase()
-                   .replaceAll('ༀ','om̐'))
+        return ewts.to_ewts(text.replaceAll('ༀ','om̐'))
                    .replaceAll(/[rl]-[iI]/g,(m) => {
                         switch (m) {
                             case 'r-i':
@@ -788,7 +788,10 @@ const to = {
                             default:
                                 return 'l̥̄';
                         }
-                   }).replaceAll(/([gṭḍbd])\+h/g,'$1h');
+                   })
+                   .replaceAll('ā+u','ū')
+                   .replaceAll('ā+i','ī')
+                   .replaceAll(/([gṭḍbd])\+h/g,'$1h');
     },
     dbumed: text => {
         const ewts = new EwtsConverter();
@@ -990,6 +993,7 @@ const to = {
     },
     
     sinhala: txt => {
+     // based on https://pitaka.lk/tools/unicode/pali_bandi.htm
       const conjuncts = [
         ['ක', '[වෂ]'],
         ['ත', '[ථව]'],
