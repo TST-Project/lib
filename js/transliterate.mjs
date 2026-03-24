@@ -989,11 +989,31 @@ const to = {
         return text;
     },
     
-    sinhala: function(txt) {
+    sinhala: txt => {
+      const conjuncts = [
+        ['ක', '[වෂ]'],
+        ['ත', '[ථව]'],
+        ['න', '[වථදධ]'],
+        ['ඤ', '[චජඡ]'],
+        ['ට', 'ඨ'],
+        ['ණ', 'ඩ'],
+        ['ද', '[ධව]'],
+        ['ම', 'බ'],
+        ['ජ','ඤ','ඥ'],
+        ['ඞ', 'ග', 'ඟ']
+      ];
 
-        const smushed = to.smush(txt);
-
-        return Sanscript.t(smushed,'iast','sinhala');
+      let smushed = to.smush(txt);
+      smushed = Sanscript.t(smushed,'iast','sinhala');
+      for(const c of conjuncts) {
+        const re = new RegExp(`${c[0]}\u0DCA(${c[1]})`,'g');
+        smushed = smushed.replaceAll(re, c[2] || `${c[0]}\u0DCA\u200D$1`);
+      }
+      smushed = smushed.replaceAll(/([ක-ෆ])\u0DCA(?=[ක-ෆ])/g, '$1\u200D\u0DCA')
+                       .replaceAll(/(ර)\u200D\u0DCA(?=[ක-ෆ])/g, '$1\u0DCA\u200D')
+                       .replaceAll(/([ක-ෆ])\u200D\u0DCA(?=[රය])/g, '$1\u0DCA\u200D');
+      return smushed;
+      
     },
 
     nandinagari: function(txt) {
