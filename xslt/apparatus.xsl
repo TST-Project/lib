@@ -755,6 +755,18 @@
 
 <xsl:template match="x:standOff/x:listApp">
   <xsl:variable name="corresp" select="translate(../@corresp,'#','')"/>
+  <xsl:variable name="omissions" select="x:listApp[@type='omissions']"/>
+    <xsl:if test="$omissions">
+      <xsl:element name="div">
+       <xsl:attribute name="class">omissions-app</xsl:attribute>
+        <xsl:for-each select="$omissions/x:app">
+          <xsl:call-template name="app">
+            <xsl:with-param name="corresp" select="$corresp"/>
+          </xsl:call-template>
+        </xsl:for-each>
+        <xsl:element name="hr"/>
+      </xsl:element>
+  </xsl:if>
   <xsl:for-each select="x:app">
     <xsl:call-template name="app">
       <xsl:with-param name="corresp" select="$corresp"/>
