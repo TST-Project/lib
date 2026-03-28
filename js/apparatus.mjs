@@ -304,7 +304,7 @@ const markLemmata = (par = document) => {
     const apparati = par.querySelectorAll('div.apparatus-block');
     for(const apparatus of apparati) {
 
-        const lemmata = apparatus.querySelectorAll('.lem[data-loc]');
+        const lemmata = apparatus.querySelectorAll(':scope > .app .lem[data-loc]');
         if(lemmata.length === 0) continue;
         const left = apparatus.parentElement.querySelector('.text-block');
         const ignoretags = getIgnoreTags(apparatus);
