@@ -170,6 +170,7 @@
 
 [lang^="sa-Gran"] {
     line-height: 2;
+    font-size-adjust: ch-width 0.45;
 }
 
 [lang^="sa-Shrd"] {
