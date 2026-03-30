@@ -119,14 +119,15 @@ const init = (par = document.body) => {
     if(!_state.parEl.lang) _state.parEl.lang = 'en';
 
     // find if there are any Tamil or Sanskrit passages
+    const foundEdition = getEditionScript();
     const foundTamil = par.querySelector('[lang|="ta"]');
     const foundOther = par.querySelector('[lang|="sa"],[lang|="hi"],[lang|="ml"],[lang|="mr"],[lang|="bo"],[lang|="pi"]');
     // add Telugu, etc.
-    if(!foundTamil && !foundOther) return;
+    if(!foundEdition && !foundTamil && !foundOther) return;
 
     if(foundOther) {
         const scripttags = par.getElementsByClassName('record_scripts');
-        const defaultSanscript = getSanscript(scripttags) || getEditionScript();
+        const defaultSanscript = getSanscript(scripttags) || foundEdition;
         if(!defaultSanscript && !foundTamil) {
             // hyphenate text even if no transliteration available
             const walker = document.createTreeWalker(par,NodeFilter.SHOW_ALL);
@@ -141,7 +142,7 @@ const init = (par = document.body) => {
 
     // initialize button
     _state.button = document.getElementById('transbutton');
-    button.init(foundTamil);
+    button.init(foundEdition ? false : foundTamil);
 
     // listen for refresh events
     (new BroadcastChannel('transliterator')).addEventListener('message', e => {
