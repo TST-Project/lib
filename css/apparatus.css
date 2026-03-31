@@ -141,10 +141,10 @@ section div.wide {
     content: ': ';
 }
 
-.mshover, a:link.mshover {
+.mshover, a:link.msid.mshover {
     text-decoration-line: underline;
     text-decoration-style: dotted;
-    text-decoration-thickness: 1px;
+    text-decoration-thickness: 0.2ch;
     text-decoration-color: rgb(168,81,16);
 }
 
@@ -177,7 +177,7 @@ section div.wide {
 .msid + .msid {
     margin-left: 0.2rem;
 }
-.msid a:link, .msid a:active,
+.msid a:link, a:link.msid, .msid a:active,
 a.alignment-pointer:link, a.alignment-pointer:active {
     text-decoration: none;
     text-shadow: none;
