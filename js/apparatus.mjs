@@ -493,7 +493,7 @@ const Events = {
         const anchor = e.target.closest('.anchor');
         if(anchor) {
             const idnotes = document.querySelectorAll(`[data-target='#${anchor.id}']`);
-            const numnotes = anchor.closest('.wide').querySelectorAll(`.anchored-note[data-n='${anchor.dataset.n}']`);;
+            const numnotes = anchor.closest('.wide').querySelectorAll(`.anchored-note[data-n='${anchor.dataset.n}']`);
             const notes = [...idnotes,...numnotes];
             if(notes.length > 0) {
               for(const note of notes) {

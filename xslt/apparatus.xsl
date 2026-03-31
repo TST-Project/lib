@@ -457,6 +457,14 @@
         <span class="rdg-text">
           <xsl:apply-templates select="$lem/node()"/>
         </span>
+        <xsl:for-each select="./x:rdgGrp/x:rdg[@type='minor']">
+            <span class="rdg-alt">
+                <xsl:attribute name="data-wit">
+                    <xsl:value-of select="translate(@wit,'#','')"/>
+                </xsl:attribute>
+                <xsl:apply-templates select="./node()"/>
+            </span>
+        </xsl:for-each>
         <xsl:choose>
           <xsl:when test="$lem/@wit">
             <span>
@@ -636,7 +644,8 @@
       <xsl:choose>
         <!--xsl:when test="@type='translation'"><xsl:text>translation</xsl:text></xsl:when-->
         <xsl:when test="../@rend = 'parallel' and @xml:lang"><xsl:text>translation</xsl:text></xsl:when>
-        <xsl:otherwise><xsl:text>edition nolemmata</xsl:text></xsl:otherwise>
+        <xsl:when test="../x:p[@xml:lang]"><xsl:text>edition nolemmata</xsl:text></xsl:when>
+        <xsl:otherwise><xsl:text>edition</xsl:text></xsl:otherwise>
       </xsl:choose>
     </xsl:attribute>
     <xsl:call-template name="lang"/>
@@ -652,7 +661,8 @@
       <xsl:choose>
         <!--xsl:when test="@type='translation'"><xsl:text>translation</xsl:text></xsl:when-->
         <xsl:when test="../@rend = 'parallel' and @xml:lang"><xsl:text>translation</xsl:text></xsl:when>
-        <xsl:otherwise><xsl:text>edition nolemmata</xsl:text></xsl:otherwise>
+        <xsl:when test="../x:lg[@xml:lang] | ../x:p[@xml:lang]"><xsl:text>edition nolemmata</xsl:text></xsl:when>
+        <xsl:otherwise><xsl:text>edition</xsl:text></xsl:otherwise>
       </xsl:choose>
     </xsl:attribute>
       <xsl:if test="@n">
