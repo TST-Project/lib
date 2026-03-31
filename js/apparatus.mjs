@@ -575,8 +575,6 @@ const init = () => {
         teitext.classList.add('negapp');
     }
 
-    if(!params.has('nounderline')) markLemmata();
-
     const apparatusbutton = document.getElementById('apparatusbutton');
     if(apparatusbutton) {
         apparatusbutton.addEventListener('click',Events.toggleApparatus);
@@ -584,10 +582,31 @@ const init = () => {
             apparatusbutton.style.display = 'block';
     }
 
+    renumberNotes();
+
+    if(!params.has('nounderline')) markLemmata();
+
     // listen for refresh events
     (new BroadcastChannel('apparatus')).addEventListener('message', e => {
         markLemmata(document.getElementById(e.data.id));
     });
+};
+
+/* take <anchor>s with @xml:id and change them to <anchor>s with @n */
+const renumberNotes = () => {
+  console.log('huh');
+  let n = 1;
+  for(const anchor of document.querySelectorAll('.anchor')) {
+    const id = anchor.id;
+    const notes = document.querySelectorAll(`.anchored-note[data-target="#${id}"]`);
+    anchor.dataset.n = n;
+    anchor.removeAttribute('id');
+    for(const note of notes) {
+      note.dataset.n = n;
+      note.removeAttribute('data-target');
+    }
+    n = n + 1;
+  }
 };
 
 const ApparatusViewer = {
