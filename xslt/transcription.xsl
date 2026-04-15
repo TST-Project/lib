@@ -298,7 +298,7 @@
         <xsl:attribute name="class">
             <xsl:value-of select="local-name()"/>
             <xsl:if test="@reason='ellipsis'">
-                <xsl:text> ellipsis</xsl:text>
+                <xsl:text> ellipsis ignored</xsl:text>
             </xsl:if>
         </xsl:attribute>
         <xsl:attribute name="data-anno">
