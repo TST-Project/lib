@@ -184,7 +184,7 @@ a.alignment-pointer:link, a.alignment-pointer:active {
     background: none;
 }
 
-.msid a[href]::after {
+.msid a[href]::after, a.msid[href]::after {
     background: none;
     padding-right: 0;
 }
