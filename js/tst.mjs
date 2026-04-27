@@ -82,7 +82,7 @@ const initRecordContainer = () => {
     // start all texts in diplomatic view
     for(const l of recordcontainer.querySelectorAll('.line-view-icon')) {
         const teitext = l.closest('.teitext');
-        const lb = !teitext.querySelector('.apparatus-block') && teitext?.querySelector('.lb, .pb');
+        const lb = /*!teitext.querySelector('.apparatus-block') && */teitext?.querySelector('.lb:not(.apparatus-block *), .pb:not(.apparatus-block *)');
         if(!lb)
             l.style.display = 'none';
         else {
