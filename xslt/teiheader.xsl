@@ -1228,9 +1228,8 @@
     </xsl:if>
     <xsl:if test="@notBefore or @notAfter">
         <xsl:value-of select="@notBefore"/>
-        <xsl:if test="@notAfter">
-            <xsl:text>―</xsl:text><xsl:value-of select="@notAfter"/>
-        </xsl:if>
+        <xsl:text>―</xsl:text>
+        <xsl:value-of select="@notAfter"/>
         <xsl:text>. </xsl:text>
     </xsl:if>
 </xsl:template>
