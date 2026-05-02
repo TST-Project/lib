@@ -418,12 +418,14 @@
 
 <xsl:template name="app">
   <xsl:param name="corresp"/>
+  <xsl:param name="markemend" select="$isedition"/>
   <xsl:element name="span">
     <xsl:attribute name="class">app</xsl:attribute>
     <xsl:choose>
       <xsl:when test="x:lem | x:rdgGrp[@type='lemma']">
         <xsl:call-template name="lemma">
           <xsl:with-param name="corresp" select="$corresp"/>
+          <xsl:with-param name="markemend" select="$markemend"/>
         </xsl:call-template>
       </xsl:when>
       <xsl:otherwise>
@@ -449,6 +451,7 @@
 
 <xsl:template name="lemma">
   <xsl:param name="corresp"/>
+  <xsl:param name="markemend" select="$isedition"/>
   <xsl:variable name="lem" select="./x:lem"/>
   <xsl:variable name="lemgrp" select="./x:rdgGrp[@type='lemma']"/>
   <xsl:choose>
@@ -490,7 +493,7 @@
             </span>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:if test="$isedition">
+            <xsl:if test="$markemend">
               <span class="lem-wit"><span class="editor" lang="en" data-anno="emendation">em.</span></span>
             </xsl:if>
           </xsl:otherwise>
@@ -774,6 +777,7 @@
         <xsl:for-each select="$omissions/x:app">
           <xsl:call-template name="app">
             <xsl:with-param name="corresp" select="$corresp"/>
+            <xsl:with-param name="markemend" select="false()"/>
           </xsl:call-template>
         </xsl:for-each>
         <xsl:element name="hr"/>
