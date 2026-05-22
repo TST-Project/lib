@@ -106,7 +106,9 @@ const events = {
 const getEditionScript = () => {
     const textlang = document.querySelector('.teitext')?.getAttribute('lang');
     if(!textlang) return null;
-    const script = textlang.split('-').pop();
+    const scriptsplit = textlang.split('-');
+    if(scriptsplit[3] !== 't') return null;
+    const script = scriptsplit.pop();
     if(script === 'Tibt') return 'dbucan';
     if(_state.isonames.has(script)) return script;
     
@@ -143,6 +145,11 @@ const init = (par = document.body) => {
     // initialize button
     _state.button = document.getElementById('transbutton');
     button.init(foundEdition ? false : foundTamil);
+
+    // switch to Tamil
+    const urlParams = new URLSearchParams(window.location.search);
+    if(urlParams.get('script') === 'Taml')
+        transliterator.toggle();
 
     // listen for refresh events
     (new BroadcastChannel('transliterator')).addEventListener('message', e => {
