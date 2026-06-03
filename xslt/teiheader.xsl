@@ -1285,11 +1285,20 @@
 
 <xsl:template match="x:revisionDesc">
     <section>
-        <h3>Revision history</h3>
+        <xsl:choose>
+          <xsl:when test="x:change">
+            <details>
+              <summary style="font-style: italic; font-weight: 400; font-size: 1.7rem; margin-bottom: 1rem">Revision history</summary>
+              <xsl:element name="table">
+                <xsl:apply-templates/>
+              </xsl:element>
+            </details>
+          </xsl:when>
+          <xsl:otherwise>
+            <h3>Revision history</h3>
+          </xsl:otherwise>
+        </xsl:choose>
         <p id="latestcommit"></p>
-        <xsl:element name="table">
-            <xsl:apply-templates/>
-        </xsl:element>
     </section>
 </xsl:template>
 
