@@ -16,7 +16,6 @@ const init = (e,root = document) => {
 
     const params = new URLSearchParams(window.location.search);
     // load image viewer if facsimile available
-    console.log(root);
     const viewer = root.getElementById('viewer');
 
     const corresps = params.getAll('corresp');
@@ -46,7 +45,7 @@ const init = (e,root = document) => {
     
     const togglers = root.getElementById('togglers');
     if(togglers) {
-      togglers.addEventListener('click',events.toggleClick.bind(null,root));
+      togglers.addEventListener('click',events.toggleClick);
       fixTogglers(root);
       window.addEventListener('resize',fixTogglers.bind(null,root));
     }
@@ -99,11 +98,11 @@ const initRecordContainer = (root = document) => {
 
 
     //if(document.querySelector('.app')) { // init in case of editmode
-        ApparatusViewer.init();
+        ApparatusViewer.init(recordcontainer);
         ApparatusViewer.setTransliterator(Transliterate);
     //}
 
-    recordcontainer.addEventListener('click',events.docClick.bind(null,root));
+    recordcontainer.addEventListener('click',events.docClick);
 
     Transliterate.init(recordcontainer);
 
@@ -178,12 +177,13 @@ const findFacs = (startel) => {
 
 const events = {
 
-    docClick: (root = document,e) => {
+    docClick: e => {
         const locel = e.target.closest('[data-loc]');
         if(locel && !e.target.closest('.app')) {
             MiradorWrapper.jumpTo(_state.mirador,_state.manifest,locel.dataset.loc);
             return;
         }
+        const root = e.target.getRootNode();
         const lineview = e.target.closest('.line-view-icon');
         if(lineview) {
             const recordcontainer = root.getElementById('recordcontainer');
@@ -205,13 +205,13 @@ const events = {
             el.scrollIntoView({behavior: 'smooth', inline:'end'});
         }
     },
-    toggleClick: (root = document,e) => {
+    toggleClick: e => {
         if(e.target.closest('#viewertoggle'))
-            toggleViewer(e,root);
+            toggleViewer(e);
         else if(e.target.closest('#recordtoggle'))
-            toggleRecord(e,root);
+            toggleRecord(e);
         else if(e.target.closest('#rotator'))
-            rotatePage(root);
+            rotatePage(e.target.getRootNode());
 
     }
 };
@@ -264,14 +264,16 @@ const lineView = function(icon) {
 };
 //window.addEventListener('load',init);
 
-const toggleViewer = (e,root = document) => {
+const toggleViewer = e => {
+    const root = e.target.getRootNode();
     if(e.target.textContent === '<')
         hideViewer(root);
     else
         showViewer(root);
 };
 
-const toggleRecord = (e,root = document) => {
+const toggleRecord = e => {
+    const root = e.target.getRootNode();
     if(e.target.textContent === '>')
         hideRecord(root);
     else

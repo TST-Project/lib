@@ -117,24 +117,25 @@ const highlight = {
         const par = targ.closest('div.apparatus-block');
         if(!par) return;
 
-	// TODO: deprecate lem-anchor
-	const leftsel = targ.closest('.lem-anchor') ?
-		'.lem-anchor' :
-        	'.lem-inline:not(.lem-following, .lem-anchor)';
-	const rightsel = targ.closest('.lem-anchor') ? 
-		'.lem-anchor' :
-		':scope > .app > .lem:not(.lem-anchor)';
+        // TODO: deprecate lem-anchor
+        const leftsel = targ.closest('.lem-anchor') ?
+          '.lem-anchor' :
+                '.lem-inline:not(.lem-following, .lem-anchor)';
+        const rightsel = targ.closest('.lem-anchor') ? 
+          '.lem-anchor' :
+          ':scope > .app > .lem:not(.lem-anchor)';
 
+        const root = par.getRootNode();
         const left = par.parentElement.querySelector('.text-block'); // or .edition?
         if(targ.dataset.loc) {
             const ignoretags = getIgnoreTags(par);
-            if(document.getElementById('transbutton').lang === 'en') {
+            if(root.getElementById('transbutton').lang === 'en') {
                 Transliterate.revert(left);
             }
             const els = highlightCoords(targ,left,ignoretags);
             const el = Array.isArray(els[0]) ? els[0][0] : els[0];
             delayedScrollIntoView(el,targ);
-            if(document.getElementById('transbutton').lang === 'en') {
+            if(root.getElementById('transbutton').lang === 'en') {
                 Transliterate.refreshCache(left);
                 Transliterate.activate(left);
             }
@@ -342,50 +343,48 @@ const matchCounts = (alignment,m,pos='start') => {
 const highlightRanges = (ranges, target, highlightfn) => {
     const ret = [];
     for(const range of ranges.toReversed()) { //TODO: toReversed() is still needed for adjacent ranges
-        if(!findEls(range)) {
-            const el = highlightfn(range);
-            ret.push(el);
-            continue;
-        }
+      if(!findEls(range)) {
+          const el = highlightfn(range);
+          ret.push(el);
+          continue;
+      }
 
-        const toHighlight = [];
-        const start = (range.startContainer.nodeType === 3) ?
-            range.startContainer :
-            range.startContainer.childNodes[range.startOffset];
+      const toHighlight = [];
+      const start = (range.startContainer.nodeType === 3) ?
+          range.startContainer :
+          range.startContainer.childNodes[range.startOffset];
 
-        const end = (range.endContainer.nodeType === 3) ?
-            range.endContainer :
-            range.endContainer.childNodes[range.endOffset-1];
+      const end = (range.endContainer.nodeType === 3) ?
+          range.endContainer :
+          range.endContainer.childNodes[range.endOffset-1];
 
-        if(start.nodeType === 3 && range.startOffset !== start.length && !wrongSeg(start)) {
-            const textRange = document.createRange();
-            textRange.setStart(start,range.startOffset);
-            textRange.setEnd(start,start.length);
-            toHighlight.push(textRange);
-        }
-        
-        const getNextNode = (n) => n.firstChild || nextSibling(n);
+      if(start.nodeType === 3 && range.startOffset !== start.length && !wrongSeg(start)) {
+          const textRange = document.createRange();
+          textRange.setStart(start,range.startOffset);
+          textRange.setEnd(start,start.length);
+          toHighlight.push(textRange);
+      }
+      
+      const getNextNode = (n) => n.firstChild || nextSibling(n);
 
-        for(let node = getNextNode(start); node !== end; node = getNextNode(node)) {
-            if(node.nodeType === 3 && !wrongSeg(node)) {
-                const textRange = document.createRange();
-                textRange.selectNode(node);
-                toHighlight.push(textRange);
-            }
-        }
+      for(let node = getNextNode(start); node !== end; node = getNextNode(node)) {
+          if(node.nodeType === 3 && !wrongSeg(node)) {
+              const textRange = document.createRange();
+              textRange.selectNode(node);
+              toHighlight.push(textRange);
+          }
+      }
 
-        if(end.nodeType === 3 && range.endOffset > 0 && !wrongSeg(end)) {
-            const textRange = document.createRange();
-            textRange.setStart(end,0);
-            textRange.setEnd(end,range.endOffset);
-            toHighlight.push(textRange);
-        }
-        
-        //const firsthighlit = highlightfn(toHighlight.shift());
-        
-        const nodearr = [];
-        for(const hiNode of toHighlight) {
-            const node = highlightfn(hiNode);
+      if(end.nodeType === 3 && range.endOffset > 0 && !wrongSeg(end)) {
+          const textRange = document.createRange();
+          textRange.setStart(end,0);
+          textRange.setEnd(end,range.endOffset);
+          toHighlight.push(textRange);
+      }
+      //const firsthighlit = highlightfn(toHighlight.shift());
+      const nodearr = [];
+      for(const hiNode of toHighlight) {
+          const node = highlightfn(hiNode);
             if(node) nodearr.push(node); // highlightrange returns undefined if range is empty
         }
         if(nodearr.length > 1) ret.push(nodearr);
@@ -393,21 +392,20 @@ const highlightRanges = (ranges, target, highlightfn) => {
     }
 
     target.normalize();
-
     return ret;
 };
 
-const unhighlight = (targ) => {
-    let highlit = /*par*/document.querySelectorAll('.highlit');
+const unhighlight = targ => {
+    const root = targ.getRootNode();
+    let highlit = root.querySelectorAll('.highlit');
     if(highlit.length === 0) return;
-    
     targ = targ ? targ.closest('div.wide') : highlit[0].closest('div.wide');
     const par = targ.querySelector('.text-block'); // or .edition?
     if(!par) return;
     
-    if(document.getElementById('transbutton').lang === 'en') {
+    if(root.getElementById('transbutton').lang === 'en') {
         Transliterate.revert(par);
-        highlit = document.querySelectorAll('.highlit'); // in case things changed (via jiggle)
+        highlit = root.querySelectorAll('.highlit'); // in case things changed (via jiggle)
     }
     
     for(const h of highlit) {
@@ -421,12 +419,12 @@ const unhighlight = (targ) => {
     par.normalize();
     Transliterate.refreshCache(par);
     
-    if(document.getElementById('transbutton').lang === 'en')
+    if(root.getElementById('transbutton').lang === 'en')
         Transliterate.activate(par);
 };
-
+/*
 const unpermalight = () => {
-    const highlit = /*par*/document.querySelectorAll('.permalit');
+    const highlit = document.querySelectorAll('.permalit');
     if(highlit.length === 0) return;
     
     const targ = highlit[0].closest('div.wide');
@@ -449,7 +447,7 @@ const unpermalight = () => {
         Transliterate.activate(par);
     }
 };
-
+*/
 const switchReading = el => {
     if(el.querySelector('.rdg-alt')) return;
     const par = el.closest('.lem') || el.closest('.rdg');
@@ -471,6 +469,7 @@ const Events = {
             highlight.inline(lem_inline);
             return;
         }
+        const root = e.target.getRootNode();
         const msid = e.target.closest('.mshover');
         if(msid) {
             clearTimeout(_state.switchReadingTimeout);
@@ -484,15 +483,16 @@ const Events = {
             highlight.apparatus(lem);
             return;
         }
-	// TODO: deprecate lem-anchor
-	const lem_anchor = e.target.closest('.lem.lem-anchor');
-	if(lem_anchor) {
-	    highlight.apparatus(lem_anchor);
-	    return;
-	}
+        // TODO: deprecate lem-anchor
+        const lem_anchor = e.target.closest('.lem.lem-anchor');
+        if(lem_anchor) {
+            highlight.apparatus(lem_anchor);
+            return;
+        }
         const anchor = e.target.closest('.anchor');
         if(anchor) {
-            const idnotes = document.querySelectorAll(`[data-target='#${anchor.id}']`);
+
+            const idnotes = root.querySelectorAll(`[data-target='#${anchor.id}']`);
             const numnotes = anchor.closest('.wide').querySelectorAll(`.anchored-note[data-n='${anchor.dataset.n}']`);
             const notes = [...idnotes,...numnotes];
             if(notes.length > 0) {
@@ -510,7 +510,7 @@ const Events = {
 
         const note = e.target.closest('.anchored-note');
         if(note) {
-            const anchor = note.dataset.target ? document.getElementById(note.dataset.target.replace(/^#/,'')) : note.closest('.wide').querySelector(`.anchor[data-n='${note.dataset.n}']`);;
+            const anchor = note.dataset.target ? root.getElementById(note.dataset.target.replace(/^#/,'')) : note.closest('.wide').querySelector(`.anchor[data-n='${note.dataset.n}']`);;
             if(anchor) {
                 anchor.classList.add('highlit');
                 note.classList.add('highlit');
@@ -532,10 +532,11 @@ const Events = {
         const msid = e.target.closest('.mshover');
         if(msid) restoreReading.bind(msid);
     },
-    toggleApparatus() {
-        const apparatussvg = document.getElementById('apparatussvg');
-        const translationsvg = document.getElementById('translationsvg');
-        const apparati = document.querySelectorAll('.apparatus-block');
+    toggleApparatus(e) {
+        const root = e.target.getRootNode();
+        const apparatussvg = root.getElementById('apparatussvg');
+        const translationsvg = root.getElementById('translationsvg');
+        const apparati = root.querySelectorAll('.apparatus-block');
 
         if(!translationsvg.checkVisibility()) {
             for(const apparatus of apparati) {
@@ -564,41 +565,40 @@ const Events = {
     }
 };
 
-const init = () => {
-    document.addEventListener('mouseover',Events.docMouseover);
-    document.addEventListener('mouseout',Events.docMouseout);
-    document.addEventListener('click',Events.docClick);
+const init = (root = document) => {
+    root.addEventListener('mouseover',Events.docMouseover);
+    root.addEventListener('mouseout',Events.docMouseout);
+    root.addEventListener('click',Events.docClick);
     
     const params = new URLSearchParams(window.location.search);
     if(params.has('negative')) {
-      for(const teitext of document.querySelectorAll('.teitext'))
+      for(const teitext of root.querySelectorAll('.teitext'))
         teitext.classList.add('negapp');
     }
 
-    const apparatusbutton = document.getElementById('apparatusbutton');
+    const apparatusbutton = root.querySelector('#apparatusbutton');
     if(apparatusbutton) {
         apparatusbutton.addEventListener('click',Events.toggleApparatus);
-        if(document.querySelector('.apparatus-block.hidden'))
+        if(root.querySelector('.apparatus-block.hidden'))
             apparatusbutton.style.display = 'block';
     }
 
-    renumberNotes();
+    renumberNotes(root);
 
-    if(!params.has('nounderline')) markLemmata();
+    if(!params.has('nounderline')) markLemmata(root);
 
     // listen for refresh events
     (new BroadcastChannel('apparatus')).addEventListener('message', e => {
-        markLemmata(document.getElementById(e.data.id));
+        markLemmata(root.querySelector('#' + e.data.id));
     });
 };
 
 /* take <anchor>s with @xml:id and change them to <anchor>s with @n */
-const renumberNotes = () => {
-  console.log('huh');
+const renumberNotes = (root = document) => {
   let n = 1;
-  for(const anchor of document.querySelectorAll('.anchor')) {
+  for(const anchor of root.querySelectorAll('.anchor')) {
     const id = anchor.id;
-    const notes = document.querySelectorAll(`.anchored-note[data-target="#${id}"]`);
+    const notes = root.querySelectorAll(`.anchored-note[data-target="#${id}"]`);
     anchor.dataset.n = n;
     anchor.removeAttribute('id');
     for(const note of notes) {

@@ -103,8 +103,8 @@ const events = {
     },
 };
 
-const getEditionScript = () => {
-    const textlang = document.querySelector('.teitext')?.getAttribute('lang');
+const getEditionScript = par => {
+    const textlang = par.querySelector('.teitext')?.getAttribute('lang');
     if(!textlang) return null;
     const scriptsplit = textlang.split('-');
     if(scriptsplit[2] !== 't') return null;
@@ -121,7 +121,7 @@ const init = (par = document.body) => {
     if(!_state.parEl.lang) _state.parEl.lang = 'en';
 
     // find if there are any Tamil or Sanskrit passages
-    const foundEdition = getEditionScript();
+    const foundEdition = getEditionScript(par);
     const foundTamil = par.querySelector('[lang|="ta"]');
     const foundOther = par.querySelector('[lang|="sa"],[lang|="hi"],[lang|="ml"],[lang|="mr"],[lang|="bo"],[lang|="pi"]');
     // add Telugu, etc.
@@ -143,7 +143,7 @@ const init = (par = document.body) => {
     prepText();
 
     // initialize button
-    _state.button = document.getElementById('transbutton');
+    _state.button = _state.parEl.querySelector('#transbutton');
     button.init(foundEdition ? false : foundTamil);
 
     // switch to Tamil
@@ -153,7 +153,7 @@ const init = (par = document.body) => {
 
     // listen for refresh events
     (new BroadcastChannel('transliterator')).addEventListener('message', e => {
-        refreshCache(document.getElementById(e.data.id));
+        refreshCache(par.querySelector('#' + e.data.id));
     });
 
 };
