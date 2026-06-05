@@ -12,23 +12,24 @@ const _state = Object.seal({
     mirador: null,
 });
 
-const init = () => {
+const init = (e,root = document) => {
 
     const params = new URLSearchParams(window.location.search);
     // load image viewer if facsimile available
-    const viewer = document.getElementById('viewer');
+    console.log(root);
+    const viewer = root.getElementById('viewer');
 
     const corresps = params.getAll('corresp');
     let facs,scrollel;
     if(corresps.length > 0) {
-        scrollel = findCorresp(corresps);
+        scrollel = findCorresp(corresps,root);
         if(scrollel) {
             const res = findFacs(scrollel);
             if(res) facs = res.split(':')[0] - 1;
         }
     }
     if(viewer) {
-        const annotag = document.getElementById('tst-annotations');
+        const annotag = root.getElementById('tst-annotations');
         if(annotag) MiradorWrapper.setAnnotations(JSON.parse(annotag.innerHTML));
 
         _state.manifest = viewer.dataset.manifest;
@@ -41,13 +42,13 @@ const init = () => {
             _state.mirador = MiradorWrapper.start('viewer',_state.manifest, page);
     }
     
-    initRecordContainer();
+    initRecordContainer(root);
     
-    const togglers = document.getElementById('togglers');
+    const togglers = root.getElementById('togglers');
     if(togglers) {
-      togglers.addEventListener('click',events.toggleClick);
-      fixTogglers();
-      window.addEventListener('resize',fixTogglers);
+      togglers.addEventListener('click',events.toggleClick.bind(null,root));
+      fixTogglers(root);
+      window.addEventListener('resize',fixTogglers.bind(null,root));
     }
     if(scrollel) scrollTo(scrollel);
 
@@ -56,26 +57,26 @@ const init = () => {
 
 };
 
-const fixTogglers = () => {
+const fixTogglers = (root = document) => {
   // TODO: this could be better
-  const rotator = document.getElementById('rotator');
+  const rotator = root.getElementById('rotator');
   if(window.innerWidth < 600) {
-    for(const toggler of document.querySelectorAll('.toggle'))
+    for(const toggler of root.querySelectorAll('.toggle'))
       toggler.classList.add('horizontal');
     if(rotator.textContent === '↺')
         rotator.textContent = '⟳';
   }
   else {
-    for(const toggler of document.querySelectorAll('.toggle'))
+    for(const toggler of root.querySelectorAll('.toggle'))
       toggler.classList.remove('horizontal');
     if(rotator.textContent === '⟳')
         rotator.textContent = '↺';
   }
 };
 
-const initRecordContainer = () => {
+const initRecordContainer = (root = document) => {
     // initialize events for the record text
-    const recordcontainer = document.getElementById('recordcontainer');
+    const recordcontainer = root.getElementById('recordcontainer');
 
     cleanLb(recordcontainer);
     
@@ -102,14 +103,14 @@ const initRecordContainer = () => {
         ApparatusViewer.setTransliterator(Transliterate);
     //}
 
-    recordcontainer.addEventListener('click',events.docClick);
+    recordcontainer.addEventListener('click',events.docClick.bind(null,root));
 
     Transliterate.init(recordcontainer);
 
 };
 
-const findCorresp = (corresps) => {
-    let res = document;
+const findCorresp = (corresps,root) => {
+    let res = root;
     for(const c of corresps) {
         res = res.querySelector(`[data-corresp~='${c}'], [id='${c}']`);
         if(!res) return false;
@@ -117,7 +118,7 @@ const findCorresp = (corresps) => {
     return res;
 };
 
-const scrollTo = (el) => {
+const scrollTo = el => {
 
     el.scrollIntoView({behaviour: 'smooth', block: 'center'});
     el.classList.add('highlit');
@@ -149,7 +150,7 @@ const findFacs = (startel) => {
         return false;
     };
     
-    const forwardFind = (e) => {
+    const forwardFind = e => {
         const walker = document.createTreeWalker(e,NodeFilter.SHOW_ALL);
         while(walker.nextNode()) {
             const cur = walker.currentNode;
@@ -177,7 +178,7 @@ const findFacs = (startel) => {
 
 const events = {
 
-    docClick: function(e) {
+    docClick: (root = document,e) => {
         const locel = e.target.closest('[data-loc]');
         if(locel && !e.target.closest('.app')) {
             MiradorWrapper.jumpTo(_state.mirador,_state.manifest,locel.dataset.loc);
@@ -185,7 +186,7 @@ const events = {
         }
         const lineview = e.target.closest('.line-view-icon');
         if(lineview) {
-            const recordcontainer = document.getElementById('recordcontainer');
+            const recordcontainer = root.getElementById('recordcontainer');
             const vpos = viewPos.getVP(recordcontainer);
             lineView(lineview);
             viewPos.setVP(recordcontainer,vpos);
@@ -200,17 +201,17 @@ const events = {
 
         if(e.target.dataset && e.target.dataset.hasOwnProperty('scroll')) {
             e.preventDefault();
-            const el = document.getElementById(e.target.href.split('#')[1]);
+            const el = root.getElementById(e.target.href.split('#')[1]);
             el.scrollIntoView({behavior: 'smooth', inline:'end'});
         }
     },
-    toggleClick: e => {
+    toggleClick: (root = document,e) => {
         if(e.target.closest('#viewertoggle'))
-            toggleViewer(e);
+            toggleViewer(e,root);
         else if(e.target.closest('#recordtoggle'))
-            toggleRecord(e);
+            toggleRecord(e,root);
         else if(e.target.closest('#rotator'))
-            rotatePage(e);
+            rotatePage(root);
 
     }
 };
@@ -263,91 +264,91 @@ const lineView = function(icon) {
 };
 //window.addEventListener('load',init);
 
-const toggleViewer = e => {
+const toggleViewer = (e,root = document) => {
     if(e.target.textContent === '<')
-        hideViewer();
+        hideViewer(root);
     else
-        showViewer();
+        showViewer(root);
 };
 
-const toggleRecord = e => {
+const toggleRecord = (e,root = document) => {
     if(e.target.textContent === '>')
-        hideRecord();
+        hideRecord(root);
     else
-        showRecord();
+        showRecord(root);
 };
 
-const rotatePage = () => {
-    const targ = document.getElementById('rotator');
+const rotatePage = (root = document) => {
+    const targ = root.getElementById('rotator');
     if(targ.textContent === '↺') {
-        document.body.style.flexDirection = 'column';
+        root.body.style.flexDirection = 'column';
         targ.textContent = '⟳';
-        const togglers = document.getElementById('togglers');
+        const togglers = root.getElementById('togglers');
         togglers.style.transform = 'rotate(180deg)';
         togglers.style.writingMode = 'vertical-lr';
         togglers.style.height = 'auto';
         togglers.style.width = '100vw';
         for(const toggler of togglers.querySelectorAll('div'))
             toggler.classList.add('horizontal');
-        const rec = document.querySelector('.record.thin');
+        const rec = root.querySelector('.record.thin');
         if(rec) rec.className = 'record fat';
     }
     else {
-        document.body.style.flexDirection = 'row-reverse';
+        root.body.style.flexDirection = 'row-reverse';
         targ.textContent = '↺';
-        const togglers = document.getElementById('togglers');
+        const togglers = root.getElementById('togglers');
         togglers.style.transform = 'unset';
         togglers.style.writingMode = 'unset';
         togglers.style.height = '100vh';
         togglers.style.width = 'auto';
         for(const toggler of togglers.querySelectorAll('div'))
             toggler.classList.remove('horizontal');
-        const rec = document.querySelector('.record.fat');
+        const rec = root.querySelector('.record.fat');
         if(rec) rec.className = 'record thin';
     }
 };
 
-const hideViewer = () => {
-    const viewer = document.getElementById('viewer');
+const hideViewer = (root = document) => {
+    const viewer = root.getElementById('viewer');
     viewer.style.display = 'none';
     //_state.curImage = TSTViewer.getMiradorCanvasId(_state.mirador);
     //TSTViewer.killMirador();
-    const toggle = document.getElementById('viewertoggle');
-    const othertoggle = document.getElementById('recordtoggle');
-    const rotator = document.getElementById('rotator');
+    const toggle = root.getElementById('viewertoggle');
+    const othertoggle = root.getElementById('recordtoggle');
+    const rotator = root.getElementById('rotator');
     toggle.textContent = '>';
     toggle.title = 'show images';
     othertoggle.style.display = 'none';
     rotator.style.display = 'none';
-    const rec = document.querySelector('.record.thin');
+    const rec = root.querySelector('.record.thin');
     if(rec) rec.className = 'record fat';
     //TSTViewer.refreshMirador();   
 };
 
-const showViewer = () => {
-    const viewer = document.getElementById('viewer');
+const showViewer = (root = document) => {
+    const viewer = root.getElementById('viewer');
     viewer.style.display = 'block';
     //TSTViewer.refreshMirador(_state.mirador,_state.manifest, _state.curImage);
-    const toggle = document.getElementById('viewertoggle');
-    const othertoggle = document.getElementById('recordtoggle');
-    const rotator = document.getElementById('rotator');
+    const toggle = root.getElementById('viewertoggle');
+    const othertoggle = root.getElementById('recordtoggle');
+    const rotator = root.getElementById('rotator');
     toggle.textContent = '<';
     toggle.title = 'hide images';
     toggle.style.display = 'flex';
     othertoggle.title = 'hide text';
     othertoggle.style.display = 'flex';
     rotator.style.display = 'flex';
-    if(document.body.style.flexDirection === 'row-reverse') {
-        const rec = document.querySelector('.record.fat');
+    if(root.body.style.flexDirection === 'row-reverse') {
+        const rec = root.querySelector('.record.fat');
         if(rec) rec.className = 'record thin';
     }
 };
 
-const hideRecord = () => {
-    document.getElementById('recordcontainer').style.display = 'none';
-    const toggle = document.getElementById('recordtoggle');
-    const othertoggle = document.getElementById('viewertoggle');
-    const rotator = document.getElementById('rotator');
+const hideRecord = (root = document) => {
+    root.getElementById('recordcontainer').style.display = 'none';
+    const toggle = root.getElementById('recordtoggle');
+    const othertoggle = root.getElementById('viewertoggle');
+    const rotator = root.getElementById('rotator');
     toggle.textContent = '<';
     toggle.title = 'show text';
     othertoggle.style.display = 'none';
@@ -355,11 +356,11 @@ const hideRecord = () => {
     //TSTViewer.refreshMirador(_state.mirador,_state.manifest, _state.curImage);
 };
 
-const showRecord = () => {
-    document.getElementById('recordcontainer').style.display = 'flex';
-    const toggle = document.getElementById('recordtoggle');
-    const othertoggle = document.getElementById('viewertoggle');
-    const rotator = document.getElementById('rotator');
+const showRecord = (root = document) => {
+    root.getElementById('recordcontainer').style.display = 'flex';
+    const toggle = root.getElementById('recordtoggle');
+    const othertoggle = root.getElementById('viewertoggle');
+    const rotator = root.getElementById('rotator');
     toggle.textContent = '>';
     toggle.title = 'hide text';
     othertoggle.style.display = 'flex';
