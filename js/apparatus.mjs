@@ -1,11 +1,3 @@
-var Transliterate;
-const setTransliterator = (obj) => Transliterate = obj;
-
-const _state = {
-    scrollTimeout: null,
-    switchReadingTimeout: null
-};
-
 const nextSibling = (node) => {
     let start = node;
     while(start) {
@@ -76,16 +68,16 @@ const getIgnoreTags = par => {
     );
 };
 
-const delayedScrollIntoView = (target,listentarget) => {
-    clearTimeout(_state.scrollTimeout);
-    _state.scrollTimeout = setTimeout(() => {
+const delayedScrollIntoView = (target,listentarget,scrolltimeout) => {
+    clearTimeout(scrolltimeout);
+    scrolltimeout = setTimeout(() => {
         target.scrollIntoView({behavior: 'smooth', block: 'nearest', container: 'nearest'});
     },500);
-    listentarget.addEventListener('mouseleave',() => clearTimeout(_state.scrollTimeout),{once: true});
+    listentarget.addEventListener('mouseleave',() => clearTimeout(scrolltimeout),{once: true});
 };
 
 const highlight = {
-    inline(targ) {
+    inline(appviewer,targ) {
         const par = targ.closest('div.text-block');
         if(!par) return;
         if(par.classList.contains('nolemmata')) return;
@@ -111,9 +103,9 @@ const highlight = {
         const allright = right.querySelectorAll(rightsel);
         const el = allright[pos];
         el.classList.add('highlit');
-        delayedScrollIntoView(el,targ);
+        delayedScrollIntoView(el,targ,appviewer.state.scrollTimeout);
     },
-    apparatus(targ) {
+    apparatus(appviewer,targ) {
         const par = targ.closest('div.apparatus-block');
         if(!par) return;
 
@@ -130,14 +122,14 @@ const highlight = {
         if(targ.dataset.loc) {
             const ignoretags = getIgnoreTags(par);
             if(root.getElementById('transbutton').lang === 'en') {
-                Transliterate.revert(left);
+                appviewer.transliterator.revert(left);
             }
             const els = highlightCoords(targ,left,ignoretags);
             const el = Array.isArray(els[0]) ? els[0][0] : els[0];
-            delayedScrollIntoView(el,targ);
+            delayedScrollIntoView(el,targ,appviewer.state.scrollTimeout);
             if(root.getElementById('transbutton').lang === 'en') {
-                Transliterate.refreshCache(left);
-                Transliterate.activate(left);
+                appviewer.transliterator.refreshCache(left);
+                appviewer.transliterator.activate(left);
             }
         }
         else {
@@ -147,7 +139,7 @@ const highlight = {
             if(allleft.length !== 0) {
                const el = allleft[pos];
                el.classList.add('highlit');
-               delayedScrollIntoView(el,targ);
+               delayedScrollIntoView(el,targ,appviewer.state.scrollTimeout);
             }
         }
     },
@@ -395,7 +387,7 @@ const highlightRanges = (ranges, target, highlightfn) => {
     return ret;
 };
 
-const unhighlight = targ => {
+const unhighlight = (targ,transliterator) => {
     const root = targ.getRootNode();
     let highlit = root.querySelectorAll('.highlit');
     if(highlit.length === 0) return;
@@ -404,7 +396,7 @@ const unhighlight = targ => {
     if(!par) return;
     
     if(root.getElementById('transbutton').lang === 'en') {
-        Transliterate.revert(par);
+        transliterator.revert(par);
         highlit = root.querySelectorAll('.highlit'); // in case things changed (via jiggle)
     }
     
@@ -417,10 +409,10 @@ const unhighlight = targ => {
         else h.classList.remove('highlit');
     }
     par.normalize();
-    Transliterate.refreshCache(par);
+    transliterator.refreshCache(par);
     
     if(root.getElementById('transbutton').lang === 'en')
-        Transliterate.activate(par);
+        transliterator.activate(par);
 };
 /*
 const unpermalight = () => {
@@ -457,36 +449,36 @@ const switchReading = el => {
     el.appendChild(rdgalt);
 };
 
-const restoreReading = par => {
-    clearTimeout(_state.switchReadingTimeout);
+const restoreReading = (par,appviewer) => {
+    clearTimeout(appviewer.state.switchReadingTimeout);
     par.querySelector('.rdg-alt')?.remove();
 };
 
 const Events = { 
-    docMouseover(e) {
+    docMouseover(appviewer,e) {
         const lem_inline = e.target.closest('.lem-inline');
         if(lem_inline) {
-            highlight.inline(lem_inline);
+            highlight.inline(appviewer,lem_inline);
             return;
         }
         const root = e.target.getRootNode();
         const msid = e.target.closest('.mshover');
         if(msid) {
-            clearTimeout(_state.switchReadingTimeout);
-            _state.switchReadingTimeout = setTimeout(() => {
+            clearTimeout(appviewer.state.switchReadingTimeout);
+            appviewer.state.switchReadingTimeout = setTimeout(() => {
                 switchReading(msid);
             },350);
-            msid.addEventListener('mouseleave',restoreReading.bind(null,msid),{once: true});
+            msid.addEventListener('mouseleave',restoreReading.bind(null,msid,appviewer),{once: true});
         }
         const lem = e.target.closest('.rdg-text')?.closest('.lem');
         if(lem) {
-            highlight.apparatus(lem);
+            highlight.apparatus(appviewer,lem);
             return;
         }
         // TODO: deprecate lem-anchor
         const lem_anchor = e.target.closest('.lem.lem-anchor');
         if(lem_anchor) {
-            highlight.apparatus(lem_anchor);
+            highlight.apparatus(appviewer,lem_anchor);
             return;
         }
         const anchor = e.target.closest('.anchor');
@@ -503,7 +495,7 @@ const Events = {
                     anchor.classList.remove('highlit');
                     note.classList.remove('highlit');
                 },{once: true});
-                delayedScrollIntoView(note,anchor);
+                delayedScrollIntoView(note,anchor,appviewer.state.scrollTimeout);
               }
           }
         }
@@ -523,14 +515,14 @@ const Events = {
         }
     },
 
-    docMouseout(e) {
+    docMouseout(appviewer,e) {
         if(e.target.closest('.lem') ||
            e.target.closest('.lem-inline'))
-            unhighlight(e.target);
+            unhighlight(e.target,appviewer.transliterator);
     },
-    docClick(e) {
+    docClick(appviewer,e) {
         const msid = e.target.closest('.mshover');
-        if(msid) restoreReading.bind(msid);
+        if(msid) restoreReading.bind(null,msid,appviewer);
     },
     toggleApparatus(e) {
         const root = e.target.getRootNode();
@@ -565,34 +557,6 @@ const Events = {
     }
 };
 
-const init = (root = document) => {
-    root.addEventListener('mouseover',Events.docMouseover);
-    root.addEventListener('mouseout',Events.docMouseout);
-    root.addEventListener('click',Events.docClick);
-    
-    const params = new URLSearchParams(window.location.search);
-    if(params.has('negative')) {
-      for(const teitext of root.querySelectorAll('.teitext'))
-        teitext.classList.add('negapp');
-    }
-
-    const apparatusbutton = root.querySelector('#apparatusbutton');
-    if(apparatusbutton) {
-        apparatusbutton.addEventListener('click',Events.toggleApparatus);
-        if(root.querySelector('.apparatus-block.hidden'))
-            apparatusbutton.style.display = 'block';
-    }
-
-    renumberNotes(root);
-
-    if(!params.has('nounderline')) markLemmata(root);
-
-    // listen for refresh events
-    (new BroadcastChannel('apparatus')).addEventListener('message', e => {
-        markLemmata(root.querySelector('#' + e.data.id));
-    });
-};
-
 /* take <anchor>s with @xml:id and change them to <anchor>s with @n */
 const renumberNotes = (root = document) => {
   let n = 1;
@@ -609,9 +573,44 @@ const renumberNotes = (root = document) => {
   }
 };
 
-const ApparatusViewer = {
-    init: init,
-    setTransliterator: setTransliterator,
+class ApparatusViewer {
+    constructor(root = document) {
+      this.uuid = crypto.randomUUID();
+      this.state = {
+        scrollTimeout: null,
+        switchReadingTimeout: null
+      };
+
+      root.addEventListener('mouseover',Events.docMouseover.bind(null,this));
+      root.addEventListener('mouseout',Events.docMouseout.bind(null,this));
+      root.addEventListener('click',Events.docClick.bind(null,this));
+    
+      const params = new URLSearchParams(window.location.search);
+      if(params.has('negative')) {
+        for(const teitext of root.querySelectorAll('.teitext'))
+          teitext.classList.add('negapp');
+      }
+
+      const apparatusbutton = root.querySelector('#apparatusbutton');
+      if(apparatusbutton) {
+          apparatusbutton.addEventListener('click',Events.toggleApparatus);
+          if(root.querySelector('.apparatus-block.hidden'))
+              apparatusbutton.style.display = 'block';
+      }
+
+      renumberNotes(root);
+
+      if(!params.has('nounderline')) markLemmata(root);
+
+      // listen for refresh events
+      (new BroadcastChannel('apparatus')).addEventListener('message', e => {
+          // TODO: add uuid
+          markLemmata(root.querySelector('#' + e.data.id));
+      });
+  }
+  setTransliterator(obj) {
+    this.transliterator = obj;
+  } 
 };
 
 export { ApparatusViewer };

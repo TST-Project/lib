@@ -98,13 +98,13 @@ const initRecordContainer = (root = document) => {
 
 
     //if(document.querySelector('.app')) { // init in case of editmode
-        ApparatusViewer.init(recordcontainer);
-        ApparatusViewer.setTransliterator(Transliterate);
+    const appviewer = new ApparatusViewer(recordcontainer);
+    const transliterator = new Transliterate(recordcontainer);
+    appviewer.setTransliterator(transliterator);
     //}
 
     recordcontainer.addEventListener('click',events.docClick);
 
-    Transliterate.init(recordcontainer);
 
 };
 
@@ -178,11 +178,15 @@ const findFacs = (startel) => {
 const events = {
 
     docClick: e => {
-        const locel = e.target.closest('[data-loc]');
-        if(locel && !e.target.closest('.app')) {
-            MiradorWrapper.jumpTo(_state.mirador,_state.manifest,locel.dataset.loc);
-            return;
+
+        if(_state.mirador) {
+          const locel = e.target.closest('[data-loc]');
+          if(locel && !e.target.closest('.app')) {
+              MiradorWrapper.jumpTo(_state.mirador,_state.manifest,locel.dataset.loc);
+              return;
+          }
         }
+
         const root = e.target.getRootNode();
         const lineview = e.target.closest('.line-view-icon');
         if(lineview) {
@@ -247,7 +251,7 @@ const lineView = function(icon) {
     else {
         icon.classList.add('diplo');
         par.classList.add('diplo');
-        
+
         const els = par.querySelectorAll('p,.para,div.lg,div.l,div.ab,.pb,.lb,.cb,.caesura,.milestone');
         for(const el of els)
             el.classList.add('diplo');
@@ -262,7 +266,6 @@ const lineView = function(icon) {
     }
 
 };
-//window.addEventListener('load',init);
 
 const toggleViewer = e => {
     const root = e.target.getRootNode();
@@ -282,21 +285,22 @@ const toggleRecord = e => {
 
 const rotatePage = (root = document) => {
     const targ = root.getElementById('rotator');
+    const body = root.host || root.body;
     if(targ.textContent === '↺') {
-        root.body.style.flexDirection = 'column';
+        body.style.flexDirection = 'column';
         targ.textContent = '⟳';
         const togglers = root.getElementById('togglers');
         togglers.style.transform = 'rotate(180deg)';
         togglers.style.writingMode = 'vertical-lr';
         togglers.style.height = 'auto';
-        togglers.style.width = '100vw';
+        togglers.style.width = '100%';
         for(const toggler of togglers.querySelectorAll('div'))
             toggler.classList.add('horizontal');
         const rec = root.querySelector('.record.thin');
         if(rec) rec.className = 'record fat';
     }
     else {
-        root.body.style.flexDirection = 'row-reverse';
+        body.style.flexDirection = 'row-reverse';
         targ.textContent = '↺';
         const togglers = root.getElementById('togglers');
         togglers.style.transform = 'unset';
@@ -377,6 +381,7 @@ const TSTViewer = Object.freeze({
     killMirador: (which) => {
         const win = which || _state.mirador;
         if(win) MiradorWrapper.kill(win);
+        _state.mirador = null;
     },
     getMirador: () => _state.mirador,
     setMirador: (mirador, manifest) => {_state.mirador = mirador; _state.manifest = manifest;},
