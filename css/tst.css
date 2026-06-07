@@ -34,7 +34,7 @@ body {
     position: relative;
     /*padding-left: 12.5%;*/
     /*width: 120%;*/
-    padding-left: 1.2rem;
+    padding-left: 3.5rem;
     max-width: 1400px;
     margin: 0 auto;
 }
@@ -68,11 +68,12 @@ body {
 
 #viewer {
     position: relative;
-    flex: 50%;
-    min-width: 50vw;
-    max-width: 100vw;
+    flex: calc(50% - 15px);
+    min-width: (50% - 15px);
+    max-width: 100%;
     height: 100vh;
     border: 0;
+    background: rgb(34,34,48);
 }
 
 #viewer .fullscreen {
@@ -102,7 +103,9 @@ body {
 
 #buttoncontainer > div {
     background: rgba(255,255,248,0.6);
-    box-shadow: -2px 2px 1px 2px rgba(0,0,0,0.2);
+    /*box-shadow: -2px 2px 1px 2px rgba(0,0,0,0.2);*/
+    box-shadow: -2px 3px 6px rgba(0,0,0,0.4);
+    border: 1px solid transparent;
     border-radius: 0.2rem;
     -webkit-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);
@@ -129,7 +132,6 @@ body {
 
 #transbutton {
     display: none;
-    border: 1px solid black;
     padding: 0.1rem 0.5rem 0.1rem 0.5rem;
     height: 36px;
     width: 34px;
@@ -446,7 +448,7 @@ hr {
     padding: 0 1px 0 0;
     -webkit-text-stroke: 1px rgba(1,1,1,0.2);
     text-stroke: 1px rgba(1,1,1,0.2);
-    box-shadow: -1px 2px 2px 1px rgba(0,0,0,0.45);
+    box-shadow: -2px 3px 6px rgba(0,0,0,0.4);
 }
 #togglers > div.horizontal {
     box-shadow: 1px -2px 2px 1px rgba(0,0,0,0.45);
@@ -454,25 +456,25 @@ hr {
 }
 
 #viewertoggle.horizontal {
-    border-radius: 0 0 0 0.3rem;
+    border-radius: 0 0 0 0.2rem;
 }
 #recordtoggle.horizontal {
-    border-radius: 0 0 0.3rem 0;
+    border-radius: 0 0 0.2rem 0;
 }
 #rotator.horizontal {
-    border-radius: 0 0 0.3rem 0.3rem;
+    border-radius: 0 0 0.2rem 0.2rem;
     margin: 0 0.2rem 0 0.2rem;
 }
 
 .toggle {
     display: flex;
     flex-grow: 1;
-    border-radius: 0 0.3rem 0.3rem 0;
+    border-radius: 0 0.2rem 0.2rem 0;
 }
 #rotator {
     margin-top: 0.2rem;
     margin-bottom: 0.2rem;
-    border-radius: 0 0.3rem 0.3rem 0;
+    border-radius: 0 0.2rem 0.2rem 0;
     padding: 0.2rem;
 }
 #togglers > div:hover {
