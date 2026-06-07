@@ -814,9 +814,12 @@ const Transliterate = class {
         this.toggle();
 
     // listen for refresh events
-    (new BroadcastChannel('transliterator')).addEventListener('message', e => {
+    const bc = new BroadcastChannel('transliterator');
+    bc.addEventListener('message', e => {
         if(e.data.uuid === this.state.uuid)
           this.refreshCache(par.querySelector('#' + e.data.id));
+        if(e.data.uuid === null)
+          bc.postMessage({uuid: this.state.uuid});
     });
   }
 

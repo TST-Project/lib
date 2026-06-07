@@ -603,9 +603,12 @@ class ApparatusViewer {
       if(!params.has('nounderline')) markLemmata(root);
 
       // listen for refresh events
-      (new BroadcastChannel('apparatus')).addEventListener('message', e => {
-          // TODO: add uuid
-          markLemmata(root.querySelector('#' + e.data.id));
+      const bc = new BroadcastChannel('apparatus');
+      bc.addEventListener('message', e => {
+          if(e.data.uuid === this.uuid)
+            markLemmata(root.querySelector('#' + e.data.id));
+          if(e.data.uuid === null)
+            bc.postMessage({uuid: this.uuid});
       });
   }
   setTransliterator(obj) {
