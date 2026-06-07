@@ -4,7 +4,7 @@ import { ApparatusViewer } from './apparatus.mjs';
 import { MiradorWrapper } from './miradorwrapper.mjs';
 import { GitHubFunctions } from './githubfunctions.mjs';
 import { viewPos } from './viewpos.mjs';
-import './tooltip.mjs';
+import initToolTips from './tooltip.mjs';
 import './removehyphens.mjs';
 
 const _state = Object.seal({
@@ -13,6 +13,8 @@ const _state = Object.seal({
 });
 
 const init = (e,root = document) => {
+
+    initToolTips(root);
 
     const params = new URLSearchParams(window.location.search);
     // load image viewer if facsimile available

@@ -5,15 +5,17 @@ const _state = {
 
 const Events = {
     docMouseover: e => {
-        const go = ee => {
-            var targ = ee.target.closest('[data-anno]');
+      const doc = e.target.getRootNode();
+        const go = (ee,par) => {
+            if(!par) par = ee.target;
+            var targ = par.closest('[data-anno]');
 
             if(!targ || !targ.matches(`${targ.tagName}:hover`)) return; // need tagname; see https://stackoverflow.com/questions/14795099/pure-javascript-to-check-if-something-has-hover-without-setting-on-mouseover-ou
 
             while(targ && targ.hasAttribute('data-anno')) {
                
                 //ignore if apparatus is already on the side
-                if(document.querySelector('.record.fat') && 
+                if(doc.querySelector('.record.fat') && 
                    targ.classList.contains('app-inline') &&
                    !targ.closest('.teitext').querySelector('.diplo') ) {
                     targ = targ.parentNode;
@@ -24,23 +26,26 @@ const Events = {
                 targ = targ.parentNode;
             }
         };
-        if(document.getElementById('tooltip'))
+        if(doc.getElementById('tooltip')) {
             go(e);
+        }
         else {
+            const targ = e.target; // target gets lost sometimes
             clearTimeout(_state.tooltipTimeout);
             _state.tooltipTimeout = setTimeout(() => {
-                go(e);
+                go(e,targ);
             },300);
         }
 
     },
     docTouchend: e => {
+        const doc = e.target.getRootNode();
         const go = ee => {
             //if(!ee.target.matches(':hover')) return; // doesn't work on Chrome?
             var targ = ee.target.closest('[data-anno]');
             while(targ && targ.hasAttribute('data-anno')) {
                 //ignore if apparatus is already on the side
-                if(document.querySelector('.record.fat') && 
+                if(doc.querySelector('.record.fat') && 
                    targ.classList.contains('app-inline') &&
                    !targ.closest('.teitext').querySelector('.diplo') ) {
                     targ = targ.parentNode;
@@ -52,7 +57,7 @@ const Events = {
             }
         };
 
-        if(document.getElementById('tooltip'))
+        if(doc.getElementById('tooltip'))
           ToolTip.remove();
         
         go(e);
@@ -69,12 +74,13 @@ const Events = {
 
 const ToolTip = {
     make: function(e,targ,touch=false) {
+        const doc = targ.getRootNode();
         const toolText = targ.classList.contains('msid') ?
-          document.getElementById(targ.dataset.id).querySelector('.expan')?.cloneNode(true) :
+          doc.getElementById(targ.dataset.id).querySelector('.expan')?.cloneNode(true) :
           targ.dataset.anno || targ.querySelector(':scope > .anno-inline')?.cloneNode(true);
         if(!toolText) return;
 
-        var tBox = document.getElementById('tooltip');
+        var tBox = doc.getElementById('tooltip');
         const tBoxDiv = document.createElement('div');
 
         if(tBox) {
@@ -87,7 +93,8 @@ const ToolTip = {
         else {
             tBox = document.createElement('div');
             tBox.id = 'tooltip';
-            document.body.appendChild(tBox);
+            const body = doc === document ? document.body : doc;
+            body.appendChild(tBox);
             tBoxDiv.myTarget = targ;
             tBox.animate([
                 {opacity: 0 },
@@ -108,9 +115,10 @@ const ToolTip = {
     },
 
     remove: function(e) {
+        const doc = e.target.getRootNode();
         clearTimeout(_state.tooltipTimeout);
 
-        const tBox = document.getElementById('tooltip');
+        const tBox = doc.getElementById('tooltip');
         if(!tBox) return;
 
         if(!e) {
@@ -140,8 +148,10 @@ const ToolTip = {
     },
 };
 
-//if(window.matchMedia('(hover: hover)').matches)
-  document.addEventListener('mouseover',Events.docMouseover);
-//else
-  document.addEventListener('touchend',Events.docTouchend);
-document.addEventListener('click',Events.docClick);
+const initToolTips = (par = document) => {
+  par.addEventListener('mouseover',Events.docMouseover);
+  par.addEventListener('touchend',Events.docTouchend);
+  par.addEventListener('click',Events.docClick);
+};
+
+export default initToolTips;
