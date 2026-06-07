@@ -1,4 +1,4 @@
-import { Transliterate } from '../../js/transliterate.mjs';
+import { scripts, to } from '../../js/transliterate.mjs';
 
 const replaceEl = function(newdoc,par,kidname,inplace = false) {
     const oldel = par.querySelector(`:scope > ${kidname}`);
@@ -19,7 +19,7 @@ const replaceEl = function(newdoc,par,kidname,inplace = false) {
 const transliterateTitle = (doc,tstxml) => {
     // lazily get just the first script mentioned
     const script = tstxml.querySelector('handNote')?.getAttribute('script')?.split(' ')[0];
-    const allscripts = Transliterate.scripts();
+    const allscripts = scripts();
     const pars = doc.querySelectorAll('unittitle[type="non-latin originel"]');
     for(const par of pars) {
         if(!script || !par.querySelector('[xml:lang]')) {
@@ -39,10 +39,10 @@ const transliterateTitle = (doc,tstxml) => {
             //else if(curnode.nodeType === Node.TEXT_NODE) {
             else if(curnode.nodeType === 3) {
                 if(curnode.parentNode.lang === 'ta')
-                    curnode.data = Transliterate.to.tamil(curnode.data);
+                    curnode.data = to.tamil(curnode.data);
                 else if(curnode.parentNode.lang === 'sa')
                     if(allscripts.has(script))
-                        curnode.data = Transliterate.to[script](curnode.data);
+                        curnode.data = to[script](curnode.data);
             }
             curnode = walker.nextNode();
         }
