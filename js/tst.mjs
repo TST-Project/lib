@@ -21,22 +21,13 @@ const init = (e,root = document) => {
     const viewer = root.getElementById('viewer');
 
     const corresps = params.getAll('corresp');
-    let facs,scrollel;
-    if(corresps.length > 0) {
-        scrollel = findCorresp(corresps,root);
-        if(scrollel) {
-            const res = findFacs(scrollel);
-            if(res) facs = res.split(':')[0] - 1;
-        }
-    }
+    const [facs, scrollel] = checkParams(root,params);
     if(viewer) {
         const annotag = root.getElementById('tst-annotations');
         if(annotag) MiradorWrapper.setAnnotations(JSON.parse(annotag.innerHTML));
 
         _state.manifest = viewer.dataset.manifest;
-        const param = params.get('facs');
-        const page = facs !== undefined ? facs :
-            (param ? parseInt(param) - 1 : null) || viewer.dataset.start;
+        const page = facs !== undefined ? facs : viewer.dataset.start;
         if(_state.mirador)
             MiradorWrapper.refresh(_state.mirador,_state.manifest, page);
         else
@@ -56,6 +47,23 @@ const init = (e,root = document) => {
     // check for GitHub commit history
     GitHubFunctions.latestCommits();
 
+};
+
+const checkParams = (par,params) => {
+  let facs, scrollel;
+  const corresps = params?.getAll('corresp');
+  if(corresps && corresps.length > 0) {
+    scrollel = findCorresp(corresps,par);
+    if(scrollel) {
+      const res = findFacs(scrollel);
+      if(res) facs = res.split(':')[0] - 1;
+    }
+  }
+  if(!facs) {
+    const facsparam = params?.get('facs');
+    if(facsparam) facs = parseInt(facsparam) - 1;
+  }
+  return [facs, scrollel];
 };
 
 const fixTogglers = (root = document) => {
@@ -391,8 +399,7 @@ const TSTViewer = Object.freeze({
     refreshMirador: MiradorWrapper.refresh,
     jumpToId: MiradorWrapper.jumpToId,
     setAnnotations: MiradorWrapper.setAnnotations,
-    findCorresp: findCorresp,
-    findFacs: findFacs
+    checkParams: checkParams
 });
 
 export { TSTViewer };

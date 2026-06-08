@@ -297,7 +297,6 @@ a.alignment-pointer:link, a.alignment-pointer:active {
 
 #apparatusbutton {
     position: relative;
-    border: 1px solid black;
     border-radius: 0.2rem;
     padding: 5px;
     display: none;
