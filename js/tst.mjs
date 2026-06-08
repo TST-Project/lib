@@ -128,9 +128,9 @@ const scrollTo = el => {
     },{once: true});
 };
 
-const findFacs = (startel) => {
+const findFacs = startel => {
 
-    const prev = (e)  => {
+    const prev = e => {
         let prevEl = e.previousElementSibling;
         if(prevEl) {
             while(prevEl.lastElementChild)
@@ -390,7 +390,9 @@ const TSTViewer = Object.freeze({
     getMiradorCanvasId: MiradorWrapper.getMiradorCanvasId,
     refreshMirador: MiradorWrapper.refresh,
     jumpToId: MiradorWrapper.jumpToId,
-    setAnnotations: MiradorWrapper.setAnnotations
+    setAnnotations: MiradorWrapper.setAnnotations,
+    findCorresp: findCorresp,
+    findFacs: findFacs
 });
 
 export { TSTViewer };
