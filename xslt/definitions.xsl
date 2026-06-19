@@ -312,6 +312,8 @@
     <tst:entry key="#sarada-ekam">&#x111DA;</tst:entry>
     <tst:entry key="#sarada-siddhi">&#x111DB;</tst:entry>
     <tst:entry key="#sarada-separator">&#x111C8;</tst:entry>
+    <tst:entry key="#sarada-section-mark-1">&#x111DE;</tst:entry>
+    <tst:entry key="#sarada-section-mark-2">&#x111DF;</tst:entry>
 
     <tst:entry key="#headmark">&#x11B00;</tst:entry>
     <tst:entry key="#headmark_with_headstroke">&#x11B01;</tst:entry>
@@ -433,7 +435,9 @@
 
     <tst:entry key="#sarada-ekam">Śāradā ekam</tst:entry>
     <tst:entry key="#sarada-siddhi">śāradā siddhi</tst:entry>
-    <tst:entry key="#sarada-siddhi">śāradā separator</tst:entry>
+    <tst:entry key="#sarada-separator">śāradā separator</tst:entry>
+    <tst:entry key="#sarada-section-mark-1">śāradā section mark 1</tst:entry>
+    <tst:entry key="#sarada-section-mark-1">śāradā section mark 2</tst:entry>
 
     <tst:entry key="#headmark">head mark</tst:entry>
     <tst:entry key="#headmark_with_headstroke">head mark with headstroke`</tst:entry>
