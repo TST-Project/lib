@@ -10,13 +10,15 @@ import './removehyphens.mjs';
 const _state = Object.seal({
     manifest: null,
     mirador: null,
+    aViewer: null 
 });
 
-const aViewer = new AlignmentViewer();
 
 const init = (e,root = document) => {
 
     initToolTips(root);
+
+    if(root === document) _state.aViewer = new AlignmentViewer();
 
     const params = new URLSearchParams(window.location.search);
     // load image viewer if facsimile available
@@ -208,12 +210,13 @@ const events = {
             viewPos.setVP(recordcontainer,vpos);
             return;
         }
-        const apointer = e.target.closest('.alignment-pointer');
-        if(apointer) {
-            e.preventDefault();
-            aViewer.show(apointer.href);
-            console.log(aViewer);
-            return;
+        if(_state.aViewer) {
+          const apointer = e.target.closest('.alignment-pointer');
+          if(apointer) {
+              e.preventDefault();
+              _state.aViewer.show(apointer.href);
+              return;
+          }
         }
 
         if(e.target.dataset && e.target.dataset.hasOwnProperty('scroll')) {
