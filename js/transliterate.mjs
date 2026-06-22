@@ -97,8 +97,8 @@ const getEditionScript = par => {
     if(scriptsplit[2] !== 't') return null;
     const script = scriptsplit.pop();
     if(script === 'Tibt') return 'dbucan';
-    if(_global.isonames.has(script)) return script;
-    
+    const scriptname = _global.isoToScript.get(script);
+    if(scriptname) return scriptname;
 };
 
 class button {
