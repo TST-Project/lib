@@ -103,16 +103,20 @@ class AlignmentViewer {
     async show(url) {
       const resp = await fetch(url);
       const xdoc = parseXML(await resp.text());
+      this.showXML(xdoc);
+    }
+    async showXML(xdoc) {
       const xsheet = parseXML(alignmentXSLT);
       const hdoc = await XSLTransform(xsheet, xdoc);
-      const blackout = this.document.createElement('div');
+      const blackout = document.createElement('div');
       blackout.id = 'blackout';
-      const viewer = this.document.createElement('div');
+      const viewer = document.createElement('div');
       viewer.id='alignment-viewer';
       replaceHeaders(hdoc);
       viewer.append(hdoc.querySelector('table'));
       blackout.append(viewer);
-      this.document.body.append(blackout);
+      const body = this.document.body || this.document;
+      body.append(blackout);
       blackout.addEventListener('click',killViewer);
       viewer.addEventListener('mouseover',viewerMouseover);
     }
