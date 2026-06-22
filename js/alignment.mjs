@@ -1,27 +1,4 @@
-const parseXML = (str) => {
-    const parser = new DOMParser();
-    const newd = parser.parseFromString(str,'text/xml');
-    if(newd.documentElement.nodeName === 'parsererror')
-        alert(`The XML file could not be loaded. Please contact your friendly local system administrator. Error: ${newd.documentElement.textContent}`);
-    else
-        return newd;
-};
-
-const XSLTransform = async function(xslsheet,doc) {
-    // compile all xsl:imports to avoid browser incompatibilities
-    
-    for(const x of xslsheet.querySelectorAll('import')) {
-        const resp = await fetch(x.getAttribute('href'));
-        const i = parseXML(await resp.text());
-
-        while(i.documentElement.firstChild)
-            x.before(i.documentElement.firstChild);
-        x.remove();
-    }
-    const xproc = new XSLTProcessor();
-    xproc.importStylesheet(xslsheet);
-    return xproc.transformToDocument(doc);
-};
+import { parseXML, XSLTransform } from './utils.mjs';
 
 const alignmentXSLT = `<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:x="http://www.tei-c.org/ns/1.0" exclude-result-prefixes="x">
 <xsl:output method="html"/>
@@ -81,7 +58,7 @@ const alignmentXSLT = `<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.or
 </xsl:template>
 </xsl:stylesheet>`;
 
-const viewer = async function(url) {
+const viewer = async url => {
     const resp = await fetch(url);
     const xdoc = parseXML(await resp.text());
     const xsheet = parseXML(alignmentXSLT);
@@ -98,12 +75,12 @@ const viewer = async function(url) {
     viewer.addEventListener('mouseover',viewerMouseover);
 };
 
-const killViewer = (e) => {
+const killViewer = e => {
     if(!e.target.closest('#alignment-viewer'))
         document.getElementById('blackout').remove();
 };
 
-const viewerMouseover = (e) => {
+const viewerMouseover = e => {
     const targ = e.target.closest('.lemma');
     if(!targ) return;
    
