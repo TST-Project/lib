@@ -58,26 +58,9 @@ const alignmentXSLT = `<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.or
 </xsl:template>
 </xsl:stylesheet>`;
 
-const viewer = async url => {
-    const resp = await fetch(url);
-    const xdoc = parseXML(await resp.text());
-    const xsheet = parseXML(alignmentXSLT);
-    const hdoc = await XSLTransform(xsheet, xdoc);
-    const blackout = document.createElement('div');
-    blackout.id = 'blackout';
-    const viewer = document.createElement('div');
-    viewer.id='alignment-viewer';
-    replaceHeaders(hdoc);
-    viewer.append(hdoc.querySelector('table'));
-    blackout.append(viewer);
-    document.body.append(blackout);
-    blackout.addEventListener('click',killViewer);
-    viewer.addEventListener('mouseover',viewerMouseover);
-};
-
 const killViewer = e => {
     if(!e.target.closest('#alignment-viewer'))
-        document.getElementById('blackout').remove();
+        e.target.getRootNode().getElementById('blackout').remove();
 };
 
 const viewerMouseover = e => {
@@ -85,7 +68,7 @@ const viewerMouseover = e => {
     if(!targ) return;
    
     const reading = targ.dataset.normal || targ.textContent;
-    const table = document.getElementById('alignment-viewer').querySelector('table');
+    const table = e.target.getRootNode().getElementById('alignment-viewer').querySelector('table');
     const highlit = table.querySelectorAll('.highlit, .lightlit');
     for(const h of highlit)
         h.classList.remove('highlit','lightlit');
@@ -100,9 +83,10 @@ const viewerMouseover = e => {
 
 };
 
-const replaceHeaders = (doc) => {
+const replaceHeaders = doc => {
+    const rootdoc = doc.getRootNode();
     for(const th of doc.querySelectorAll('th')) {
-        const wit = document.getElementById(th.textContent);
+        const wit = rootdoc.getElementById(th.textContent);
         if(wit) {
             const abbr = wit.querySelector('.msid');
             const abbrcopy = abbr.cloneNode(true);
@@ -112,8 +96,26 @@ const replaceHeaders = (doc) => {
     }
 };
 
-const AlignmentViewer = {
-    viewer: viewer
+class AlignmentViewer {
+    constructor(doc) {
+      this.document = doc || document;
+    }
+    async show(url) {
+      const resp = await fetch(url);
+      const xdoc = parseXML(await resp.text());
+      const xsheet = parseXML(alignmentXSLT);
+      const hdoc = await XSLTransform(xsheet, xdoc);
+      const blackout = this.document.createElement('div');
+      blackout.id = 'blackout';
+      const viewer = this.document.createElement('div');
+      viewer.id='alignment-viewer';
+      replaceHeaders(hdoc);
+      viewer.append(hdoc.querySelector('table'));
+      blackout.append(viewer);
+      this.document.body.append(blackout);
+      blackout.addEventListener('click',killViewer);
+      viewer.addEventListener('mouseover',viewerMouseover);
+    }
 };
 
-export { AlignmentViewer };
+export default AlignmentViewer;

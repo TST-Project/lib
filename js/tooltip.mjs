@@ -117,8 +117,8 @@ const ToolTip = {
     remove: function(e) {
         const doc = e.target.getRootNode();
         clearTimeout(_state.tooltipTimeout);
-
-        const tBox = doc.getElementById('tooltip');
+        // in case shadowRoot already removed
+        const tBox = doc.getElementById ? doc.getElementById('tooltip') : null; 
         if(!tBox) return;
 
         if(!e) {

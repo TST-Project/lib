@@ -1,5 +1,5 @@
 import { Transliterate } from './transliterate.mjs';
-import { AlignmentViewer } from './alignment.mjs';
+import AlignmentViewer from './alignment.mjs';
 import { ApparatusViewer } from './apparatus.mjs';
 import { MiradorWrapper } from './miradorwrapper.mjs';
 import { GitHubFunctions } from './githubfunctions.mjs';
@@ -11,6 +11,8 @@ const _state = Object.seal({
     manifest: null,
     mirador: null,
 });
+
+const aViewer = new AlignmentViewer();
 
 const init = (e,root = document) => {
 
@@ -209,7 +211,8 @@ const events = {
         const apointer = e.target.closest('.alignment-pointer');
         if(apointer) {
             e.preventDefault();
-            AlignmentViewer.viewer(apointer.href);
+            aViewer.show(apointer.href);
+            console.log(aViewer);
             return;
         }
 
