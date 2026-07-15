@@ -547,7 +547,7 @@ const to = {
             return p1+grv.get(p2); 
         });
     },
-    grantha: function(txt) {
+    grantha: txt => {
         const grv = new Map([
             [UTF8('11300'),'\u0B82'],
             [UTF8('1133E'),'\u0BBE'],
@@ -578,7 +578,7 @@ const to = {
             return p1+grv.get(p2); 
         });
     },
-    malayalam: function(txt) {
+    malayalam: txt => {
         const chillu = {
             'ക':'ൿ',
             'ണ':'ൺ',
@@ -614,11 +614,13 @@ const to = {
         return replacedtxt;
     },
     
-    devanagari: function(txt) {
+    devanagari: txt => {
 
         const pretext = txt//.replace(/ṙ/g, 'r')
             .replace(/e/g,'ē')
+            .replace(/E/g,'Ē')
             .replace(/o(?![ṁḿ])/g,'ō')
+            .replace(/O(?![ṁḿ])/g,'Ō')
             .replace(/([^aāiīuūeēoōṛṝl̥l̥̄])ṃ/,'$1\'\u200Dṃ') // standalone anusvāra
             .replace(/([^aāiīuūeēoōṛṝl̥l̥̄])ḥ/,'$1\'\u200Dḥ') // standalone visarga
             .replace(/(^|\s)_y/,'$1\'\u200Dy') // half-form of ya
@@ -633,7 +635,7 @@ const to = {
         return text;
     },
 
-    bengali: function(txt) {
+    bengali: txt => {
 
         const pretext = txt//.replace(/ṙ/g, 'r')
             .replace(/e/g,'ē')
@@ -648,7 +650,7 @@ const to = {
         return text;
     },
 
-    telugu: function(txt) {
+    telugu: txt => {
 
         const pretext = txt.replace(/(^|\s)_ā/,'$1\u0C3D\u200D\u0C3E')
             .replace(/(^|\s)_r/,'$1\u0C3D\u200D\u0C30\u0C4D');
@@ -679,7 +681,7 @@ const to = {
     },
     
 
-    newa: function(txt) {
+    newa: txt => {
 
         const pretext = txt//.replace(/ṙ/g, 'r')
             .replace(/e/g,'ē')
@@ -692,7 +694,7 @@ const to = {
         return text;
     },
 
-    sarada: function(txt) {
+    sarada: txt => {
 
         const pretext = txt//.replace(/ṙ/g, 'r')
             .replace(/e/g,'ē')
@@ -733,7 +735,7 @@ const to = {
       
     },
 
-    nandinagari: function(txt) {
+    nandinagari: txt => {
 
         const pretext = txt//.replace(/ṙ/g, 'r')
             .replace(/e/g,'ē')
