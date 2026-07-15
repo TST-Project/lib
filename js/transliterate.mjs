@@ -29,6 +29,7 @@ const _global = Object.seal({
     hyphenator: {
         'ta-Taml': new Hypher(hyphenation_ta),
         'sa-Latn': new Hypher(hyphenation_sa),
+        'si-Latn': new Hypher(hyphenation_sa),
         'pi-Latn': new Hypher(hyphenation_sa),
         'ta-Latn': new Hypher(hyphenation_ta_Latn),
         'te-Latn': new Hypher(hyphenation_sa),
@@ -1039,6 +1040,11 @@ const Transliterate = class {
                 else if(curlang === 'bo') {
                     curnode.lang = 'bo-Latn-t-bo-Tibt';
                     if(curscript === 'Tibt')
+                        curnode.classList.add('originalscript');
+                }
+                else if(curlang === 'si') {
+                    curnode.lang = 'si-Latn-t-si-Sinh';
+                    if(curscript === 'Sinh')
                         curnode.classList.add('originalscript');
                 }
                 else if(curlang === 'sa' || 
