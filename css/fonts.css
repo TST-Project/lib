@@ -52,10 +52,10 @@
     font-family: 'Noto Serif Tamil';
     src: url('../fonts/TSTTamil.woff');
     unicode-range: U+200D, U+0020,U+0B80-0BFF;
-    font-weight: normal;
-    font-style: normal;
+    /*font-weight: normal;
+    font-style: normal;*/
 }
-
+/*
 @font-face {
     font-family: 'Noto Serif Tamil';
     src: url('../fonts/noto/NotoSerifTamilSlanted-Regular.ttf');
@@ -77,7 +77,7 @@
     font-weight: bold;
     font-style: normal;
 }
-
+*/
 @font-face {
     font-family: 'Noto Serif Tamil';
     src: url('../fonts/noto/NotoSansTamilSupplement-Regular.ttf');
