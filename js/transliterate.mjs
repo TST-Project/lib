@@ -723,7 +723,8 @@ const to = {
       ];
 
       let smushed = to.smush(txt)
-                      .replaceAll(/n̆d/g,'ඳ');
+                      .replaceAll(/n̆d/g,'ඳ')
+                      .replaceAll(/n̆ḍ/g,'ඬ');
       smushed = Sanscript.t(smushed,'iast','sinhala');
       for(const c of conjuncts) {
         const re = new RegExp(`${c[0]}\u0DCA(${c[1]})`,'g');
