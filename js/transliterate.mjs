@@ -719,12 +719,12 @@ const to = {
         ['ද', '[ධව]'],
         ['ම', 'බ'],
         ['ජ','ඤ','ඥ'],
-        ['ඞ', 'ග', 'ඟ']
+        ['ඞ', 'ග', 'ඟ'],
+        ['න','̌ද','ඳ'],
+        ['ණ','̌ඩ','ඬ']
       ];
 
-      let smushed = to.smush(txt)
-                      .replaceAll(/n̆d/g,'ඳ')
-                      .replaceAll(/n̆ḍ/g,'ඬ');
+      let smushed = to.smush(txt);
       smushed = Sanscript.t(smushed,'iast','sinhala');
       for(const c of conjuncts) {
         const re = new RegExp(`${c[0]}\u0DCA(${c[1]})`,'g');
