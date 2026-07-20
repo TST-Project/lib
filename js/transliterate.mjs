@@ -445,9 +445,10 @@ const to = {
         return text;
     },
     smushvirama: text =>
-      text.replace(/(\S)(?:·|_{1,2})/g, match => 
-        match === '__' ? '$1\u200D' :
-                         '$1\u200C'
+      text.replace(/(\S)(·|_{1,2})/g, (_,p1,p2) => 
+        p1 +
+        (p2 === '__' ? '\u200D' :
+                      '\u200C')
       ),
     
     nums: text => {
