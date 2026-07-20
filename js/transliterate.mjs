@@ -445,9 +445,9 @@ const to = {
         return text;
     },
     smushvirama: text =>
-      text.replace(/_{1,2}(?=\s*)/g, function(match) {
+      text.replace(/(?:·|_{1,2})(?=\s*)/g, function(match) {
           if(match === '__') return '\u200D';
-          else if(match === '_') return '\u200C';
+          else if(match === '_' || match === '·') return '\u200C';
       }),
     
     nums: text => {
