@@ -440,13 +440,15 @@ const to = {
         text = text.replace(/ü/g,'\u200Cu');
         text = text.replace(/ï/g,'\u200Ci');
 
-        text = text.replace(/_{1,2}(?=\s*)/g, function(match) {
-            if(match === '__') return '\u200D';
-            else if(match === '_') return '\u200C';
-        });
+        text = to.smushvirama(text);
 
         return text;
     },
+    smushvirama: text =>
+      text.replace(/_{1,2}(?=\s*)/g, function(match) {
+          if(match === '__') return '\u200D';
+          else if(match === '_') return '\u200C';
+      }),
     
     nums: text => {
         const newarr = [];
@@ -725,7 +727,7 @@ const to = {
         ['ම','̆බ','ඹ']
       ];
 
-      let smushed = smush ? to.smush(txt) : txt;
+      let smushed = smush ? to.smush(txt) : to.smushvirama(txt);
       smushed = Sanscript.t(smushed,'iast','sinhala');
       for(const c of conjuncts) {
         const re = new RegExp(`${c[0]}\u0DCA(${c[1]})`,'g');
