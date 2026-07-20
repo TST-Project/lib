@@ -707,7 +707,7 @@ const to = {
         return text;
     },
     
-    sinhala: txt => {
+    sinhala: (txt,smush=true) => {
      // based on https://pitaka.lk/tools/unicode/pali_bandi.htm
       const conjuncts = [
         ['ක', '[වෂ]'],
@@ -725,7 +725,7 @@ const to = {
         ['ම','̆බ','ඹ']
       ];
 
-      let smushed = to.smush(txt);
+      let smushed = smush ? to.smush(txt) : txt;
       smushed = Sanscript.t(smushed,'iast','sinhala');
       for(const c of conjuncts) {
         const re = new RegExp(`${c[0]}\u0DCA(${c[1]})`,'g');
@@ -946,6 +946,7 @@ const Transliterate = class {
         else if(curnode.nodeType === Node.TEXT_NODE && curnode.parentNode.lang) {
             // ignore svgs that have no lang attribute
             const [lang, script] = curnode.parentNode.lang.split('-');
+            const smush = ['sa','ta','pi'].includes(lang);
 
             if(_global.availlangs.includes(lang)) {
                 const scriptfunc = to.hasOwnProperty(script) ? to[script] : null;
@@ -957,7 +958,7 @@ const Transliterate = class {
                 else if(curnode.parentElement.classList.contains('originalscript'))
                     result = cache.get(curnode,this.state.cachedtext);
                 else if(scriptfunc)
-                    result = scriptfunc(curnode.data);
+                    result = scriptfunc(curnode.data,smush);
 
                 if(result !== undefined) curnode.data = result;
             }
