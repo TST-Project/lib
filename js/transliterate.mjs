@@ -445,10 +445,10 @@ const to = {
         return text;
     },
     smushvirama: text =>
-      text.replace(/(?:·|_{1,2})(?=\s*)/g, function(match) {
-          if(match === '__') return '\u200D';
-          else if(match === '_' || match === '·') return '\u200C';
-      }),
+      text.replace(/(\S)(?:·|_{1,2})/g, match => 
+        match === '__' ? '$1\u200D' :
+                         '$1\u200C'
+      ),
     
     nums: text => {
         const newarr = [];
@@ -541,7 +541,6 @@ const to = {
             //.replace(/ḷ/g,'l̥')
             .replace(/(^|\s)_ā/g,'$1\u0B85\u200D\u0BBE')
             .replace(/(\S)([AĀIĪUŪEĒOŌ])/g,'$1\u200C$2')
-            .replace(/(\S)·/g,'$1\u200C')
             .toLowerCase();
         const rgex = new RegExp(`([${grc.join('')}])([${[...grv.keys()].join('')}])`,'g');
         const pretext = Sanscript.t(smushed,'iast','tamil');
