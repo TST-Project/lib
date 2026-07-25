@@ -392,7 +392,7 @@
             <xsl:value-of select="$source"/>
             <xsl:if test="$corresp">
               <xsl:text>&amp;corresp=</xsl:text>
-              <xsl:value-of select="$corresp"/>
+              <xsl:value-of select="substring-after($corresp,'#')"/>
             </xsl:if>
           </xsl:attribute>
           <xsl:apply-templates select="$siglum"/>
