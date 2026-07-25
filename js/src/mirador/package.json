@@ -11,7 +11,7 @@
     "webpack-cli": "^4.9.1"
   },
   "dependencies": {
-    "mirador": "^3.4.3",
+    "mirador": "3.4.3",
     "mirador-annotations": "^0.5.0",
     "mirador-image-tools": "^0.11.0",
     "react": "^17.0.2",

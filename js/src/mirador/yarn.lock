@@ -1219,7 +1219,7 @@ mirador-image-tools@^0.11.0:
   resolved "https://registry.yarnpkg.com/mirador-image-tools/-/mirador-image-tools-0.11.0.tgz#d036367faa5416ab73f0117a04382a1afe604ae9"
   integrity sha512-DdFi/MS9X05Qc30vR5jJv12JZe8/3hKiWlXG2oJlOm5reF7ZS9cPxuK9hxw6F6DzENROTJlJU1dS5preB5RsGQ==
 
-mirador@^3.4.3:
+mirador@3.4.3:
   version "3.4.3"
   resolved "https://registry.yarnpkg.com/mirador/-/mirador-3.4.3.tgz#1b083bd037b851d1389758f3c86eb94832b00ec6"
   integrity sha512-yHoug0MHy4e9apykbbBhK+4CmbZS94zMxmugw2E2VX6iB0b2PKKY0JfYr/QfXh9P29YnWAbymaXJVpgbHVpTVw==
