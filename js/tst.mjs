@@ -125,7 +125,7 @@ const initRecordContainer = (root = document) => {
 const findCorresp = (corresps,root) => {
     let res = root;
     for(const c of corresps) {
-        res = res.querySelector(`[data-corresp~='${c}'], [id='${c}']`);
+        res = res.querySelector(`[data-corresp~='${c}'], [id='${c}']:not(.witness)`);
         if(!res) return false;
     }
     return res;

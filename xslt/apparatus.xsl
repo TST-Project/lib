@@ -195,7 +195,7 @@
           </xsl:attribute>
           <xsl:attribute name="id"><xsl:value-of select="$xmlid"/></xsl:attribute>
           <xsl:if test="@corresp">
-            <xsl:attribute name="data-corresp"><xsl:value-of select="@corresp"/></xsl:attribute>
+            <xsl:attribute name="data-corresp"><xsl:value-of select="substring-after(@corresp,'#')"/></xsl:attribute>
           </xsl:if>
           <xsl:apply-templates/>
         </div>
@@ -215,7 +215,7 @@
           <xsl:attribute name="id"><xsl:value-of select="$xmlid"/></xsl:attribute>
         </xsl:if>
         <xsl:if test="@corresp">
-          <xsl:attribute name="data-corresp"><xsl:value-of select="@corresp"/></xsl:attribute>
+          <xsl:attribute name="data-corresp"><xsl:value-of select="substring-after(@corresp,'#')"/></xsl:attribute>
         </xsl:if>
         <div>
           <xsl:attribute name="class">text-block</xsl:attribute>
@@ -244,7 +244,7 @@
           <xsl:attribute name="id"><xsl:value-of select="@xml:id"/></xsl:attribute>
         </xsl:if>
         <xsl:if test="@corresp">
-          <xsl:attribute name="data-corresp"><xsl:value-of select="@corresp"/></xsl:attribute>
+          <xsl:attribute name="data-corresp"><xsl:value-of select="substring-after(@corresp,'#')"/></xsl:attribute>
         </xsl:if>
         <div>
           <xsl:attribute name="class">text-block</xsl:attribute>
@@ -282,7 +282,7 @@
           </xsl:attribute>
           <xsl:attribute name="id"><xsl:value-of select="$xmlid"/></xsl:attribute>
           <xsl:if test="@corresp">
-            <xsl:attribute name="data-corresp"><xsl:value-of select="@corresp"/></xsl:attribute>
+            <xsl:attribute name="data-corresp"><xsl:value-of select="substring-after(@corresp,'#')"/></xsl:attribute>
           </xsl:if>
           <xsl:if test="@n">
             <xsl:attribute name="style">
@@ -312,7 +312,7 @@
           <xsl:attribute name="id"><xsl:value-of select="$xmlid"/></xsl:attribute>
         </xsl:if>
         <xsl:if test="@corresp">
-          <xsl:attribute name="data-corresp"><xsl:value-of select="@corresp"/></xsl:attribute>
+          <xsl:attribute name="data-corresp"><xsl:value-of select="substring-after(@corresp,'#')"/></xsl:attribute>
         </xsl:if>
         <xsl:element name="div">
           <xsl:attribute name="class">text-block</xsl:attribute>

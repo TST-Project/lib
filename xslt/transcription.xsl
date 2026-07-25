@@ -30,6 +30,9 @@
             <xsl:attribute name="class">
                 <xsl:text>teitext edition</xsl:text>
             </xsl:attribute>
+            <xsl:if test="$textid">
+              <xsl:attribute name="data-corresp"><xsl:value-of select="$textid"/></xsl:attribute>
+            </xsl:if>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:attribute name="class">
