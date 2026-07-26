@@ -605,8 +605,14 @@ class ApparatusViewer {
       // listen for refresh events
       const bc = new BroadcastChannel('apparatus');
       bc.addEventListener('message', e => {
-          if(e.data.uuid === this.uuid)
-            markLemmata(root.querySelector('#' + e.data.id));
+          if(e.data.uuid === this.uuid) {
+            if(params.has('nounderline')) return;
+
+            if(e.data.hasOwnProperty('id'))
+              markLemmata(root.querySelector('#' + e.data.id));
+            else
+              markLemmata(root);
+          }
           if(e.data.uuid === null)
             bc.postMessage({uuid: this.uuid});
       });

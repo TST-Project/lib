@@ -44,7 +44,7 @@ const init = (e,root = document) => {
     if(togglers) {
       togglers.addEventListener('click',events.toggleClick);
       fixTogglers(root);
-      window.addEventListener('resize',fixTogglers.bind(null,root));
+      if(root === document) window.addEventListener('resize',fixTogglers.bind(null,root));
     }
     if(scrollel) scrollTo(scrollel);
 

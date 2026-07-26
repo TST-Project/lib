@@ -824,8 +824,12 @@ const Transliterate = class {
     // listen for refresh events
     const bc = new BroadcastChannel('transliterator');
     bc.addEventListener('message', e => {
-        if(e.data.uuid === this.state.uuid)
-          this.refreshCache(par.querySelector('#' + e.data.id));
+        if(e.data.uuid === this.state.uuid) {
+          if(e.data.hasOwnProperty('id'))
+            this.refreshCache(par.querySelector('#' + e.data.id));
+          else
+            this.refreshCache(par);
+        }
         if(e.data.uuid === null)
           bc.postMessage({uuid: this.state.uuid});
     });
