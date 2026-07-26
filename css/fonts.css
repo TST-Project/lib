@@ -139,7 +139,7 @@
 @font-face {
     font-family: 'Abhaya Libre';
     src: url('../fonts/AbhayaLibre-Medium.ttf');
-    unicode-range: U+200D, U+0D80-U+0DFF;
+    unicode-range: U+200D, U+0D80-0DFF;
 }
 .aalt {
     font-feature-settings: "aalt" 1;
