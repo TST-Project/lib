@@ -8,6 +8,7 @@
 <xsl:template match="x:trailer">
     <xsl:element name="div">
         <xsl:attribute name="class">trailer</xsl:attribute>
+        <xsl:call-template name="lang"/>
         <xsl:apply-templates/>
     </xsl:element>
 </xsl:template>
@@ -32,18 +33,18 @@
     <xsl:call-template name="p"/>
 </xsl:template>
 
-  <xsl:template match="x:list">
+<xsl:template match="x:list">
     <xsl:element name="ul">
         <xsl:call-template name="lang"/>
         <xsl:apply-templates/>
     </xsl:element>
 </xsl:template>
-  <xsl:template match="x:list[@rend='numbered']">
+<xsl:template match="x:list[@rend='numbered']">
     <xsl:element name="ol">
         <xsl:apply-templates/>
     </xsl:element>
 </xsl:template>
-  <xsl:template match="x:list/x:item">
+<xsl:template match="x:item">
     <xsl:element name="li">
         <xsl:call-template name="lang"/>
         <xsl:apply-templates/>
