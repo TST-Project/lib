@@ -803,5 +803,6 @@
 <xsl:template match="x:standOff[@type='notes2']"/>
 <xsl:template match="x:standOff[@type='notes3']"/>
 <xsl:template match="x:standOff[@type='notes4']"/>
+<xsl:template match="x:standOff[@type='wordsplit']"/>
 
 </xsl:stylesheet>
