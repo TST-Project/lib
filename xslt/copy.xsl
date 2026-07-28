@@ -5,9 +5,14 @@
 
 <xsl:output method="html" encoding="UTF-8" omit-xml-declaration="yes"/>
 
-<xsl:template match="@*|node()">
+<xsl:template match="@*">
     <xsl:copy>
-    <xsl:apply-templates select="@*|node()"/>
+      <xsl:apply-templates/>
+    </xsl:copy>
+</xsl:template>
+<xsl:template match="node()">
+    <xsl:copy>
+      <xsl:apply-templates/>
     </xsl:copy>
 </xsl:template>
 
