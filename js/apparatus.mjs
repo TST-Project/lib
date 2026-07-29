@@ -606,10 +606,13 @@ class ApparatusViewer {
       const bc = new BroadcastChannel('apparatus');
       bc.addEventListener('message', e => {
           if(e.data.uuid === this.uuid) {
+            if(e.data.shutdown === true) {
+              bc.close();
+              return;
+            }
             if(params.has('nounderline')) return;
-
             if(e.data.hasOwnProperty('id'))
-              markLemmata(root.querySelector('#' + e.data.id));
+              markLemmata(root.querySelector(`*[id="${e.data.id}"]`));
             else
               markLemmata(root);
           }

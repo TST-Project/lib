@@ -825,6 +825,10 @@ const Transliterate = class {
     const bc = new BroadcastChannel('transliterator');
     bc.addEventListener('message', e => {
         if(e.data.uuid === this.state.uuid) {
+          if(e.data.shutdown === true) {
+            bc.close();
+            return;
+          }
           if(e.data.hasOwnProperty('id'))
             this.refreshCache(par.querySelector('#' + e.data.id));
           else
