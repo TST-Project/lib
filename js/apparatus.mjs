@@ -604,6 +604,8 @@ class ApparatusViewer {
 
       // listen for refresh events
       const bc = new BroadcastChannel('apparatus');
+      let taken = false;
+      // TODO: just set this.uuid after receiving the first message instead of setting the taken variable
       bc.addEventListener('message', e => {
           if(e.data.uuid === this.uuid) {
             if(e.data.shutdown === true) {
@@ -616,8 +618,10 @@ class ApparatusViewer {
             else
               markLemmata(root);
           }
-          if(e.data.uuid === null)
+          if(!taken && e.data.uuid === null) {
             bc.postMessage({uuid: this.uuid});
+            taken = true;
+          }
       });
   }
   setTransliterator(obj) {

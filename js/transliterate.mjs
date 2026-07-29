@@ -823,6 +823,7 @@ const Transliterate = class {
 
     // listen for refresh events
     const bc = new BroadcastChannel('transliterator');
+    let taken = false;
     bc.addEventListener('message', e => {
         if(e.data.uuid === this.state.uuid) {
           if(e.data.shutdown === true) {
@@ -834,8 +835,10 @@ const Transliterate = class {
           else
             this.refreshCache(par);
         }
-        if(e.data.uuid === null)
+        if(!taken && e.data.uuid === null) {
           bc.postMessage({uuid: this.state.uuid});
+          taken = true;
+        }
     });
   }
 
