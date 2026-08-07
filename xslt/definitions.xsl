@@ -307,6 +307,7 @@
     <tst:entry key="#newa-siddhi">&#x1144A;</tst:entry>
     <tst:entry key="#newa-gap-filler">&#x1144E;</tst:entry>
     <tst:entry key="#newa-old-gap-filler">&#x1144E;</tst:entry>
+    <tst:entry key="#newa-comma">&#x1144D;</tst:entry>
     <tst:entry key="#newa-abbreviation">&#x1144F;</tst:entry>
 
     <tst:entry key="#sarada-ekam">&#x111DA;</tst:entry>
@@ -432,6 +433,8 @@
     <tst:entry key="#newa-siddhi">Newa siddhi</tst:entry>
     <tst:entry key="#newa-gap-filler">Newa gap filler</tst:entry>
     <tst:entry key="#newa-old-gap-filler">Newa old-style gap filler</tst:entry>
+    <tst:entry key="#newa-comma">Newa comma</tst:entry>
+    <tst:entry key="#newa-abbreviation">Newa abbreviation sign</tst:entry>
 
     <tst:entry key="#sarada-ekam">Śāradā ekam</tst:entry>
     <tst:entry key="#sarada-siddhi">śāradā siddhi</tst:entry>
