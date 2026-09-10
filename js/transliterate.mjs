@@ -831,7 +831,7 @@ const Transliterate = class {
             return;
           }
           if(e.data.hasOwnProperty('id'))
-            this.refreshCache(par.querySelector('#' + e.data.id));
+            this.refreshCache(par.querySelector(`[id="${e.data.id}"]`));
           else
             this.refreshCache(par);
         }
