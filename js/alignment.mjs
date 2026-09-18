@@ -83,8 +83,7 @@ const viewerMouseover = e => {
 
 };
 
-const replaceHeaders = doc => {
-    const rootdoc = doc.getRootNode();
+const replaceHeaders = (rootdoc,doc) => {
     for(const th of doc.querySelectorAll('th')) {
         const wit = rootdoc.getElementById(th.textContent);
         if(wit) {
@@ -94,6 +93,18 @@ const replaceHeaders = doc => {
             th.appendChild(abbrcopy);
         }
     }
+};
+
+const rearrangeWits = (htmldoc, xmldoc) => {
+  const listWit = htmldoc.querySelector('div.listWit');
+  if(!listWit) return;
+  const ids = [...listWit.querySelectorAll('.witness')].map(w => w.id);
+  const teiCorpus = xmldoc.querySelector('teiCorpus');
+  for(const id of ids) {
+    const tei = xmldoc.querySelector(`TEI[n="${id}"]`);
+    if(!tei) continue;
+    teiCorpus.appendChild(tei);
+  }
 };
 
 class AlignmentViewer {
@@ -106,13 +117,14 @@ class AlignmentViewer {
       this.showXML(xdoc);
     }
     async showXML(xdoc) {
+      rearrangeWits(this.document,xdoc);
       const xsheet = parseXML(alignmentXSLT);
       const hdoc = await XSLTransform(xsheet, xdoc);
       const blackout = document.createElement('div');
       blackout.id = 'blackout';
       const viewer = document.createElement('div');
       viewer.id='alignment-viewer';
-      replaceHeaders(hdoc);
+      replaceHeaders(this.document,hdoc);
       viewer.append(hdoc.querySelector('table'));
       blackout.append(viewer);
       const body = this.document.body || this.document;
