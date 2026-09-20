@@ -189,6 +189,11 @@ a.alignment-pointer:link, a.alignment-pointer:active {
     padding-right: 0;
 }
 
+q div.lg {
+  font-size: inherit;
+  line-height: inherit;
+}
+
 .listWit {
     display: none;
 }
