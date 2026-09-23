@@ -459,7 +459,13 @@
       <xsl:element name="span">
         <xsl:attribute name="class">lem</xsl:attribute>
         <xsl:attribute name="data-loc"><xsl:value-of select="@loc"/></xsl:attribute>
-        <span class="rdg-text">
+        <span>
+            <xsl:attribute name="class">
+              <xsl:text>rdg-text</xsl:text>
+              <xsl:if test="$lem/@subtype">
+               <xsl:text> </xsl:text><xsl:value-of select="$lem/@subtype"/>
+              </xsl:if>
+            </xsl:attribute>
           <xsl:apply-templates select="$lem/node()"/>
         </span>
         <xsl:for-each select="./x:rdgGrp/x:rdg[@type='minor']">

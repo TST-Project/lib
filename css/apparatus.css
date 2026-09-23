@@ -106,6 +106,13 @@ section div.wide {
 .lem .rdg-text::after {
     content: ']';
 }
+.lem .rdg-text.prefix::after, .lem .rdg-text.infix::after {
+  content: '°]';
+}
+.lem .rdg-text.suffix::before, .lem .rdg-text.infix::before  {
+  content: '°';
+}
+
 
 .negapp .lem-wit {
   display: none;
