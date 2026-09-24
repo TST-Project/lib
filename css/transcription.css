@@ -457,16 +457,29 @@ span.surplus {
     */
 }
 
-span.surplus::before {
+span.surplus:not(.interpolated)::before {
     content: '{';
     color: #CC0000;
     font-size: 0.8em;
 }
 
-span.surplus::after {
+span.surplus:not(.interpolated)::after {
     content: '}';
     color: #CC0000;
     font-size: 0.8em;
+}
+
+span.surplus.interpolated {
+    background-color: rgba(132,132,10,0.2);
+    color: rgba(0,0,0,0.55);
+}
+
+.interpolated-icon svg {
+  height: 1rem;
+  fill: #A85110;
+  opacity: 1;
+  vertical-align: central;
+  margin-left: 0.1rem;
 }
 
 span.hi {

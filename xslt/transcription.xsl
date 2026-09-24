@@ -6,6 +6,10 @@
 
 <xsl:output method="html" encoding="UTF-8" omit-xml-declaration="yes"/>
 
+<xsl:variable name="interpolated-svg">
+  <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M412.31,291.46,478,357.15l-65.69,65.68-21-21L421.07,372h-44a87.86,87.86,0,0,1-62.53-25.9l-159.2-159.2a58.29,58.29,0,0,0-41.5-17.19H34V140h79.87a87.83,87.83,0,0,1,62.53,25.91L335.6,325.08a58.27,58.27,0,0,0,41.5,17.19h44l-29.79-29.78Zm-257,33.65a59.1,59.1,0,0,1-41.53,17.16H34V372h79.81a89,89,0,0,0,62.54-25.86l53.7-53.51-21-21.07ZM335.63,186.89a59.09,59.09,0,0,1,41.53-17.16h43.91l-29.79,29.78,21,21L478,154.86,412.31,89.17l-21,21L421.07,140H377.16a89.08,89.08,0,0,0-62.58,25.89l-53.52,53.7,21.07,21Z"/></svg>
+</xsl:variable>
+
 <xsl:template match="x:text">
     <xsl:variable name="textid">
         <xsl:choose>
@@ -213,6 +217,20 @@
             </xsl:if>
         </xsl:attribute>
         <xsl:apply-templates />
+        <xsl:if test="@corresp">
+          <xsl:variable name="xmlid" select="translate(@corresp,'#','')"/>
+          <xsl:attribute name="id">
+            <xsl:value-of select="$xmlid"/><xsl:text>-supplied</xsl:text>
+          </xsl:attribute>
+          <xsl:apply-templates select="//x:surplus[@xml:id=$xmlid]/node()"/>
+          <xsl:if test="@reason='interpolated'">
+            <xsl:element name="a">
+              <xsl:attribute name="href"><xsl:value-of select="@corresp"/></xsl:attribute>
+              <xsl:attribute name="class">interpolated-icon</xsl:attribute>
+              <xsl:copy-of select="$interpolated-svg"/>
+            </xsl:element>
+      </xsl:if>
+        </xsl:if>
     </xsl:element>
 </xsl:template>
 
@@ -939,10 +957,32 @@
 
 <xsl:template match="x:surplus">
     <xsl:element name="span">
-        <xsl:attribute name="class">surplus</xsl:attribute>
-        <xsl:attribute name="data-anno">surplus</xsl:attribute>
-        <xsl:call-template name="lang"/>
-        <xsl:apply-templates/>
+      <xsl:attribute name="class">
+          <xsl:text>surplus</xsl:text>
+          <xsl:if test="@reason='interpolated'">
+            <xsl:text> interpolated</xsl:text>
+          </xsl:if>
+      </xsl:attribute>
+      <xsl:if test="@xml:id">
+        <xsl:attribute name="id"><xsl:value-of select="@xml:id"/></xsl:attribute>
+      </xsl:if>
+      <xsl:attribute name="data-anno">
+        <xsl:text>surplus</xsl:text>
+        <xsl:if test="@reason">
+          <xsl:text> (</xsl:text><xsl:value-of select="@reason"/><xsl:text>)</xsl:text>
+        </xsl:if>
+      </xsl:attribute>
+      <xsl:call-template name="lang"/>
+      <xsl:apply-templates/>
+      <xsl:if test="@reason='interpolated'">
+        <xsl:element name="a">
+          <xsl:attribute name="class">interpolated-icon</xsl:attribute>
+          <xsl:attribute name="href">
+            <xsl:text>#</xsl:text><xsl:value-of select="@xml:id"/><xsl:text>-supplied</xsl:text>
+          </xsl:attribute>
+          <xsl:copy-of select="$interpolated-svg"/>
+        </xsl:element>
+      </xsl:if>
     </xsl:element>
 </xsl:template>
 
