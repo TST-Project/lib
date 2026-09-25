@@ -239,6 +239,7 @@ span.lb, span.cb {
 
 .lb.diplo[data-nobreak]::before, .pb.diplo[data-nobreak]::before, .cb.diplo[data-nobreak]::before {
     content: "-";
+    font-size: 1.4rem;
     opacity: 0.5;
     visibility: visible;
 }   
