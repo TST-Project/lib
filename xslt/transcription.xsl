@@ -453,7 +453,11 @@
 </xsl:template>
 
 <xsl:template match="x:c">
-    <xsl:element name="span"><xsl:apply-templates/></xsl:element>
+  <xsl:element name="span">
+    <xsl:attribute name="class">character</xsl:attribute>
+    <xsl:call-template name="lang"/>
+    <xsl:apply-templates/>
+  </xsl:element>
 </xsl:template>
 
 <xsl:template match="x:g">
