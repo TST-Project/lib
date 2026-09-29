@@ -1379,6 +1379,28 @@
 
 <xsl:template match="x:sourceDoc"/>
 
+<xsl:template match="x:gi">
+    <xsl:element name="code">
+        <xsl:attribute name="class">tag</xsl:attribute>
+        <xsl:apply-templates/>
+    </xsl:element>
+</xsl:template>
+
+<xsl:template match="x:att">
+    <xsl:element name="code">
+      <xsl:attribute name="class">attribute</xsl:attribute>
+      <xsl:apply-templates/>
+    </xsl:element>
+</xsl:template>
+
+<xsl:template match="x:c">
+  <xsl:element name="span">
+    <xsl:attribute name="class">character</xsl:attribute>
+    <xsl:call-template name="lang"/>
+    <xsl:apply-templates/>
+  </xsl:element>
+</xsl:template>
+
 <xsl:template name="import-milestone">
     <!--xsl:if test="self::x:seg and not(./*[1]/@facs)"-->
     <!--xsl:if test="(self::x:fw or @function) and not(./node()[1][@facs or local-name() = 'milestone' or local-name() = 'pb'])"-->

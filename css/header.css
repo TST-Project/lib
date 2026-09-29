@@ -163,3 +163,13 @@ a[href^='https://']:has(img), a[href^='https://']:has(img):hover {
     content: ' (?)';
     color:  #CC0000;
 }
+
+code.tag::before {
+  content: '<';
+}
+code.tag::after {
+  content: '>';
+}
+code.attribute::before {
+  content: '@';
+}
