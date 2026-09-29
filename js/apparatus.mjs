@@ -387,32 +387,49 @@ const highlightRanges = (ranges, target, highlightfn) => {
     return ret;
 };
 
+const checkTemps = nodelist => {
+  for(const node of nodelist)
+    if(node.classList.contains('temporary'))
+      return true;
+  return false;
+};
+
 const unhighlight = (targ,transliterator) => {
-    const root = targ.getRootNode();
-    let highlit = root.querySelectorAll('.highlit');
-    if(highlit.length === 0) return;
-    targ = targ ? targ.closest('div.wide') : highlit[0].closest('div.wide');
-    const par = targ.querySelector('.text-block'); // or .edition?
-    if(!par) return;
-    
-    if(root.getElementById('transbutton').lang === 'en') {
-        transliterator.revert(par);
-        highlit = root.querySelectorAll('.highlit'); // in case things changed (via jiggle)
+  const root = targ.getRootNode();
+  let highlit = root.querySelectorAll('.highlit');
+  if(highlit.length === 0) return;
+
+  targ = targ ? targ.closest('div.wide') : highlit[0].closest('div.wide');
+  const par = targ.querySelector('.text-block'); // or .edition?
+  if(!par) return;
+ 
+  const needsRefresh = checkTemps(highlit);
+
+  if(!needsRefresh) {
+    for(const h of highlit)
+      h.classList.remove('highlit');
+    return;
+  }
+
+  if(root.getElementById('transbutton').lang === 'en') {
+    transliterator.revert(par);
+    highlit = root.querySelectorAll('.highlit'); // in case things changed (via jiggle)
+  }
+  
+  for(const h of highlit) {
+    if(h.classList.contains('temporary')) {
+      while(h.firstChild)
+        h.after(h.firstChild);
+      h.remove();
     }
-    
-    for(const h of highlit) {
-        if(h.classList.contains('temporary')) {
-            while(h.firstChild)
-                h.after(h.firstChild);
-            h.remove();
-        }
-        else h.classList.remove('highlit');
-    }
-    par.normalize();
-    transliterator.refreshCache(par);
-    
-    if(root.getElementById('transbutton').lang === 'en')
-        transliterator.activate(par);
+    else h.classList.remove('highlit');
+  }
+
+  par.normalize();
+  transliterator.refreshCache(par);
+
+  if(root.getElementById('transbutton').lang === 'en')
+    transliterator.activate(par);
 };
 /*
 const unpermalight = () => {
