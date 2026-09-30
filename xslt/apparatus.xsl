@@ -177,24 +177,6 @@
   </xsl:element>
 </xsl:template>
 
-<xsl:template name="p">
-    <div class="lg wide">
-      <div>
-        <xsl:call-template name="lang"/>
-        <xsl:attribute name="class">
-          <xsl:text>text-block p edition</xsl:text>
-        </xsl:attribute>
-        <xsl:if test="@xml:id">
-          <xsl:attribute name="id"><xsl:value-of select="@xml:id"/></xsl:attribute>
-        </xsl:if>
-        <xsl:if test="@corresp">
-          <xsl:attribute name="data-corresp"><xsl:value-of select="substring-after(@corresp,'#')"/></xsl:attribute>
-        </xsl:if>
-        <xsl:apply-templates/>
-      </div>
-    </div>
-</xsl:template>
-
 <xsl:template match="x:text//x:p">
   <xsl:variable name="xmlid" select="@xml:id"/>
   <xsl:variable name="hashid" select="concat('#',$xmlid)"/>
