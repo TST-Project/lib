@@ -13,11 +13,14 @@
     </xsl:element>
 </xsl:template>
 
-<xsl:template match="x:p">
+<xsl:template name="p">
   <xsl:element name="p">
       <xsl:call-template name="lang"/>
       <xsl:apply-templates/>
   </xsl:element>
+</xsl:template>
+<xsl:template match="x:p">
+  <xsl:call-template name="p"/>
 </xsl:template>
 
 <xsl:template match="x:list">

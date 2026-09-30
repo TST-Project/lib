@@ -177,12 +177,15 @@
   </xsl:element>
 </xsl:template>
 
-<xsl:template name="p">
+<xsl:template name="editionblock">
+  <xsl:param name="blocktype">p</xsl:param>
   <div class="lg wide">
     <div>
       <xsl:call-template name="lang"/>
       <xsl:attribute name="class">
-        <xsl:text>text-block p edition</xsl:text>
+          <xsl:text>text-block </xsl:text>
+          <xsl:value-of select="$blocktype"/>
+          <xsl:text> edition</xsl:text>
       </xsl:attribute>
       <xsl:if test="@xml:id">
         <xsl:attribute name="id"><xsl:value-of select="@xml:id"/></xsl:attribute>
@@ -195,7 +198,7 @@
   </div>
 </xsl:template>
 
-<xsl:template match="x:text[@type='edition']//x:p">
+<xsl:template match="x:text//x:p">
   <xsl:variable name="xmlid" select="@xml:id"/>
   <xsl:variable name="hashid" select="concat('#',$xmlid)"/>
   <xsl:variable name="apparatus" select="//x:standOff[@type='apparatus' and @corresp=$hashid]"/>
@@ -248,7 +251,14 @@
       </div>
     </xsl:when>
     <xsl:otherwise>
-      <xsl:call-template name="p"/>
+      <xsl:choose>
+        <xsl:when test="$isedition">
+          <xsl:call-template name="editionblock"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:call-template name="p"/>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
@@ -282,7 +292,7 @@
   </xsl:choose>
 </xsl:template>
 
-<xsl:template match="x:text[@type='edition']//x:lg | x:text[@type='edition']//x:l[@xml:id]"> <!-- not child of x:div[@rend='parallel'] -->
+<xsl:template match="x:text//x:lg | x:text//x:l[@xml:id]"> <!-- not child of x:div[@rend='parallel'] -->
   <xsl:variable name="xmlid" select="@xml:id"/>
   <xsl:variable name="hashid" select="concat('#',$xmlid)"/>
   <xsl:variable name="apparatus" select="//x:standOff[@type='apparatus' and @corresp=$hashid]"/>
@@ -345,7 +355,16 @@
       </div>
     </xsl:when>
     <xsl:otherwise>
-      <xsl:call-template name="lg"/>
+      <xsl:choose>
+        <xsl:when test="$isedition">
+          <xsl:call-template name="editionblock">
+            <xsl:with-param name="blocktype">lg</xsl:with-param>
+          </xsl:call-template>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:call-template name="lg"/>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
