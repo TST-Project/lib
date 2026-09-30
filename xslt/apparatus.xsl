@@ -230,7 +230,7 @@
       </div>
     </xsl:when>
     <xsl:otherwise>
-      <xsl:call-template name="p"/>
+      <xsl:apply-templates/>
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
