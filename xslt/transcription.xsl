@@ -640,7 +640,7 @@
         </xsl:attribute>
         <xsl:attribute name="lang">en</xsl:attribute>
         <xsl:choose>
-            <xsl:when test="@break = 'no' and $hyphen = 'yes'">
+            <xsl:when test="@break = 'no' and $hyphen">
                 <xsl:attribute name="data-nobreak"/>
             </xsl:when>
             <xsl:otherwise>
@@ -669,7 +669,7 @@
 </xsl:template>
 
 <xsl:template match="x:cb">
-    <xsl:param name="hyphen">yes</xsl:param>
+    <xsl:param name="hyphen" select="true()"/>
     <xsl:call-template name="cb">
         <xsl:with-param name="hyphen"><xsl:value-of select="$hyphen"/></xsl:with-param>
     </xsl:call-template>
@@ -677,31 +677,39 @@
 
 <xsl:template match="x:rubric/child::*[1][local-name() = 'cb'] | x:incipit/child::*[1][local-name() = 'cb'] | x:explicit/child::*[1][local-name() = 'cb'] | x:finalRubric/child::*[1][local-name() = 'cb'] | x:colophon/child::*[1][local-name() = 'cb']">
     <xsl:call-template name="cb">
-        <xsl:with-param name="hyphen">no</xsl:with-param>
-        <xsl:with-param name="excerpt">yes</xsl:with-param>
+        <xsl:with-param name="hyphen" select="false()"/>
+        <xsl:with-param name="excerpt" select="true()"/>
     </xsl:call-template>
 </xsl:template>
 
-<xsl:template match="x:q[@rend='block']//x:lg//x:cb | x:quote[@rend='block']//x:lg//x:cb | x:q[not(@rend)]//x:cb | x:quote[not(@rend)]//x:cb | x:standOff[@type='apparatus']//x:cb">
+<xsl:template match="x:q[@rend='block']//x:lg//x:cb | x:quote[@rend='block']//x:lg//x:cb | x:q[not(@rend)]//x:cb | x:quote[not(@rend)]//x:cb">
     <xsl:call-template name="cb">
-        <xsl:with-param name="diplo">false</xsl:with-param>
+      <xsl:with-param name="diplo" select="false()"/>
+    </xsl:call-template>
+</xsl:template>
+<xsl:template match="x:standOff//x:cb">
+    <xsl:call-template name="cb">
+      <xsl:with-param name="diplo" select="false()"/>
+      <xsl:with-param name="apparatus" select="false()"/>
     </xsl:call-template>
 </xsl:template>
 
 <xsl:template name="cb">
-    <xsl:param name="diplo">true</xsl:param>
-    <xsl:param name="hyphen">yes</xsl:param>
-    <xsl:param name="excerpt">no</xsl:param>
+    <xsl:param name="diplo" select="true()"/>
+    <xsl:param name="hyphen" select="true()"/>
+    <xsl:param name="excerpt" select="false()"/>
+    <xsl:param name="apparatus" select="false()"/>
     <xsl:element name="span">
         <xsl:attribute name="class">
             <xsl:text>cb</xsl:text>
-            <xsl:if test="$diplo = 'true'"><xsl:text> diplo</xsl:text></xsl:if>
-            <xsl:if test="$excerpt = 'yes'"><xsl:text> nobreak</xsl:text></xsl:if>
+            <xsl:if test="$diplo"><xsl:text> diplo</xsl:text></xsl:if>
+            <xsl:if test="$excerpt"><xsl:text> nobreak</xsl:text></xsl:if>
+            <xsl:if test="$apparatus"><xsl:text> apparatus</xsl:text></xsl:if>
             <xsl:if test="not(@n)"><xsl:text> unnumbered</xsl:text></xsl:if>
         </xsl:attribute>
         <xsl:attribute name="lang">en</xsl:attribute>
         <xsl:choose>
-            <xsl:when test="@break = 'no' and $hyphen = 'yes'">
+            <xsl:when test="@break = 'no' and $hyphen">
                 <xsl:attribute name="data-nobreak"/>
             </xsl:when>
             <xsl:otherwise>
@@ -727,7 +735,7 @@
 </xsl:template>
 
 <xsl:template match="x:pb">
-    <xsl:param name="excerpt">no</xsl:param>
+    <xsl:param name="excerpt" select="false()"/>
     <xsl:call-template name="pb">
         <xsl:with-param name="excerpt"><xsl:value-of select="$excerpt"/></xsl:with-param>
     </xsl:call-template>

@@ -239,9 +239,9 @@ const events = {
 
 const cleanLb = par => {
   let start = 1;
-  for(const tag of par.querySelectorAll('span.milestone, span.pb, span.lb')) {
+  for(const tag of par.querySelectorAll('span.milestone, span.pb, span.cb, span.lb')) {
     if(tag.classList.contains('apparatus')) continue;
-    if(tag.classList.contains('milestone') || tag.classList.contains('pb'))
+    if(tag.matches('.milestone, .pb, .cb'))
       start = 1;
     else {
       if(tag.classList.contains('unnumbered')) {
