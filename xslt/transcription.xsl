@@ -860,6 +860,14 @@
         <xsl:apply-templates />
     </xsl:element>
 </xsl:template>
+<xsl:template match="x:quote[@rend='block']/x:lg | x:q[@rend='block']/x:lg">
+    <xsl:apply-templates/>
+</xsl:template>
+<xsl:template match="x:quote[@rend='block']/x:lg/x:l | x:q[@rend='block']/x:lg/x:l">
+  <xsl:element name="p">
+    <xsl:apply-templates/>
+  </xsl:element>
+</xsl:template>
 
 <xsl:template match="x:foreign">
     <xsl:element name="em">
