@@ -518,40 +518,50 @@
         </xsl:element>
 </xsl:template>
 <xsl:template match="x:milestone">
-    <xsl:param name="excerpt">no</xsl:param>
-    <xsl:variable name="unit" select="@unit"/>
-    <xsl:variable name="form" select="ancestor::x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:physDesc/x:objectDesc/@form"/>
-    <xsl:element name="span">
-        <xsl:attribute name="class">
-            <xsl:text>milestone diplo</xsl:text>
-            <xsl:if test="$excerpt = 'yes'"><xsl:text> nobreak</xsl:text></xsl:if>
-            <xsl:if test="$unit = 'folio' or $unit = 'page'">
-                <xsl:text> biggap</xsl:text>
-            </xsl:if>
-        </xsl:attribute>
-        <xsl:attribute name="lang">en</xsl:attribute>
-        <xsl:apply-templates select="@facs"/>
-        <xsl:if test="$excerpt = 'no' and @break = 'no'">
-            <xsl:attribute name="data-nobreak"/>
-        </xsl:if>
-        <xsl:choose>
-        <xsl:when test="$unit">
-            <xsl:variable name="unitname" select="$TST//tst:milestones/tst:entry[@key=$unit]"/>
-            <xsl:choose>
-                <xsl:when test="$unitname"><xsl:value-of select="$unitname"/></xsl:when>
-                <xsl:otherwise><xsl:value-of select="$unit"/></xsl:otherwise>
-            </xsl:choose>
-            <xsl:if test="@n"><xsl:text> </xsl:text></xsl:if>
-        </xsl:when>
-        <xsl:when test="$form = 'pothi'">
-            <xsl:text>folio </xsl:text>
-        </xsl:when>
-        <xsl:when test="$form = 'codex'">
-            <xsl:text>page </xsl:text>
-        </xsl:when>
-        </xsl:choose>
-        <xsl:value-of select="@n"/>
-    </xsl:element>
+  <xsl:call-template name="milestone"/>
+</xsl:template>
+  <xsl:template match="x:standOff//x:milestone">
+  <xsl:call-template name="milestone">
+      <xsl:with-param name="apparatus" select="true()"/>
+  </xsl:call-template>
+</xsl:template>
+<xsl:template name="milestone">
+  <xsl:param name="excerpt" select="false()"/>
+  <xsl:param name="apparatus" select="false()"/>
+  <xsl:variable name="unit" select="@unit"/>
+  <xsl:variable name="form" select="ancestor::x:TEI/x:teiHeader/x:fileDesc/x:sourceDesc/x:msDesc/x:physDesc/x:objectDesc/@form"/>
+  <xsl:element name="span">
+      <xsl:attribute name="class">
+          <xsl:text>milestone diplo</xsl:text>
+          <xsl:if test="$excerpt"><xsl:text> nobreak</xsl:text></xsl:if>
+          <xsl:if test="$apparatus"><xsl:text> apparatus</xsl:text></xsl:if>
+          <xsl:if test="$unit = 'folio' or $unit = 'page'">
+              <xsl:text> biggap</xsl:text>
+          </xsl:if>
+      </xsl:attribute>
+      <xsl:attribute name="lang">en</xsl:attribute>
+      <xsl:apply-templates select="@facs"/>
+      <xsl:if test="$excerpt and @break = 'no'">
+          <xsl:attribute name="data-nobreak"/>
+      </xsl:if>
+      <xsl:choose>
+      <xsl:when test="$unit">
+          <xsl:variable name="unitname" select="$TST//tst:milestones/tst:entry[@key=$unit]"/>
+          <xsl:choose>
+              <xsl:when test="$unitname"><xsl:value-of select="$unitname"/></xsl:when>
+              <xsl:otherwise><xsl:value-of select="$unit"/></xsl:otherwise>
+          </xsl:choose>
+          <xsl:if test="@n"><xsl:text> </xsl:text></xsl:if>
+      </xsl:when>
+      <xsl:when test="$form = 'pothi'">
+          <xsl:text>folio </xsl:text>
+      </xsl:when>
+      <xsl:when test="$form = 'codex'">
+          <xsl:text>page </xsl:text>
+      </xsl:when>
+      </xsl:choose>
+      <xsl:value-of select="@n"/>
+  </xsl:element>
 </xsl:template>
 
 <xsl:template match="x:locus">
@@ -590,7 +600,7 @@
 </xsl:template>
 
 <xsl:template match="x:lb">
-    <xsl:param name="hyphen">yes</xsl:param>
+    <xsl:param name="hyphen" select="true()"/>
     <xsl:call-template name="lb">
         <xsl:with-param name="hyphen"><xsl:value-of select="$hyphen"/></xsl:with-param>
     </xsl:call-template>
@@ -598,26 +608,34 @@
 
 <xsl:template match="x:rubric/child::*[1][local-name() = 'lb'] | x:incipit/child::*[1][local-name() = 'lb'] | x:explicit/child::*[1][local-name() = 'lb'] | x:finalRubric/child::*[1][local-name() = 'lb'] | x:colophon/child::*[1][local-name() = 'lb']">
     <xsl:call-template name="lb">
-        <xsl:with-param name="hyphen">no</xsl:with-param>
-        <xsl:with-param name="excerpt">yes</xsl:with-param>
+      <xsl:with-param name="hyphen" select="false()"/>
+      <xsl:with-param name="excerpt" select="true()"/>
     </xsl:call-template>
 </xsl:template>
 
-<xsl:template match="x:q[@rend='block']//x:lg//x:lb | x:quote[@rend='block']//x:lg//x:lb | x:q[not(@rend)]//x:lb | x:quote[not(@rend)]//x:lb | x:standOff[@type='apparatus']//x:lb">
+<xsl:template match="x:q[@rend='block']//x:lg//x:lb | x:quote[@rend='block']//x:lg//x:lb | x:q[not(@rend)]//x:lb | x:quote[not(@rend)]//x:lb">
     <xsl:call-template name="lb">
-        <xsl:with-param name="diplo">false</xsl:with-param>
+      <xsl:with-param name="diplo" select="false()"/>
     </xsl:call-template>
 </xsl:template>
 
+<xsl:template match="x:standOff//x:lb">
+    <xsl:call-template name="lb">
+      <xsl:with-param name="diplo" select="false()"/>
+      <xsl:with-param name="apparatus" select="true()"/>
+    </xsl:call-template>
+</xsl:template>
 <xsl:template name="lb">
-    <xsl:param name="diplo">true</xsl:param>
-    <xsl:param name="hyphen">yes</xsl:param>
-    <xsl:param name="excerpt">no</xsl:param>
+    <xsl:param name="diplo" select="true()"/>
+    <xsl:param name="hyphen" select="true()"/>
+    <xsl:param name="excerpt" select="false()"/>
+    <xsl:param name="apparatus" select="false()"/>
     <xsl:element name="span">
         <xsl:attribute name="class">
             <xsl:text>lb</xsl:text>
-            <xsl:if test="$diplo = 'true'"><xsl:text> diplo</xsl:text></xsl:if>
-            <xsl:if test="$excerpt = 'yes'"><xsl:text> nobreak</xsl:text></xsl:if>
+            <xsl:if test="$diplo"><xsl:text> diplo</xsl:text></xsl:if>
+            <xsl:if test="$excerpt"><xsl:text> nobreak</xsl:text></xsl:if>
+            <xsl:if test="$apparatus"><xsl:text> apparatus</xsl:text></xsl:if>
             <xsl:if test="not(@n)"><xsl:text> unnumbered</xsl:text></xsl:if>
         </xsl:attribute>
         <xsl:attribute name="lang">en</xsl:attribute>
@@ -715,26 +733,36 @@
     </xsl:call-template>
 </xsl:template>
 <xsl:template match="x:rubric/child::*[1][local-name() = 'pb'] | x:incipit/child::*[1][local-name() = 'pb'] | x:explicit/child::*[1][local-name() = 'pb'] | x:finalRubric/child::*[1][local-name() = 'pb'] | x:colophon/child::*[1][local-name() = 'pb']">
-    <xsl:param name="excerpt">yes</xsl:param>
+    <xsl:param name="excerpt" select="true()"/>
     <xsl:call-template name="pb">
         <xsl:with-param name="excerpt"><xsl:value-of select="$excerpt"/></xsl:with-param>
     </xsl:call-template>
 </xsl:template>
-<xsl:template match="x:q[@rend='block']//x:lg//x:pb | x:quote[@rend='block']//x:lg//x:pb | x:standOff[@type='apparatus']//x:pb">
-    <xsl:param name="excerpt">no</xsl:param>
+<xsl:template match="x:q[@rend='block']//x:lg//x:pb | x:quote[@rend='block']//x:lg//x:pb">
+    <xsl:param name="excerpt" select="false()"/>
     <xsl:call-template name="pb">
-        <xsl:with-param name="diplo">false</xsl:with-param>
+        <xsl:with-param name="diplo" select="false()"/>
         <xsl:with-param name="excerpt"><xsl:value-of select="$excerpt"/></xsl:with-param>
+    </xsl:call-template>
+</xsl:template>
+<xsl:template match="x:standOff//x:pb">
+    <xsl:param name="excerpt" select="false()"/>
+    <xsl:call-template name="pb">
+      <xsl:with-param name="diplo" select="false()"/>
+      <xsl:with-param name="apparatus" select="true()"/>
+      <xsl:with-param name="excerpt"><xsl:value-of select="$excerpt"/></xsl:with-param>
     </xsl:call-template>
 </xsl:template>
 <xsl:template name="pb">
-    <xsl:param name="excerpt">no</xsl:param>
-    <xsl:param name="diplo">true</xsl:param>
+    <xsl:param name="excerpt" select="false()"/>
+    <xsl:param name="diplo" select="true()"/>
+    <xsl:param name="apparatus" select="false()"/>
     <xsl:element name="span">
         <xsl:attribute name="class">
             <xsl:text>pb</xsl:text>
-            <xsl:if test="$diplo = 'true'"><xsl:text> diplo</xsl:text></xsl:if>
-            <xsl:if test="$excerpt = 'yes'"><xsl:text> nobreak</xsl:text></xsl:if>
+            <xsl:if test="$diplo"><xsl:text> diplo</xsl:text></xsl:if>
+            <xsl:if test="$excerpt"><xsl:text> nobreak</xsl:text></xsl:if>
+            <xsl:if test="$apparatus"><xsl:text> apparatus</xsl:text></xsl:if>
         </xsl:attribute>
         <xsl:attribute name="lang">en</xsl:attribute>
         <xsl:variable name="facs" select="@facs"/>

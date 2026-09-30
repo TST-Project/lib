@@ -237,13 +237,26 @@ const events = {
 };
 
 
-const cleanLb = (par) => {
-    const lbs = par.querySelectorAll('[data-nobreak]');
-    for(const lb of lbs) {
-        const prev = lb.previousSibling;
-        if(prev && prev.nodeType === 3)
-            prev.data = prev.data.trimEnd();
+const cleanLb = par => {
+  let start = 1;
+  for(const tag of par.querySelectorAll('span.milestone, span.pb, .lb')) {
+    if(tag.classList.contains('apparatus')) continue;
+    if(tag.classList.contains('milestone') || tag.classList.contains('pb'))
+      start = 1;
+    else {
+      if(tag.dataset.n) start = tag.dataset.n;
+      else {
+        tag.classList.remove('unnumbered');
+        tag.dataset.n = start;
+        start = start + 1;
+      }
     }
+    if(tag.dataset.hasOwnProperty('nobreak')) {
+      const prev = tag.previousSibling;
+      if(prev && prev.nodeType === 3)
+          prev.data = prev.data.trimEnd();
+    }
+  }
 };
 
 
