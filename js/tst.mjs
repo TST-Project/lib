@@ -239,17 +239,18 @@ const events = {
 
 const cleanLb = par => {
   let start = 1;
-  for(const tag of par.querySelectorAll('span.milestone, span.pb, .lb')) {
+  for(const tag of par.querySelectorAll('span.milestone, span.pb, span.lb')) {
     if(tag.classList.contains('apparatus')) continue;
     if(tag.classList.contains('milestone') || tag.classList.contains('pb'))
       start = 1;
     else {
-      if(tag.dataset.hasOwnProperty('n')) start = parseInt(tag.dataset.n) + 1;
-      else {
+      if(tag.classList.contains('unnumbered')) {
         tag.classList.remove('unnumbered');
         tag.dataset.n = start;
         start = start + 1;
       }
+      else
+        start = parseInt(tag.dataset.n) + 1;
     }
     if(tag.dataset.hasOwnProperty('nobreak')) {
       const prev = tag.previousSibling;
