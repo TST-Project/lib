@@ -177,7 +177,25 @@
   </xsl:element>
 </xsl:template>
 
-<xsl:template match="x:text//x:p">
+<xsl:template name="p">
+  <div class="lg wide">
+    <div>
+      <xsl:call-template name="lang"/>
+      <xsl:attribute name="class">
+        <xsl:text>text-block p edition</xsl:text>
+      </xsl:attribute>
+      <xsl:if test="@xml:id">
+        <xsl:attribute name="id"><xsl:value-of select="@xml:id"/></xsl:attribute>
+      </xsl:if>
+      <xsl:if test="@corresp">
+        <xsl:attribute name="data-corresp"><xsl:value-of select="substring-after(@corresp,'#')"/></xsl:attribute>
+      </xsl:if>
+      <xsl:apply-templates/>
+    </div>
+  </div>
+</xsl:template>
+
+<xsl:template match="x:text[@type='edition']//x:p">
   <xsl:variable name="xmlid" select="@xml:id"/>
   <xsl:variable name="hashid" select="concat('#',$xmlid)"/>
   <xsl:variable name="apparatus" select="//x:standOff[@type='apparatus' and @corresp=$hashid]"/>
@@ -230,7 +248,7 @@
       </div>
     </xsl:when>
     <xsl:otherwise>
-      <xsl:apply-templates/>
+      <xsl:call-template name="p"/>
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
@@ -264,7 +282,7 @@
   </xsl:choose>
 </xsl:template>
 
-<xsl:template match="x:text//x:lg | x:text//x:l[@xml:id]"> <!-- not child of x:div[@rend='parallel'] -->
+<xsl:template match="x:text[@type='edition']//x:lg | x:text[@type='edition']//x:l[@xml:id]"> <!-- not child of x:div[@rend='parallel'] -->
   <xsl:variable name="xmlid" select="@xml:id"/>
   <xsl:variable name="hashid" select="concat('#',$xmlid)"/>
   <xsl:variable name="apparatus" select="//x:standOff[@type='apparatus' and @corresp=$hashid]"/>
