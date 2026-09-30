@@ -188,7 +188,7 @@
 
 [lang^="ml-Mlym"], [lang^="te-Telu"], [lang^="kn-Knda"],
 [lang^="sa-Mlym"], [lang^="sa-Telu"], [lang^="sa-Knda"] {
-    font-size-adjust: ex-height 0.55;
+    /*font-size-adjust: ex-height 0.55;*/ /* doesn't look good in Chrome */
 }
 
 [lang^="si-Sinh"], [lang^="pi-Sinh"] {
