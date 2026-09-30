@@ -244,7 +244,7 @@ const cleanLb = par => {
     if(tag.classList.contains('milestone') || tag.classList.contains('pb'))
       start = 1;
     else {
-      if(tag.dataset.n) start = tag.dataset.n;
+      if(tag.dataset.hasOwnProperty('n')) start = parseInt(tag.dataset.n) + 1;
       else {
         tag.classList.remove('unnumbered');
         tag.dataset.n = start;
