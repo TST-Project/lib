@@ -13,39 +13,11 @@
     </xsl:element>
 </xsl:template>
 
-<xsl:template name="p">
-    <div class="lg wide">
-      <div>
-        <xsl:call-template name="lang"/>
-        <xsl:attribute name="class">
-          <xsl:text>text-block p edition</xsl:text>
-        </xsl:attribute>
-        <xsl:if test="@xml:id">
-          <xsl:attribute name="id"><xsl:value-of select="@xml:id"/></xsl:attribute>
-        </xsl:if>
-        <xsl:if test="@corresp">
-          <xsl:attribute name="data-corresp"><xsl:value-of select="substring-after(@corresp,'#')"/></xsl:attribute>
-        </xsl:if>
-        <xsl:apply-templates/>
-      </div>
-    </div>
-    <!--xsl:element name="p">
-        <xsl:if test="@xml:id">
-            <xsl:attribute name="id">
-                <xsl:value-of select="@xml:id"/>
-            </xsl:attribute>
-        </xsl:if>
-        <xsl:if test="@corresp">
-            <xsl:attribute name="data-corresp">
-                <xsl:value-of select="translate(@corresp,'#','')"/>
-            </xsl:attribute>
-        </xsl:if>
-        <xsl:call-template name="lang"/>
-        <xsl:apply-templates/>
-    </xsl:element-->
-</xsl:template>
 <xsl:template match="x:p">
-    <xsl:call-template name="p"/>
+  <xsl:element name="p">
+      <xsl:call-template name="lang"/>
+      <xsl:apply-templates/>
+  </xsl:element>
 </xsl:template>
 
 <xsl:template match="x:list">
