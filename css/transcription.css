@@ -59,7 +59,7 @@ abbr[data-anno] {
     font-style: normal;
 }
 
-div.diplo, div.wide.diplo, p.diplo, span.diplo .blockline {
+div.diplo, div.wide.diplo, p.diplo, .diplo .blockline {
     display: inline;
 }
 blockquote:has(.diplo) {

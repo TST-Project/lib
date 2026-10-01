@@ -861,12 +861,6 @@
         <xsl:apply-templates />
     </xsl:element>
 </xsl:template>
-<xsl:template match="x:quote[@rend='block']/x:lg | x:q[@rend='block']/x:lg">
-  <xsl:element name="span">
-    <xsl:call-template name="lang"/>
-    <xsl:apply-templates/>
-  </xsl:element>
-</xsl:template>
 <xsl:template match="x:quote[@rend='block']//x:l | x:q[@rend='block']//x:l">
   <xsl:element name="span">
     <xsl:attribute name="class">blockline</xsl:attribute>
