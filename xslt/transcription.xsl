@@ -739,7 +739,8 @@
 </xsl:template>
 <xsl:template match="x:rubric/child::*[1][local-name() = 'pb'] | x:incipit/child::*[1][local-name() = 'pb'] | x:explicit/child::*[1][local-name() = 'pb'] | x:finalRubric/child::*[1][local-name() = 'pb'] | x:colophon/child::*[1][local-name() = 'pb']">
     <xsl:call-template name="pb">
-      <xsl:with-param name="excerpt" select="false()"/>
+      <xsl:with-param name="hyphen" select="false()"/>
+      <xsl:with-param name="excerpt" select="true()"/>
     </xsl:call-template>
 </xsl:template>
 <xsl:template match="x:q[@rend='block']//x:lg//x:pb | x:quote[@rend='block']//x:lg//x:pb">
