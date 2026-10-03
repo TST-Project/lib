@@ -1407,7 +1407,7 @@
             <xsl:variable name="milestone" select="preceding::*[(self::x:milestone and (@unit = 'folio' or @unit = 'page') ) or self::x:pb][1]"/>
             <xsl:if test="$milestone">
                 <xsl:apply-templates select="$milestone">
-                    <xsl:with-param name="excerpt">yes</xsl:with-param>
+            <xsl:with-param name="excerpt" select="true()"/>
                 </xsl:apply-templates>
             </xsl:if>
         </xsl:if>
@@ -1424,11 +1424,10 @@
         <xsl:variable name="milestone" select="exsl:node-set($testnode)/node()[1]"/>
         <!--xsl:if test="(self::x:fw or @function) and not(./node()[1][self::x:lb or self::x:pb or self::x:milestone or self::x:cb] or ./node()[1]/x:lb or ./node()[1]/x:pb or ./node()[1]/x:cb or ./node()[1]/x:milestone)"-->
         <xsl:if test="not($milestone)">
-
             <xsl:variable name="lb" select="preceding::*[self::x:lb][1]"/>
             <xsl:if test="$lb">
                 <xsl:apply-templates select="$lb">
-                    <xsl:with-param name="hyphen">no</xsl:with-param>
+                <xsl:with-param name="hyphen" select="false()"/>
                 </xsl:apply-templates>
                 <xsl:element name="span">
                     <xsl:attribute name="lang">en</xsl:attribute>
