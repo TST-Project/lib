@@ -580,7 +580,7 @@ const to = {
             return p1+grv.get(p2); 
         });
     },
-    malayalam: txt => {
+    malayalam: (txt,smush=true,features=new Set()) => {
         const chillu = {
             'ക':'ൿ',
             'ണ':'ൺ',
@@ -592,30 +592,29 @@ const to = {
             'ള':'ൾ'
         };
 
-        const smushed = to.smush(txt,true)
+        const smushed = smush ? to.smush(txt,true) : txt;
+        const smushed2 = smushed
             .replace(/(^|\s)_ā/,'$1\u0D3D\u200D\u0D3E')
             //.replace(/(^|\s)_r/,"$1\u0D3D\u200D\u0D30\u0D4D");
             //FIXME (replaced by chillu r right now)
             .replace(/ŭ/g,'u\u0D4D')
             .replace(/(\S)·/g,'$1\u200C');
         
-        const newtxt = Sanscript.t(smushed,'iast','malayalam')
+        const newtxt = Sanscript.t(smushed2,'iast','malayalam')
             // use chillu final consonants	
             .replaceAll(/([കണതനമരലള])്(?![^\s\u200C,—’―])/g, function(match,p1) {
                 return chillu[p1];
             });
 
-        /*
-        const replacedtxt = _state.features.has('dotReph') ?
+        const replacedtxt = features.has('dotReph') ?
             // use dot reph
             newtxt.replace(/(^|[^്])ര്(?=\S)/g,'$1ൎ') :
             newtxt;
-        */
-        const replacedtxt = newtxt.replace(/(^|[^്])ര്(?=\S)/g,'$1ൎ');
+        //const replacedtxt = newtxt.replace(/(^|[^്])ര്(?=\S)/g,'$1ൎ');
 
         return replacedtxt;
     },
-    
+
     devanagari: txt => {
 
         const pretext = txt//.replace(/ṙ/g, 'r')
@@ -652,16 +651,18 @@ const to = {
         return text;
     },
 
-    telugu: txt => {
+    telugu: (txt,smush=true,features=new Set()) => {
 
         const pretext = txt.replace(/(^|\s)_ā/,'$1\u0C3D\u200D\u0C3E')
             .replace(/(^|\s)_r/,'$1\u0C3D\u200D\u0C30\u0C4D');
         // FIXME: should be moved to the right of the following consonant cluster
 
-        const smushedtext = to.smush(pretext);
+        const smushedtext = smush ? to.smush(pretext) : pretext;
         //const replacedtext = _state.features.has('valapalagilaka') ?
         //    smushedtext.replace(/r(?=[kgcjṭḍṇtdnpbmyvlh])/,'ṙ') : smushedtext;
-        const replacedtext = smushedtext.replace(/r(?=[kgcjṭḍṇtdnpbmyvlh])/,'ṙ');
+        //const replacedtext = smushedtext.replace(/r(?=[kgcjṭḍṇtdnpbmyvlh])/,'ṙ');
+        const replacedtext = features.has('valapalagilaka') ?
+          smushedtext.replaceAll(/r(?=[gjṭḍṇtdblśṣsh])/g,'ṙ') : smushedtext;
 
         const posttext = replacedtext//.replace(/ê/g,'e') // no pṛṣṭhamātrās
             //.replace(/ô/g,'o') // same with o
@@ -779,6 +780,15 @@ const replaceTextInNode = function(text, replace, node) {
     }
 };
 
+const getFeatures = par => {
+  const ret = new Set();
+  for(const li of par.querySelectorAll('[data-scriptref]')) {
+    for(const ref of li.dataset.scriptref.split(/\s+/))
+      ret.add(ref);
+  }
+  return ret;
+};
+
 const Transliterate = class {
   constructor(par) {
     if(!par) par = document.body;
@@ -786,6 +796,7 @@ const Transliterate = class {
       uuid: crypto.randomUUID(),
       cachedtext: new Map(),
       parEl: par,
+      features: getFeatures(par),
       defaultSanscript: null,
       button: null
     };
@@ -971,7 +982,7 @@ const Transliterate = class {
                 else if(curnode.parentElement.classList.contains('originalscript'))
                     result = cache.get(curnode,this.state.cachedtext);
                 else if(scriptfunc)
-                    result = scriptfunc(curnode.data,smush);
+                    result = scriptfunc(curnode.data,smush,this.state.features);
 
                 if(result !== undefined) curnode.data = result;
             }
@@ -1033,7 +1044,6 @@ const Transliterate = class {
 
     while(curnode) {
         if(curnode.nodeType === Node.ELEMENT_NODE) {
-            // what about script features? (e.g. valapalagilaka)
             const curlangattr = curnode.lang;
             if(!curlangattr) {
                 // lang undefined; copy from parent
