@@ -301,6 +301,9 @@
   <xsl:variable name="notes3" select="//x:standOff[@type='notes3' and @corresp=$hashid]"/>
   <xsl:variable name="notes4" select="//x:standOff[@type='notes4' and @corresp=$hashid]"/>
   <xsl:choose>
+    <xsl:when test="..[local-name() = 'q'] or ..[local-name() = 'quote']">
+      <xsl:call-template name="lg"/>
+    </xsl:when>
     <xsl:when test="$apparatus or $notes1 or $notes2 or $notes3 or $notes4">
       <div class="lg wide">
         <div>
