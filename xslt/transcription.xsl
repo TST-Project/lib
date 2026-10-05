@@ -14,10 +14,10 @@
     <xsl:variable name="textid">
         <xsl:choose>
             <xsl:when test="@corresp">
-                <xsl:value-of select="substring-after(@corresp,'#')"/>
+              <xsl:value-of select="substring-after(@corresp,'#')"/>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:value-of select="//x:idno[@type='siglum']"/>
+              <xsl:apply-templates select="//x:idno[@type='siglum']/node()"/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:variable>
@@ -63,7 +63,16 @@
                             <xsl:if test="$cu and $textid">
                                 <xsl:text>, </xsl:text>
                             </xsl:if>
-                            <xsl:value-of select="$textid"/>
+                            <xsl:copy-of select="$textid"/>
+                            <!--xsl:variable name="siglum" select="//x:idno[@type='siglum']"/>
+                            <xsl:choose>
+                              <xsl:when test="$siglum">
+                                <xsl:apply-templates select="$siglum/node()"/>
+                              </xsl:when>
+                              <xsl:otherwise>
+                                <xsl:value-of select="$textid"/>
+                              </xsl:otherwise>
+                            </xsl:choose-->
                         </xsl:element>
                     </xsl:element>
                 </xsl:element>
@@ -739,8 +748,7 @@
 </xsl:template>
 <xsl:template match="x:rubric/child::*[1][local-name() = 'pb'] | x:incipit/child::*[1][local-name() = 'pb'] | x:explicit/child::*[1][local-name() = 'pb'] | x:finalRubric/child::*[1][local-name() = 'pb'] | x:colophon/child::*[1][local-name() = 'pb']">
     <xsl:call-template name="pb">
-      <xsl:with-param name="hyphen" select="false()"/>
-      <xsl:with-param name="excerpt" select="true()"/>
+      <xsl:with-param name="excerpt" select="false()"/>
     </xsl:call-template>
 </xsl:template>
 <xsl:template match="x:q[@rend='block']//x:lg//x:pb | x:quote[@rend='block']//x:lg//x:pb">
