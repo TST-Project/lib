@@ -16,6 +16,16 @@
 <xsl:template name="p">
   <xsl:element name="p">
       <xsl:call-template name="lang"/>
+      <xsl:if test="@xml:id">
+          <xsl:attribute name="id">
+              <xsl:value-of select="@xml:id"/>
+          </xsl:attribute>
+      </xsl:if>
+      <xsl:if test="@corresp">
+          <xsl:attribute name="data-corresp">
+              <xsl:value-of select="translate(@corresp,'#','')"/>
+          </xsl:attribute>
+      </xsl:if>
       <xsl:apply-templates/>
   </xsl:element>
 </xsl:template>
