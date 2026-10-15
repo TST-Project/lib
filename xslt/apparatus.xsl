@@ -113,7 +113,6 @@
   <xsl:choose>
     <xsl:when test="$source">
       <xsl:element name="a">
-         <xsl:attribute name="lang">en</xsl:attribute>
          <xsl:attribute name="target">_blank</xsl:attribute>
           <xsl:attribute name="data-id"><xsl:value-of select="$witness/@id"/></xsl:attribute>
          <xsl:attribute name="class">
@@ -135,7 +134,6 @@
     </xsl:when>
     <xsl:otherwise>
       <xsl:element name="span">
-         <xsl:attribute name="lang">en</xsl:attribute>
          <xsl:attribute name="class">
           <xsl:text>msid</xsl:text>
           <xsl:if test="$rdggrp and $rdggrp/x:rdg[@type='minor'][contains(concat(normalize-space(@wit), ' '),concat($thisms,' '))]">
@@ -520,6 +518,7 @@
           <xsl:when test="$lem/@wit">
             <span>
               <xsl:attribute name="class">lem-wit</xsl:attribute>
+              <xsl:attribute name="lang">en</xsl:attribute>
               <xsl:choose>
                 <xsl:when test="$nativesplit">
                   <xsl:call-template name="splitwit2">
@@ -540,7 +539,7 @@
           </xsl:when>
           <xsl:otherwise>
             <xsl:if test="$markemend">
-              <span class="lem-wit"><span class="editor" lang="en" data-anno="emendation">em.</span></span>
+              <span class="lem-wit" lang="en"><span class="editor" data-anno="emendation">em.</span></span>
             </xsl:if>
           </xsl:otherwise>
         </xsl:choose>
@@ -569,6 +568,7 @@
             </xsl:for-each>
             <span>
               <xsl:attribute name="class">lem-wit</xsl:attribute>
+              <xsl:attribute name="lang">en</xsl:attribute>
               <xsl:choose>
                 <xsl:when test="$nativesplit">
                   <xsl:call-template name="splitwit2">
@@ -623,6 +623,7 @@
     <xsl:text> </xsl:text>
     <span>
       <xsl:attribute name="class">rdg-wit</xsl:attribute>
+      <xsl:attribute name="lang">en</xsl:attribute>
       <xsl:choose>
         <xsl:when test="$nativesplit">
           <xsl:call-template name="splitwit2">
