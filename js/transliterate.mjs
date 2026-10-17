@@ -748,20 +748,15 @@ const to = {
                        .replaceAll('်ဟ','ှ')
                        .replaceAll('ဉ်ဉ','ည')
                        .replaceAll('််','်')
- 		       .replaceAll(/ရ်(?=[ကခဂဃစဆဇဈဋဌဍဎတထဒဓနပဖဗဘမယလဝသဟဠၐၑ])/g,'ရ်္')
-                       .replaceAll('ဂာ','ဂါ')
-                       .replaceAll('ခာ','ခါ')
-                       .replaceAll('ငာ','ငါ')
-                       .replaceAll('ဒာ','ဒါ')
-                       .replaceAll('ပာ','ပါ')
-                       .replaceAll('ဝာ','ဝါ')
+                       .replaceAll(/ရ်(?=[ကခဂဃစဆဇဈဋဌဍဎတထဒဓနပဖဗဘမယလဝသဟဠၐၑ])/g,'ရ်္')
+                       .replaceAll(/([ဂခငဒပဝ])ာ/g,'$1ါ')
                        .replaceAll(/င်(?=[ကခဂ၎])/g,'င်္')
-                       .replaceAll(/ဗ်(?=[ဗဒ])/g,'ဗ္')
-                       .replaceAll('က်(?=[ကခၑ]','က္')
+                       .replaceAll(/ဗ်(?=ဒ)/g,'ဗ္')
+                       .replaceAll('က်(?=[ခၑ]','က္')
+                       .replaceAll(/([ဂစဇဋဍတဒပဗမလသဠ])်\1/g,'$1\u1039$1')
                        .replaceAll('ဒ်ဘ','ဒ္ဘ')
                        .replaceAll('ဇ်ဉာ','ဇ္ဉာ')
-                       .replaceAll(/န်(?=[တထဒဓ])/g,'န္')
-                       .replaceAll('န်တ','န္တ');
+                       .replaceAll(/န်(?=[တထဒဓ])/g,'န္');
       return smushed;
     },
 
