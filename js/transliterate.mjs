@@ -748,7 +748,7 @@ const to = {
                        .replaceAll('်ဟ','ှ')
                        .replaceAll('ဉ်ဉ','ည')
                        .replaceAll('််','်')
- 		       .replaceAll(/ရ်(?=[ကခဂဃစဆဇဈဋဌဍဎတထဒဓနပဖဗဘမယလဝသဟဠၐၑ])/,'ရ်္')
+ 		       .replaceAll(/ရ်(?=[ကခဂဃစဆဇဈဋဌဍဎတထဒဓနပဖဗဘမယလဝသဟဠၐၑ])/g,'ရ်္')
                        .replaceAll('ဂာ','ဂါ')
                        .replaceAll('ခာ','ခါ')
                        .replaceAll('ငာ','ငါ')
