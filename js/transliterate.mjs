@@ -755,7 +755,7 @@ const to = {
                        .replaceAll('ပာ','ပါ')
                        .replaceAll('ဝာ','ဝါ')
                        .replaceAll(/င်(?=[ဂ၎])/g,'င်္')
-                       .replaceAll(/ဗ်(?=[ဗဒ]/g,'ဗ္')
+                       .replaceAll(/ဗ်(?=[ဗဒ])/g,'ဗ္')
                        .replaceAll('က်ၑ','က္ၑ')
                        .replaceAll('ဒ်ဘ','ဒ္ဘ')
                        .replaceAll('ဇ်ဉာ','ဇ္ဉာ')
