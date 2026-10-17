@@ -119,6 +119,7 @@
     <tst:entry key="pala">pala</tst:entry>
     <tst:entry key="sarada">sarada</tst:entry>
     <tst:entry key="sinhala">sinhala</tst:entry>
+    <tst:entry key="burmese">burmese</tst:entry>
     <tst:entry key="telugu">telugu</tst:entry>
     <tst:entry key="tamil">tamil</tst:entry>
     <tst:entry key="dbucan">uchen</tst:entry>
@@ -206,6 +207,7 @@
     <tst:entry key="raj">Rajasthani</tst:entry>
     <tst:entry key="san">Sanskrit</tst:entry>
     <tst:entry key="sin">Sinhalese</tst:entry>
+    <tst:entry key="mya">Burmese</tst:entry>
     <tst:entry key="tam">Tamil</tst:entry>
     <tst:entry key="tel">Telugu</tst:entry>
     <tst:entry key="bod">Tibetan</tst:entry>
@@ -229,6 +231,7 @@
     <tst:entry key="raj">raj</tst:entry>
     <tst:entry key="san">san</tst:entry>
     <tst:entry key="sin">sin</tst:entry>
+    <tst:entry key="myr">myr</tst:entry>
     <tst:entry key="tam">tam</tst:entry>
     <tst:entry key="tel">tel</tst:entry>
     <tst:entry key="bod">tib</tst:entry>

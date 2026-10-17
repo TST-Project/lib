@@ -9,8 +9,7 @@ import { hyphenation_hi } from './hi.mjs';
 
 const UTF8 = str => String.fromCodePoint(`0x${str}`);
 
-const _global = Object.seal({
-    hindic: Object.freeze(['mr','hi','gu','raj','bra']),
+const _global = {
     scriptToIso: new Map([
         ['tamil','Taml'],
         ['bengali','Beng'],
@@ -23,73 +22,65 @@ const _global = Object.seal({
         ['telugu','Telu'],
         ['kannada','Knda'],
         ['nandinagari','Nand'],
+        ['burmese','Mymr'],
         ['dbumed','Tibt'],
         ['dbucan','Tibt']
     ]),
     hyphenator: {
         'ta-Taml': new Hypher(hyphenation_ta),
         'sa-Latn': new Hypher(hyphenation_sa),
-        'si-Latn': new Hypher(hyphenation_sa),
-        'pi-Latn': new Hypher(hyphenation_sa),
         'ta-Latn': new Hypher(hyphenation_ta_Latn),
-        'te-Latn': new Hypher(hyphenation_sa),
-        'ml-Latn': new Hypher(hyphenation_sa),
-        'hi-Deva': new Hypher(hyphenation_hi)
     },
-    reverselangs: new Map([
-        ['ta-Latn-t-ta-Taml','ta-Taml-t-ta-Latn'],
-        ['ta-Taml-t-ta-Latn','ta-Latn-t-ta-Taml'],
-        ['te-Latn-t-te-Gran','te-Gran-t-te-Latn'],
-        ['te-Gran-t-te-Latn','te-Latn-t-te-Gran'],
-        ['ml-Mlym-t-ml-Latn','ml-Latn-t-ml-Mlym'],
-        ['ml-Latn-t-ml-Mlym','ml-Mlym-t-ml-Latn'],
-        ['te-Telu-t-te-Latn','te-Latn-t-te-Telu'],
-        ['te-Latn-t-te-Telu','te-Telu-t-te-Latn'],
-        ['kn-Knda-t-kn-Latn','kn-Latn-t-kn-Knda'],
-        ['kn-Latn-t-kn-Knda','kn-Knda-t-kn-Latn'],
-        ['pi-Sinh-t-pi-Latn','pi-Latn-t-pi-Sinh'],
-        ['pi-Latn-t-pi-Sinh','pi-Sinh-t-pi-Latn'],
-        ['si-Sinh-t-si-Latn','si-Latn-t-si-Sinh'],
-        ['si-Latn-t-si-Sinh','si-Sinh-t-si-Latn'],
-        ['bo-Latn-t-bo-Tibt','bo-Tibt-t-bo-Latn'],
-        ['bo-Tibt-t-bo-Latn','bo-Latn-t-bo-Tibt'],
-        /*
-        ['mr-Latn-t-mr-Deva','mr-Deva-t-mr-Latn'],
-        ['mr-Deva-t-mr-Latn','mr-Latn-t-mr-Deva'],
-        ['hi-Latn-t-hi-Deva','hi-Deva-t-hi-Latn'],
-        ['hi-Deva-t-hi-Latn','hi-Latn-t-hi-Deva']
-        */
+    hindic: Object.freeze(['mr','hi','gu','raj','bra']),
+    langscripts: Object.freeze([
+      ['sa',['Deva','Beng','Gran','Mlym','Newa','Shrd','Sinh','Telu','Knda','Nand','Mymr','Tibt']],
+      ['mr',['Deva']],
+      ['hi',['Deva']],
+      ['gu',['Deva']],
+      ['raj',['Deva']],
+      ['bra',['Deva']],
+      ['new',['Newa']],
+      ['ta',['Taml']],
+      ['te',['Gran','Telu']],
+      ['ml',['Mlym']],
+      ['kn',['Knda']],
+      ['pi',['Sinh','Mymr']],
+      ['si',['Sinh']],
+      ['my',['Mymr']],
+      ['bo',['Tibt']]
     ]),
     isoToScript: new Map(),
     scriptnames: null,
-    isonames: null,
-    availlangs: null
-});
-_global.availlangs = Object.freeze(['sa','ta','kn','ml','pi','te','si','bo',..._global.hindic]);
+    //isonames: null,
+    availlangs: null,
+    reverselangs: null
+};
+_global.availlangs = Object.freeze(['sa',..._global.langscripts.map(arr => arr[0])]);
 
+_global.reverselangs = new Map(
+  _global.langscripts.reduce((acc,cur) => {
+    for(const script of cur[1]) {
+      acc.push([`${cur[0]}-Latn-t-${cur[0]}-${script}`,`${cur[0]}-${script}-t-${cur[0]}-Latn`]);
+      acc.push([`${cur[0]}-${script}-t-${cur[0]}-Latn`,`${cur[0]}-Latn-t-${cur[0]}-${script}`]);
+    }
+    return acc;
+  },[])
+);
+
+['si','my','pi','te','kn','ml','new'].forEach(code => {
+    _global.hyphenator[`${code}-Latn`] = _global.hyphenator['sa-Latn'];
+});
 _global.hindic.forEach(code => {
     _global.hyphenator[`${code}-Latn`] = _global.hyphenator['sa-Latn'];
-    if(code !== 'hi')
-        _global.hyphenator[`${code}-Deva`] = _global.hyphenator['hi-Deva'];
-    _global.reverselangs.set(`${code}-Latn-t-${code}-Deva`,`${code}-Deva-t-${code}-Latn`);
-    _global.reverselangs.set(`${code}-Deva-t-${code}-Latn`,`${code}-Latn-t-${code}-Deva`);
+    _global.hyphenator[`${code}-Deva`] = _global.hyphenator['hi-Deva'];
 });
-/*
-_global.hyphenator['mr-Latn'] = _global.hyphenator['sa-Latn'];
-_global.hyphenator['mr-Deva'] = _global.hyphenator['hi-Deva'];
-_global.hyphenator['hi-Latn'] = _global.hyphenator['sa-Latn'];
-*/
 
 _global.scriptToIso.forEach((val,key) => _global.isoToScript.set(val,key));
 
 _global.scriptnames = new Set(_global.scriptToIso.keys());
 
-_global.isonames = new Set(_global.scriptToIso.values());
-for(const val of _global.isonames) {
-    if(val === 'tamil') continue;
-    _global.reverselangs.set(`sa-${val}-t-sa-Latn`,`sa-Latn-t-sa-${val}`);
-    _global.reverselangs.set(`sa-Latn-t-sa-${val}`,`sa-${val}-t-sa-Latn`);
-}
+//_global.isonames = new Set(_global.scriptToIso.values());
+Object.freeze(_global);
 
 const getEditionScript = par => {
     const textlang = par.querySelector('.teitext')?.getAttribute('lang');
@@ -740,6 +731,38 @@ const to = {
       return smushed;
       
     },
+    burmese: (txt,smush=true) => {
+      let smushed = smush ? to.smush(txt) : to.smushvirama(txt);
+      smushed = smushed.replaceAll('e*','၏')
+                       .replaceAll('n*','၌')
+                       .replaceAll('r*','၍')
+                       .replaceAll('l*','၎')
+                       .replaceAll(/(?<=\S)ʺ/g,'ḥ')
+                       .replaceAll(/(?<=\S)ʻ/g,'်')
+                       .replaceAll(/(?<=\s)’/g,'အ')
+                       .replaceAll(/u\u00ADi/g,'ui'); // TODO: better Burmese hyphenation
+      smushed = Sanscript.t(smushed,'iast','burmese');
+      smushed = smushed.replaceAll('်ဝ','ွ')
+                       .replaceAll('်ယ','ျ')
+                       .replaceAll('်ရ','ြ')
+                       .replaceAll('်ဟ','ှ')
+                       .replaceAll('ဉ်ဉ','ည')
+                       .replaceAll('််','်')
+                       .replaceAll('ဂာ','ဂါ')
+                       .replaceAll('ခာ','ခါ')
+                       .replaceAll('ငာ','ငါ')
+                       .replaceAll('ဒာ','ဒါ')
+                       .replaceAll('ပာ','ပါ')
+                       .replaceAll('ဝာ','ဝါ')
+                       .replaceAll(/င်(?=[ဂ၎])/g,'င်္')
+                       .replaceAll(/ဗ်(?=[ဗဒ]/g,'ဗ္')
+                       .replaceAll('က်ၑ','က္ၑ')
+                       .replaceAll('ဒ်ဘ','ဒ္ဘ')
+                       .replaceAll('ဇ်ဉာ','ဇ္ဉာ')
+                       .replaceAll(/န်(?=[တထဒဓ])/g,'န္')
+                       .replaceAll('န်တ','န္တ');
+      return smushed;
+    },
 
     nandinagari: txt => {
 
@@ -1054,6 +1077,7 @@ const Transliterate = class {
             }
             else {
                 const [curlang,curscript] = curlangattr.split('-');
+                /*
                 if(curlang === 'ta') {
                     if(!curscript) {
                         // assume Madras Lexicon transliteration
@@ -1081,6 +1105,8 @@ const Transliterate = class {
                         curlang === 'ml' ||
                         // TODO: add Telugu, etc.
                         _global.hindic.indexOf(curlang) !== -1) {
+                */
+                if(_global.availlangs.includes(curlang)) {
                     // case 1: sa-XXXX
                     // case 2: sa
                     // case 3: sa-Latn[-t-sa-XXXX]

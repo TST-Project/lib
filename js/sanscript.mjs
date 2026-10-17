@@ -356,8 +356,9 @@ var schemes = Sanscript.schemes = {
             'e','ē','ai',
             'o','ō','au',
             'ê','aî','ô','aû', // Devanāgarī pṛṣṭhamātrās
-            'æ','ǣ','ə'],
-            other_marks: ['ṃ','ḥ','m̐','ẖ','ḫ','ḵ'],
+            'æ','ǣ','ə', // Sinhalese & Balinese
+            'ui'], // Burmese
+            other_marks: ['ṃ','ḥ','m̐','ẖ','ḫ','ḵ','ʹ'],
             virama: [''],
             consonants: ['k','kh','g','gh','ṅ',
             'c','ch','j','jh','ñ',
@@ -404,7 +405,43 @@ var schemes = Sanscript.schemes = {
             '','','','','','ෆ','','','','',''],
             symbols: ['','𑇡','𑇢','𑇣','𑇤','𑇥','𑇦','𑇧','𑇨','𑇩','ඕං','','\'','|','||','𑇪','𑇳','𑇴'],
             //TODO: add 20,30,40,50,60,70,80,90
-        }
+        },
+        burmese: {
+            vowels: [
+            'အ','အာ',
+            'ဣ','ဤ',
+            'ဥ','ဦ', 
+            'ၒ','ၓ',
+            'ၔ','ၕ',
+            'ဧ','ဧ','ဪ',
+            'ဩ','ဩ','ဪ',
+            '','','','', // Devanāgarī pṛṣṭhamātrās
+            '','','',
+   	    'ို'],
+            vowel_marks: ['ာ',
+            'ိ','ီ',
+            'ု','ူ',
+            'ၖ','ၗ',
+            'ၘ','ၙ',
+            'ေ','ေ','ဲ',
+            'ော','ော','ော်',
+            '','','','',
+            '','','',
+            'ို'],
+            other_marks: ['ံ','း','ံ','း','း','း','့'],
+            virama: ['်'],
+            consonants: ['က','ခ','ဂ','ဃ','င',
+'စ','ဆ','ဇ','ဈ','ဉ',
+'ဋ','ဌ','ဍ','ဎ','ဏ',
+'တ','ထ','ဒ','ဓ','န',
+'ပ','ဖ','ဗ','ဘ','မ',
+'ယ','ရ','လ','ဝ',
+'ၐ','ၑ','သ','ဟ',
+'ဠ','','','', // Dravidian
+            '', // Bengali
+            '','','','','','','','','','',''],
+            symbols: ['၀','၁','၂','၃','၄','၅','၆','၇','၈','၉','ဩံ','','\'','၊','။','','',''],
+        },
     },
 
     // Set of names of schemes
@@ -626,7 +663,7 @@ var transliterateRoman = function(data, map, options) {
         // Match all token substrings to our map.
         for (var j = 0; j < maxTokenLength; j++) {
             var token = tokenBuffer.substr(0,maxTokenLength-j);
-
+/*
             if (skippingSGML === true) {
                 skippingSGML = (token !== '>');
             } else if (token === '<') {
@@ -637,7 +674,8 @@ var transliterateRoman = function(data, map, options) {
                 break;
             }
             skippingTrans = skippingSGML || toggledTrans;
-            if ((tempLetter = letters[token]) !== undefined && !skippingTrans) {
+            */
+            if ((tempLetter = letters[token]) !== undefined /*&& !skippingTrans*/) {
                 if (toRoman) {
                     buf.push(tempLetter);
                 } else {
