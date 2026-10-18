@@ -212,6 +212,11 @@ body {
     font-size: 1.1em;
 }
 
+#transbutton:lang(sa-Mymr) {
+    padding: 0 0 0 0.38em;
+    font-size: 1.3em;
+}
+
 #transbutton:lang(sa-Tibt) {
     padding: 0.3em 0 0 0.35em;
     line-height: 1.5em;

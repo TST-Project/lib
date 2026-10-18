@@ -191,12 +191,13 @@
     /*font-size-adjust: ex-height 0.55;*/ /* doesn't look good in Chrome */
 }
 
-[lang^="si-Sinh"], [lang^="pi-Sinh"] {
+[lang^="si-Sinh"], [lang^="pi-Sinh"], [lang^="sa-Mymr"], [lang^="my-Mymr"] {
     font-size-adjust: ex-height 0.5;
 }
 
 :lang(en) {
-    word-spacing: normal;
+  word-spacing: normal;
+  font-size-adjust: none;
 }
 
 p[lang^="bo-Tibt"], p[lang^="bod"] {
