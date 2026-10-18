@@ -24,10 +24,10 @@ const _global = {
     availlangs: null,
     reverselangs: null
 };
-_global.availlangs = Object.freeze(['sa',...langscripts.map(arr => arr[0])]);
+_global.availlangs = Object.freeze(['sa',...[...langscripts].map(arr => arr[0])]);
 
 _global.reverselangs = new Map(
-  langscripts.reduce((acc,cur) => {
+  [...langscripts].reduce((acc,cur) => {
     for(const script of cur[1]) {
       acc.push([`${cur[0]}-Latn-t-${cur[0]}-${script}`,`${cur[0]}-${script}-t-${cur[0]}-Latn`]);
       acc.push([`${cur[0]}-${script}-t-${cur[0]}-Latn`,`${cur[0]}-Latn-t-${cur[0]}-${script}`]);
