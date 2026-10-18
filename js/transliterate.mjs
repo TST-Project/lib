@@ -143,40 +143,22 @@ const cache = {
         };
         // hyphenate according to script (Tamil or Romanized)
         const shortlang = getShortLang(txtnode.parentNode);
-        if(_global.hyphenator.hasOwnProperty(shortlang)) {
-            const hyphenated = _global.hyphenator[shortlang].hyphenateText(txt);
-            cachemap.set(txtnode,hyphenated);
-            // convert Tamil (and others) to Roman
-            const scriptcode = shortlang.split('-')[1];
-            if(scriptcode === 'Tibt')
-              return to.ewts(txt);
-            else if(scriptcode) {
-              const scriptname = _global.isoToScript.get(scriptcode);
-              if(scriptname)
-                return to.iast(hyphenated,scriptname);
-            }
-            /*
-            if(shortlang === 'ta-Taml') {
-                return to.iast(hyphenated);
-            }
-            //else if(shortlang === 'hi-Deva' || shortlang === 'mr-Deva') {
-            else if(shortlang.split('-')[1] === 'Deva') {
-                // TODO: also deal with 'sa-Beng', 'sa-Shar', etc.
-                return to.iast(hyphenated,'devanagari');
-            }
-            */
-            else return hyphenated;
+        const hyphenator = _global.hyphenator[shortlang];
+        const hyphenated = hyphenator ? hyphenator.hyphenateText(txt) : txt;
+        cachemap.set(txtnode,hyphenated);
+
+        // convert Tamil (and others) to Roman
+        const scriptcode = shortlang.split('-')[1];
+        if(scriptcode === 'Tibt')
+          return to.ewts(txt);
+        else if(scriptcode !== 'Latn') {
+          const scriptname = _global.isoToScript.get(scriptcode);
+          if(scriptname)
+            return to.iast(hyphenated,scriptname);
         }
-        if(shortlang === 'bo-Tibt') {
-            cachemap.set(txtnode,txt);
-            return to.ewts(txt);
-        }
-        else {
-            cachemap.set(txtnode,txt);
-            return txt;
-        }
+        else return hyphenated;
     },
-    
+
     /** Retrieves cached text, based on the supplied node.
      *  @param {Node} txtnode
      *  @return       string
@@ -477,9 +459,21 @@ const to = {
 
     iast: function(text,from) {
         const f = from || 'tamil';
-        const literated = Sanscript.t(text,f,'iast')
+        let literated = Sanscript.t(text,f,'iast')
             .replace(/^⁰|([^\d⁰])⁰/g,'$1¹⁰');
             //.replace(/l̥/g,'ḷ');
+
+        if(f === 'burmese')
+          literated = literated.replaceAll(/a\u1039/g,'')
+                               .replaceAll('၏','e*')
+                               .replaceAll('၌','n*')
+                               .replaceAll('၍','r*')
+                               .replaceAll('၎','l*')
+                               .replaceAll('ွ','va')
+                               .replaceAll('ျ','ya')
+                               .replaceAll('ြ','ra')
+                               .replaceAll('ှ','ha');
+
         if(f !== 'tamil')
             return literated.replace(/e/g,'ĕ')
                             .replace(/ē/g,'e')

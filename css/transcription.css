@@ -198,6 +198,7 @@ span.lb, span.cb {
     font-family: Brill;
     font-size: 1.3rem;
     font-weight: bold;
+    font-size-adjust: none;
     padding-right: 1rem;
     line-height: 1.5rem;
     letter-spacing: 0;
