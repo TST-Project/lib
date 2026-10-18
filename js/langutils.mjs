@@ -55,11 +55,6 @@ const langscripts = new Map([
   ['bo',['Tibt']]
 ]);
 
-const UTF8 = str => String.fromCodePoint(`0x${str}`);
-
-console.log(`[${UTF8('11305')}-${UTF8('11339')}]`);
-
-
 const scriptranges = new Map([
   ['Deva',/[\u0900-\u097F]/u],
   ['Beng',/[\u0980-\u09FF]/u],
