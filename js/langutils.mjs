@@ -45,7 +45,7 @@ const langscripts = new Map([
   ['raj',['Deva']],
   ['bra',['Deva']],
   ['new',['Newa']],
-  ['ta',['Taml']],
+  ['ta',['Taml','Gran']],
   ['te',['Gran','Telu']],
   ['ml',['Mlym']],
   ['kn',['Knda']],
