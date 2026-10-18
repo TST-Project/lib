@@ -37,50 +37,62 @@
   </xsl:choose>
 </xsl:template>
 
+<xsl:template name="editors-each">
+  <xsl:param name="selector" select="x:editor"/>
+  <xsl:for-each select="$selector">
+      <xsl:choose>
+          <xsl:when test="position() = last() and position() != 1">
+              <xsl:text> &amp; </xsl:text>
+          </xsl:when>
+          <xsl:when test="position() != 1">
+              <xsl:text>, </xsl:text>
+          </xsl:when>
+          <xsl:otherwise/>
+      </xsl:choose>
+      <xsl:apply-templates select="./x:persName"/>
+      <xsl:apply-templates select="./x:orgName"/>
+  </xsl:for-each>
+  <xsl:text>. </xsl:text>
+</xsl:template>
+
 <xsl:template name="editors">
-    <xsl:element name="div">
-        <xsl:attribute name="class">editionStmt</xsl:attribute>
-        <p>
-            <xsl:if test="x:editor[not(@role)]">
-                <xsl:text>Catalogue description by </xsl:text>
-                <xsl:for-each select="x:editor[not(@role)]">
-                    <xsl:choose>
-                        <xsl:when test="position() = last() and position() != 1">
-                            <xsl:text> &amp; </xsl:text>
-                        </xsl:when>
-                        <xsl:when test="position() != 1">
-                            <xsl:text>, </xsl:text>
-                        </xsl:when>
-                        <xsl:otherwise/>
-                    </xsl:choose>
-                    <xsl:apply-templates select="x:persName"/>
-                    <xsl:apply-templates select="x:orgName"/>
-                </xsl:for-each>
-                <xsl:text>. </xsl:text>
-            </xsl:if>
-            <xsl:if test="x:editor[@role='translator']">
-                <xsl:text>Translated by </xsl:text>
-                <xsl:for-each select="x:editor[@role='translator']">
-                    <xsl:choose>
-                        <xsl:when test="position() = last() and position() != 1">
-                            <xsl:text> &amp; </xsl:text>
-                        </xsl:when>
-                        <xsl:when test="position() != 1">
-                            <xsl:text>, </xsl:text>
-                        </xsl:when>
-                        <xsl:otherwise/>
-                    </xsl:choose>
-                    <xsl:apply-templates/>
-                </xsl:for-each>
-                <xsl:text>.</xsl:text>
-            </xsl:if>
-        </p>
-   </xsl:element>
+  <xsl:element name="div">
+    <xsl:attribute name="class">editionStmt</xsl:attribute>
+    <p>
+      <xsl:variable name="cataloguers" select="x:editor[@role='cataloguer']"/>
+      <xsl:if test="$cataloguers">
+        <xsl:text>Catalogue description by </xsl:text>
+        <xsl:call-template name="editors-each">
+          <xsl:with-param name="selector" select="$cataloguers"/>
+        </xsl:call-template>
+      </xsl:if>
+      <xsl:variable name="editors" select="x:editor[not(@role)]"/>
+      <xsl:if test="$editors">
+        <xsl:text>Edited by </xsl:text>
+        <xsl:call-template name="editors-each">
+          <xsl:with-param name="selector" select="$editors"/>
+        </xsl:call-template>
+      </xsl:if>
+      <xsl:variable name="translators" select="x:editor[@role='translator']"/>
+      <xsl:if test="$translators">
+        <xsl:text>Translated by </xsl:text>
+        <xsl:call-template name="editors-each">
+          <xsl:with-param name="selector" select="$translators"/>
+        </xsl:call-template>
+      </xsl:if>
+      <xsl:variable name="transcribers" select="x:editor[@role='transcriber']"/>
+      <xsl:if test="$transcribers">
+        <xsl:text>Transcribed by </xsl:text>
+        <xsl:call-template name="editors-each">
+          <xsl:with-param name="selector" select="$transcribers"/>
+        </xsl:call-template>
+      </xsl:if>
+    </p>
+ </xsl:element>
 </xsl:template>
 
 <xsl:template match="x:titleStmt/x:editor/x:persName">
-    <xsl:apply-templates/>
-    <xsl:text> </xsl:text>
+  <xsl:apply-templates/>
 </xsl:template>
 
 <!--xsl:template match="x:titleStmt/x:respStmt">
@@ -158,6 +170,7 @@
     <tr><td colspan="2"><xsl:apply-templates/></td></tr>
 </xsl:template>
 <xsl:template match="x:orgName">
+    <xsl:text> </xsl:text>
     <xsl:element name="span">
         <xsl:attribute name="class">orgname</xsl:attribute>
         <xsl:call-template name="lang"/>
