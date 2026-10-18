@@ -748,14 +748,17 @@ const to = {
                        .replaceAll('်ဟ','ှ')
                        .replaceAll('ဉ်ဉ','ည')
                        .replaceAll('််','်')
-                       .replaceAll(/ရ်(?=[ကခဂဃစဆဇဈဋဌဍဎတထဒဓနပဖဗဘမယလဝသဟဠၐၑ])/g,'ရ်္')
-                       .replaceAll(/([ဂခငဒပဝ])ာ/g,'$1ါ')
+                       .replaceAll(/ရ်(?=[ကခဂဃစဆဇဈဋဌဍဎတဏထဒဓနပဖဗဘမယလဝသဟဠၐၑ])/g,'ရ်္')
+                       .replaceAll(/([ဂခငဒပဝၐ])ာ/g,'$1ါ')
+                       .replaceAll(/က်(?=[ကခတၑ])/g,'က္')
                        .replaceAll(/င်(?=[ကခဂ၎])/g,'င်္')
-                       .replaceAll(/ဗ်(?=ဒ)/g,'ဗ္')
-                       .replaceAll('က်(?=[ခၑ]','က္')
+                       .replaceAll(/ဗ်(?=[ဗဒ])/g,'ဗ္')
                        .replaceAll(/([ဂစဇဋဍတဒပဗမလသဠ])်\1/g,'$1\u1039$1')
-                       .replaceAll('ဒ်ဘ','ဒ္ဘ')
-                       .replaceAll('ဇ်ဉာ','ဇ္ဉာ')
+                       .replaceAll(/ဒ်(?=[ဘဗဒဓမဂဃ])/g,'ဒ္')
+                       .replaceAll(/မ်(?=[ပဖဗဘမ])/g,'မ္')
+                       .replaceAll(/သ်(?=[ကတထနပဖမ])/g,'သ္')
+                       .replaceAll(/ဇ်(?=[ဇဉ])/g,'ဇ္')
+                       .replaceAll(/ပ်(?=[တပ])/g,'ပ္')
                        .replaceAll(/န်(?=[တထဒဓ])/g,'န္');
       return smushed;
     },
