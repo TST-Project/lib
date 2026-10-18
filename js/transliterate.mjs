@@ -6,26 +6,11 @@ import { hyphenation_ta } from './ta.mjs';
 import { hyphenation_ta_Latn } from './ta-Latn.mjs';
 import { hyphenation_sa } from './sa.mjs';
 import { hyphenation_hi } from './hi.mjs';
+import {langscripts, scriptranges, scriptToIso} from './langutils.mjs';
 
 const UTF8 = str => String.fromCodePoint(`0x${str}`);
 
 const _global = {
-    scriptToIso: new Map([
-        ['tamil','Taml'],
-        ['bengali','Beng'],
-        ['devanagari','Deva'],
-        ['grantha','Gran'],
-        ['malayalam','Mlym'],
-        ['newa','Newa'],
-        ['sarada','Shrd'],
-        ['sinhala','Sinh'],
-        ['telugu','Telu'],
-        ['kannada','Knda'],
-        ['nandinagari','Nand'],
-        ['burmese','Mymr'],
-        ['dbumed','Tibt'],
-        ['dbucan','Tibt']
-    ]),
     hyphenator: {
         'ta-Taml': new Hypher(hyphenation_ta),
         'sa-Latn': new Hypher(hyphenation_sa),
@@ -33,33 +18,16 @@ const _global = {
         'hi-Deva': new Hypher(hyphenation_hi),
     },
     hindic: Object.freeze(['mr','hi','gu','raj','bra']),
-    langscripts: Object.freeze([
-      ['sa',['Deva','Beng','Gran','Mlym','Newa','Shrd','Sinh','Telu','Knda','Nand','Mymr','Tibt']],
-      ['mr',['Deva']],
-      ['hi',['Deva']],
-      ['gu',['Deva']],
-      ['raj',['Deva']],
-      ['bra',['Deva']],
-      ['new',['Newa']],
-      ['ta',['Taml']],
-      ['te',['Gran','Telu']],
-      ['ml',['Mlym']],
-      ['kn',['Knda']],
-      ['pi',['Sinh','Mymr']],
-      ['si',['Sinh']],
-      ['my',['Mymr']],
-      ['bo',['Tibt']]
-    ]),
     isoToScript: new Map(),
     scriptnames: null,
     //isonames: null,
     availlangs: null,
     reverselangs: null
 };
-_global.availlangs = Object.freeze(['sa',..._global.langscripts.map(arr => arr[0])]);
+_global.availlangs = Object.freeze(['sa',...langscripts.map(arr => arr[0])]);
 
 _global.reverselangs = new Map(
-  _global.langscripts.reduce((acc,cur) => {
+  langscripts.reduce((acc,cur) => {
     for(const script of cur[1]) {
       acc.push([`${cur[0]}-Latn-t-${cur[0]}-${script}`,`${cur[0]}-${script}-t-${cur[0]}-Latn`]);
       acc.push([`${cur[0]}-${script}-t-${cur[0]}-Latn`,`${cur[0]}-Latn-t-${cur[0]}-${script}`]);
@@ -76,9 +44,9 @@ _global.hindic.forEach(code => {
     _global.hyphenator[`${code}-Deva`] = _global.hyphenator['hi-Deva'];
 });
 
-_global.scriptToIso.forEach((val,key) => _global.isoToScript.set(val,key));
+scriptToIso.forEach((val,key) => _global.isoToScript.set(val,key));
 
-_global.scriptnames = new Set(_global.scriptToIso.keys());
+_global.scriptnames = new Set(scriptToIso.keys());
 
 //_global.isonames = new Set(_global.scriptToIso.values());
 Object.freeze(_global);
@@ -103,7 +71,7 @@ class button {
         }
         else if(defaultSanscript) {
             this.buttonel.textContent = to[defaultSanscript]('a');
-            this.buttonel.lang = `sa-${_global.scriptToIso.get(defaultSanscript)}`;
+            this.buttonel.lang = `sa-${scriptToIso.get(defaultSanscript)}`;
         }
         this.buttonel.style.display = 'block';
     }
@@ -782,7 +750,7 @@ const to = {
     },
 };
 
-for(const [key, val] of _global.scriptToIso) {
+for(const [key, val] of scriptToIso) {
     to[val] = to[key];
 }
 
@@ -1028,12 +996,12 @@ const Transliterate = class {
         const scriptcode = (() => {
             // if this is a handDesc element
             if(synch.classList.contains('record_scripts'))
-                return _global.scriptToIso.get(getSanscript([synch],this.state.defaultSanscript));
+                return scriptToIso.get(getSanscript([synch],this.state.defaultSanscript));
             // otherwise
             const unitselector = units.map(s => `[data-synch~='${s}']`);
             const handDescs = [...this.state.parEl.getElementsByClassName('record_scripts')].filter(el => el.matches(unitselector));
             const script = getSanscript(handDescs,this.state.defaultSanscript) || this.state.defaultSanscript;
-            return _global.scriptToIso.get(script);
+            return scriptToIso.get(script);
         })();
         
         const walker = document.createTreeWalker(synch,NodeFilter.SHOW_ALL);
@@ -1041,7 +1009,7 @@ const Transliterate = class {
     }
 
     // tag rest of the document; use default script for Sanskrit
-    const isodefault = _global.scriptToIso.get(this.state.defaultSanscript);
+    const isodefault = scriptToIso.get(this.state.defaultSanscript);
     const walker = document.createTreeWalker(this.state.parEl,NodeFilter.SHOW_ALL, 
         { acceptNode(node) { return node.nodeType === Node.ELEMENT_NODE && node.hasAttribute('data-synch') ?
             NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;} });
