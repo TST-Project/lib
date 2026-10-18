@@ -30,6 +30,7 @@ const _global = {
         'ta-Taml': new Hypher(hyphenation_ta),
         'sa-Latn': new Hypher(hyphenation_sa),
         'ta-Latn': new Hypher(hyphenation_ta_Latn),
+        'hi-Deva': new Hypher(hyphenation_hi),
     },
     hindic: Object.freeze(['mr','hi','gu','raj','bra']),
     langscripts: Object.freeze([
@@ -146,6 +147,15 @@ const cache = {
             const hyphenated = _global.hyphenator[shortlang].hyphenateText(txt);
             cachemap.set(txtnode,hyphenated);
             // convert Tamil (and others) to Roman
+            const scriptcode = shortlang.split('-')[1];
+            if(scriptcode === 'Tibt')
+              return to.ewts(txt);
+            else if(scriptcode) {
+              const scriptname = _global.isoToScript.get(scriptcode);
+              if(scriptname)
+                return to.iast(hyphenated,scriptname);
+            }
+            /*
             if(shortlang === 'ta-Taml') {
                 return to.iast(hyphenated);
             }
@@ -154,6 +164,7 @@ const cache = {
                 // TODO: also deal with 'sa-Beng', 'sa-Shar', etc.
                 return to.iast(hyphenated,'devanagari');
             }
+            */
             else return hyphenated;
         }
         if(shortlang === 'bo-Tibt') {
