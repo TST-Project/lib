@@ -148,7 +148,7 @@ const getSanscript = (handDescs,defaultSanscript) => {
             else if(_global.scriptnames.has(script)) return script;
         }
     }
-    return maybetamil ? 'grantha' : false;
+    return maybetamil ? 'tamil' : false;
 };
 
 const jiggle = node => {
@@ -1076,19 +1076,7 @@ const Transliterate = class {
                         // TODO: add Telugu, etc.
                         _global.hindic.indexOf(curlang) !== -1) {
                 */
-                if(curlang === 'ta') {
-                    if(!curscript) {
-                        // assume Madras Lexicon transliteration
-                        curnode.lang = 'ta-Latn-t-ta-Taml';
-                    }
-                    // Tamil in Tamil script
-                    else if(curscript === 'Taml') {
-                        curnode.classList.add('originalscript');
-                        curnode.lang = 'ta-Latn-t-ta-Taml';
-                    }
-                    // Tamil in other scripts?
-                }
-                else if(_global.availlangs.includes(curlang)) {
+                if(_global.availlangs.includes(curlang)) {
                     // case 1: sa-XXXX
                     // case 2: sa
                     // case 3: sa-Latn[-t-sa-XXXX]
