@@ -796,7 +796,6 @@ const Transliterate = class {
       button: null
     };
     if(this.state.parEl.lang) this.state.parEl.lang = 'en';
-
     // find if there are any Tamil or Sanskrit passages
     const foundEdition = getEditionScript(par);
     const foundTamil = par.querySelector('[lang|="ta"]');
@@ -816,7 +815,6 @@ const Transliterate = class {
     }
     // prepare the text for transliteration
     this.prepText(this.state.parEl);
-
     // initialize button
     const buttonel = this.state.parEl.querySelector('#transbutton');
     this.state.button = new button(buttonel,this.state.defaultSanscript,foundEdition ? false : foundTamil);
@@ -1078,7 +1076,19 @@ const Transliterate = class {
                         // TODO: add Telugu, etc.
                         _global.hindic.indexOf(curlang) !== -1) {
                 */
-                if(_global.availlangs.includes(curlang)) {
+                if(curlang === 'ta') {
+                    if(!curscript) {
+                        // assume Madras Lexicon transliteration
+                        curnode.lang = 'ta-Latn-t-ta-Taml';
+                    }
+                    // Tamil in Tamil script
+                    else if(curscript === 'Taml') {
+                        curnode.classList.add('originalscript');
+                        curnode.lang = 'ta-Latn-t-ta-Taml';
+                    }
+                    // Tamil in other scripts?
+                }
+                else if(_global.availlangs.includes(curlang)) {
                     // case 1: sa-XXXX
                     // case 2: sa
                     // case 3: sa-Latn[-t-sa-XXXX]
