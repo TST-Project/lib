@@ -201,7 +201,7 @@
     <tst:entry key="lat">Latin</tst:entry>
     <tst:entry key="mal">Malayalam</tst:entry>
     <tst:entry key="mar">Marathi</tst:entry>
-    <tst:entry key="new">Newari</tst:entry>
+    <tst:entry key="new">Newar</tst:entry>
     <tst:entry key="pli">Pali</tst:entry>
     <tst:entry key="por">Portuguese</tst:entry>
     <tst:entry key="pra">Prakrit</tst:entry>
