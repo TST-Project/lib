@@ -17,7 +17,7 @@ const iso1to3 = new Map([
     ['mya','my'],
     ['tel','te'],
     ['kan','kn'],
-    ['zh','zho']
+    ['zho','zh']
 ]);
 
 const scriptToIso = new Map([ // TODO: add Chinese
