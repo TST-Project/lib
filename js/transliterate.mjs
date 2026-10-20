@@ -1092,11 +1092,12 @@ const Transliterate = class {
                         const parscript = getParScript(curnode);
 
                         let scriptappend = parscript || scriptcode;
-
+                        
+                        // if language is unqualified 'ta'
                         if(curlang === 'ta')
                             scriptappend = 'Taml';
-                        // if language is unqualified 'sa' and script is 'Taml', 
-                        // switch to 'Gran'
+
+                        // if language is unqualified 'sa' and script is 'Taml', switch to 'Gran'
                         if(curlang === 'sa' && scriptappend && scriptappend.endsWith('Taml'))
                             scriptappend = 'Gran';
 
