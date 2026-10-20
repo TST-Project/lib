@@ -51,7 +51,7 @@ const newMirador = function(id,manifest,start = 0,annoMap = _state.annoMap, anno
         },
         windows: [{
             id: _state.winname,
-            loadedManifest: manifest,
+            manifestId: manifest,
             canvasIndex: start
         }],
         window: {
