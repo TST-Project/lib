@@ -138,7 +138,7 @@
 }
 @font-face {
     font-family: 'Abhaya Libre';
-    src: url('../fonts/AbhayaLibre-Medium.woff');
+    src: url('../fonts/AbhayaLibre-Medium-custom.ttf');
     unicode-range: U+200D, U+0D80-0DFF;
 }
 @font-face {
