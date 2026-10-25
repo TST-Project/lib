@@ -693,6 +693,8 @@ const to = {
       ];
 
       let smushed = smush ? to.smush(txt) : to.smushvirama(txt);
+      smushed = smushed.replace(/(?<![aāiīuūeēoōṛṝl̥l̥̄])ṃ/,'a\u200Dṃ') // standalone anusvāra
+                       .replace(/(?<![aāiīuūeēoōṛṝl̥l̥̄])ḥ/,'a\u200Dḥ') // standalone visarga
       smushed = Sanscript.t(smushed,'iast','sinhala');
       for(const c of conjuncts) {
         const re = new RegExp(`${c[0]}\u0DCA(${c[1]})`,'g');
@@ -928,7 +930,7 @@ const Transliterate = class {
   activate(par = this.state.parEl) {
     const subst = par.querySelectorAll('span.subst, span.choice, span.expan, span.damage');
     for(const s of subst)
-        if(s.lang.startsWith('sa') || s.lang.startsWith('ta')) jiggle(s);
+        if(s.lang.startsWith('sa') || s.lang.startsWith('ta') || s.lang.startsWith('pi')) jiggle(s);
         //TODO: Also other languages?
 
     convertNums(par);
