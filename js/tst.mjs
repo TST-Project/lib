@@ -238,19 +238,30 @@ const events = {
 
 
 const cleanLb = par => {
-  let start = 1;
+  let linestart = 1;
+  let columnstart = 1;
   for(const tag of par.querySelectorAll('span.milestone, span.pb, span.cb, span.lb')) {
     if(tag.classList.contains('apparatus')) continue;
-    if(tag.matches('.milestone, .pb, .cb'))
-      start = 1;
+    if(tag.matches('.milestone, .pb, .cb')) {
+      linestart = 1;
+      if(tag.matches('.cb') && tag.classList.contains('unnumbered')) {
+        tag.classList.remove('unnumbered');
+        tag.dataset.anno = `column ${columnstart}`;
+        tag.dataset.n = `col. ${columnstart}`;
+        columnstart = columnstart + 1;
+      }
+      else
+        columnstart = 1;
+    }
     else {
       if(tag.classList.contains('unnumbered')) {
         tag.classList.remove('unnumbered');
-        tag.dataset.n = start;
-        start = start + 1;
+        tag.dataset.n = linestart;
+        tag.dataset.anno = `line ${linestart}`;
+        linestart = linestart + 1;
       }
       else
-        start = parseInt(tag.dataset.n) + 1;
+        linestart = parseInt(tag.dataset.n) + 1;
     }
     if(tag.dataset.hasOwnProperty('nobreak')) {
       const prev = tag.previousSibling;
