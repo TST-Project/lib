@@ -16,8 +16,6 @@ const _state = Object.seal({
 
 const init = (e,root = document) => {
 
-    initToolTips(root);
-
     if(root === document) _state.aViewer = new AlignmentViewer();
 
     const params = new URLSearchParams(window.location.search);
@@ -90,6 +88,8 @@ const fixTogglers = (root = document) => {
 const initRecordContainer = (root = document) => {
     // initialize events for the record text
     const recordcontainer = root.getElementById('recordcontainer');
+
+    initToolTips(recordcontainer);
 
     cleanLb(recordcontainer);
     
