@@ -427,7 +427,7 @@ const TSTViewer = Object.freeze({
     getMirador: () => _state.mirador,
     setMirador: (mirador, manifest) => {_state.mirador = mirador; _state.manifest = manifest;},
     getMiradorCanvasId: MiradorWrapper.getMiradorCanvasId,
-    refreshMirador: MiradorWrapper.refresh,
+    refreshMirador: (mirador, manifest,n,annos) => {_state.mirador = mirador; _state.manifest = manifest; MiradorWrapper.refresh(mirador,manifest,n,annos);},
     jumpToId: MiradorWrapper.jumpToId,
     setAnnotations: MiradorWrapper.setAnnotations,
     checkParams: checkParams
