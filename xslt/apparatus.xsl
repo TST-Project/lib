@@ -227,7 +227,8 @@
         </xsl:call-template>
       </div>
     </xsl:when>
-    <xsl:when test=".//x:app and not(//x:facsimile/x:graphic)">
+    <!--xsl:when test=".//x:app and not(//x:facsimile/x:graphic)"-->
+    <xsl:when test=".//x:app">
       <div>
         <xsl:attribute name="class">para wide</xsl:attribute>
         <xsl:if test="$xmlid">
@@ -263,7 +264,8 @@
 
 <xsl:template match="x:text//x:head">
   <xsl:choose>
-    <xsl:when test=".//x:app and not(//x:facsimile/x:graphic)">
+    <!--xsl:when test=".//x:app and not(//x:facsimile/x:graphic)"-->
+    <xsl:when test=".//x:app">
       <div>
         <xsl:attribute name="class">para wide</xsl:attribute>
         <xsl:if test="@xml:id">
@@ -334,7 +336,8 @@
         </xsl:call-template>
       </div>
     </xsl:when>
-    <xsl:when test=".//x:app and not(//x:facsimile/x:graphic)">
+    <!--xsl:when test=".//x:app and not(//x:facsimile/x:graphic)"-->
+    <xsl:when test=".//x:app">
       <div>
         <xsl:attribute name="class">lg wide</xsl:attribute>
         <xsl:if test="$xmlid">
@@ -394,7 +397,10 @@
       </xsl:if>
       <xsl:for-each select="x:note">
         <xsl:text> </xsl:text>
-        <xsl:apply-templates select="."/>
+        <span class="app-note">
+          <xsl:call-template name="lang"/>
+          <xsl:apply-templates select="."/>
+        </span>
       </xsl:for-each>
     </span>
   </span>
@@ -482,7 +488,10 @@
     </xsl:if>
     <xsl:for-each select="x:note">
       <xsl:text> </xsl:text>
-      <xsl:apply-templates />
+        <span class="app-note">
+          <xsl:call-template name="lang"/>
+          <xsl:apply-templates/>
+        </span>
     </xsl:for-each>
   </xsl:element>
 </xsl:template>
@@ -793,6 +802,7 @@
   </xsl:element>
   <xsl:for-each select="$standOff/x:note">
     <span class="anchored-note">
+      <xsl:call-template name="lang"/>
       <xsl:if test="@target">
         <xsl:attribute name="data-target">
         <xsl:value-of select="@target"/>

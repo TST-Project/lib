@@ -969,6 +969,7 @@
 <xsl:template match="x:note[@place='foot']">
     <xsl:variable name="anchor" select="./x:c[@type='anchor']"/>
     <xsl:element name="span">
+        <xsl:call-template name="lang"/>
         <xsl:attribute name="data-teiname">note</xsl:attribute>
         <xsl:attribute name="data-anno"/>
         <xsl:attribute name="class">footnote ignored<xsl:if test="not($anchor)"> numbered</xsl:if></xsl:attribute>
