@@ -1087,13 +1087,13 @@
                         <xsl:with-param name="search-string">#</xsl:with-param>
                     </xsl:call-template>
                 </xsl:variable>
-                <xsl:if test="$cu or $tu">
+                <xsl:if test="$cu != '' or $tu != ''">
                     <span class="lihead">
                         <xsl:value-of select="$cu"/>
-                        <xsl:if test="$cu and $tu">
+                        <xsl:if test="$cu != '' and $tu != ''">
                             <xsl:text>, </xsl:text>
                         </xsl:if>
-                        <xsl:if test="$tu">
+                        <xsl:if test="$tu != ''">
                             <xsl:element name="a">
                                 <!--xsl:attribute name="class">local</xsl:attribute-->
                                 <xsl:attribute name="href">

@@ -609,8 +609,15 @@
 </xsl:template>
 
 <xsl:template match="x:lb">
+    <xsl:param name="diplo" select="true()"/>
+    <xsl:param name="hyphen" select="true()"/>
+    <xsl:param name="excerpt" select="false()"/>
+    <xsl:param name="apparatus" select="false()"/>
     <xsl:call-template name="lb">
-      <xsl:with-param name="hyphen" select="true()"/>
+      <xsl:with-param name="diplo" select="$diplo"/>
+      <xsl:with-param name="hyphen" select="$hyphen"/>
+      <xsl:with-param name="excerpt" select="$excerpt"/>
+      <xsl:with-param name="apparatus" select="$apparatus"/>
     </xsl:call-template>
 </xsl:template>
 
@@ -742,8 +749,13 @@
 </xsl:template>
 
 <xsl:template match="x:pb">
+    <xsl:param name="excerpt" select="false()"/>
+    <xsl:param name="diplo" select="true()"/>
+    <xsl:param name="apparatus" select="false()"/>
     <xsl:call-template name="pb">
-      <xsl:with-param name="excerpt" select="false()"/>
+      <xsl:with-param name="excerpt" select="$excerpt"/>
+      <xsl:with-param name="diplo" select="$diplo"/>
+      <xsl:with-param name="apparatus" select="$apparatus"/>
     </xsl:call-template>
 </xsl:template>
   <xsl:template match="x:rubric/child::*[1][local-name() = 'pb'] | x:incipit/child::*[1][local-name() = 'pb'] | x:explicit/child::*[1][local-name() = 'pb'] | x:finalRubric/child::*[1][local-name() = 'pb'] | x:colophon/child::*[1][local-name() = 'pb'] | x:q/child::*[1][local-name() = 'pb']">

@@ -221,6 +221,9 @@ span.lb, span.cb {
 .pb.diplo.unnumbered::after {
     content: "\a\a(unnumbered page)";
 }
+.pb.diplo.unnumbered.nobreak::after {
+    content: "(unnumbered page)";
+}
 
 .cb::after {
     content: 'c';
