@@ -218,6 +218,10 @@ span.lb, span.cb {
     content: "\a␤";
 }
 
+.pb.diplo.unnumbered::after {
+    content: "\a\a(unnumbered page)";
+}
+
 .cb::after {
     content: 'c';
     opacity: 0.4;

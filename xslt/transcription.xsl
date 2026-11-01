@@ -774,6 +774,7 @@
             <xsl:if test="$diplo"><xsl:text> diplo</xsl:text></xsl:if>
             <xsl:if test="$excerpt"><xsl:text> nobreak</xsl:text></xsl:if>
             <xsl:if test="$apparatus"><xsl:text> apparatus</xsl:text></xsl:if>
+            <xsl:if test="not(@n)"><xsl:text> unnumbered</xsl:text></xsl:if>
         </xsl:attribute>
         <xsl:attribute name="lang">en</xsl:attribute>
         <xsl:variable name="facs" select="@facs"/>
@@ -812,17 +813,22 @@
             </xsl:attribute>
         </xsl:if>
         <xsl:attribute name="data-anno">
-            <xsl:if test="@n">
+            <xsl:choose>
+              <xsl:when test="@n">
                 <xsl:choose>
-                    <xsl:when test="$unit">
-                        <xsl:value-of select="$unit"/><xsl:text> </xsl:text>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:text>page </xsl:text>
-                    </xsl:otherwise>
+                  <xsl:when test="$unit">
+                    <xsl:value-of select="$unit"/><xsl:text> </xsl:text>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:text>page </xsl:text>
+                  </xsl:otherwise>
                 </xsl:choose>
                 <xsl:value-of select="@n"/>
-            </xsl:if>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:text>unnumbered page</xsl:text>
+              </xsl:otherwise>
+            </xsl:choose>
             <xsl:if test="$facs and $facs != ''">
                 <xsl:variable name="imgno" select="substring-before($facs,':')"/>
                 <xsl:variable name="annono" select="substring-after($facs,':')"/>
