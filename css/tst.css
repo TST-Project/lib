@@ -246,6 +246,7 @@ section > div.lg {
 
 section > table {
     /*max-width: 55%;*/
+    font-family: inherit;
     border-spacing: 0 1rem;
 }
 
