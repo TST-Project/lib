@@ -778,11 +778,15 @@ const replaceTextInNode = function(text, replace, node) {
     }
 };
 
-const getFeatures = par => {
+const getFeatures = maybearr => {
   const ret = new Set();
-  for(const li of par.querySelectorAll('[data-scriptref]')) {
-    for(const ref of li.dataset.scriptref.split(/\s+/))
-      ret.add(ref);
+  const pars = Array.isArray(maybearr) ? maybearr : [maybearr];
+
+  for(const par of pars) {
+    for(const li of par.querySelectorAll('[data-scriptref]')) {
+      for(const ref of li.dataset.scriptref.split(/\s+/))
+        ret.add(ref);
+    }
   }
   return ret;
 };
@@ -995,16 +999,16 @@ const Transliterate = class {
         const units = synch.dataset.synch.split(' ');
         // decide on a script for Sanskrit
         const scriptcode = (() => {
-            // if this is a handDesc element
-            if(synch.classList.contains('record_scripts'))
-                return scriptToIso.get(getSanscript([synch],this.state.defaultSanscript));
-            // otherwise
-            const unitselector = units.map(s => `[data-synch~='${s}']`);
-            const handDescs = [...this.state.parEl.getElementsByClassName('record_scripts')].filter(el => el.matches(unitselector));
-            const script = getSanscript(handDescs,this.state.defaultSanscript) || this.state.defaultSanscript;
-            return scriptToIso.get(script);
+          // if this is a handNote or typeNote element
+          if(synch.classList.contains('record_scripts'))
+              return scriptToIso.get(getSanscript([synch],this.state.defaultSanscript));
+          // otherwise
+          const unitselector = units.map(s => `[data-synch~='${s}']`);
+          const handDescs = [...this.state.parEl.getElementsByClassName('record_scripts')].filter(el => el.matches(unitselector));
+          const script = getSanscript(handDescs,this.state.defaultSanscript) || this.state.defaultSanscript;
+          return scriptToIso.get(script);
         })();
-        
+
         const walker = document.createTreeWalker(synch,NodeFilter.SHOW_ALL);
         this.prepTextWalker(walker,scriptcode);
     }
@@ -1050,6 +1054,9 @@ const Transliterate = class {
             }
             else {
                 const [curlang,curscript] = curlangattr.split('-');
+                // TODO: find a better way; also do valapalagilaka and other features
+                if(scriptcode === 'Deva' && this.state.features.has('jainaNagari'))
+                  curnode.dataset.features = 'jainaNagari';
                 /*
                 if(curlang === 'ta') {
                     if(!curscript) {
@@ -1104,7 +1111,7 @@ const Transliterate = class {
                         if(curlang === 'sa' && scriptappend && scriptappend.endsWith('Taml'))
                             scriptappend = 'Gran';
 
-                        curnode.lang = scriptappend ? 
+                        curnode.lang = scriptappend !== 'Latn' ? 
                             `${curlang}-Latn-t-${curlang}-${scriptappend}`:
                         // case 2: script not specified at all
                             `${curlang}-Latn`;
