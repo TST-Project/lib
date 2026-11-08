@@ -23,17 +23,14 @@ h4.mspart {
 .msItem [lang^="sa"] {
     font-family: inherit;
 }
-*/
-#physDesc {
+#physDesc [lang^="sa"] {
+    font-family: inherit;
 }
 
+*/
 #physDesc ul {
     padding-left: 0;
     margin-bottom: 0;
-}
-
-#physDesc [lang^="sa"] {
-    font-family: inherit;
 }
 
 .revisionDesc {

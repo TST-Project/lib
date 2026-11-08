@@ -182,6 +182,7 @@
 
 [lang^="sa-Deva"][data-features="jainaNagari"] {
     font-family: Jaini, Brill, et-book, Georgia, serif;
+    font-size-adjust: ch-width 0.5;
 }
 
 [lang^="sa-Gran"] {
