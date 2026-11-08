@@ -1247,6 +1247,10 @@
     </xsl:if>
 </xsl:template>
 
+<xsl:template match="x:origPlace">
+  <xsl:apply-templates/>
+</xsl:template>
+
 <xsl:template match="x:history">
     <section>
     <h3>History</h3>
