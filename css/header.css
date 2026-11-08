@@ -15,7 +15,7 @@ h4.mspart {
 /*    max-width: 700px; */
     hyphens: auto;
 }
-
+/*
 #summary [lang^="sa"] {
     font-family: inherit;
 }
@@ -23,7 +23,7 @@ h4.mspart {
 .msItem [lang^="sa"] {
     font-family: inherit;
 }
-
+*/
 #physDesc {
 }
 

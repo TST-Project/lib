@@ -1,4 +1,10 @@
 @font-face {
+    font-family: 'Jaini';
+    src: url('../fonts/Jaini-Regular.ttf');
+    unicode-range: U+200D, U+0900-097F, U+A8E0-A8FF, U+1CD0-1CF6, U+2E24, U+11B00-11B09;
+}
+
+@font-face {
     font-family: 'PedanticDevanagari';
     src: local('PedanticDevanagariLight'),
          url('../fonts/PedanticDevanagariLight.woff');
@@ -172,6 +178,10 @@
 
 .trad {
     font-feature-settings: "trad" 1;
+}
+
+[lang^="sa-Deva"][data-features="jainaNagari"] {
+    font-family: Jaini, Brill, et-book, Georgia, serif;
 }
 
 [lang^="sa-Gran"] {
