@@ -888,6 +888,10 @@
         <xsl:apply-templates />
     </xsl:element>
 </xsl:template>
+<xsl:template match="x:rdg//x:quote[@rend='block'] | x:rdg//x:q[@rend='block']">
+    <xsl:apply-templates />
+</xsl:template>
+
 <xsl:template match="x:quote[@rend='block']//x:l | x:q[@rend='block']//x:l">
   <xsl:element name="span">
     <xsl:attribute name="class">blockline</xsl:attribute>
