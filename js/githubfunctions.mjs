@@ -19,7 +19,7 @@ const latestCommits = async () => {
         pathsplit.shift(); // pathname starts with a slash
         const repo = pathsplit.shift();
         const path = pathsplit.join('/');
-        const commiturl = document.getElementById('history')?.dataset.commits;
+        const commiturl = span.dataset.commits;
         const urls = [
           `https://api.github.com/repos/${sub}/${repo}/commits?path=${path}`,
           `https://api.github.com/repos/${sub}/${repo}/commits?path=docs/${path}`

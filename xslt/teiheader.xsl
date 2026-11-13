@@ -1255,9 +1255,6 @@
     <section>
     <h3>History</h3>
     <table id="history">
-        <xsl:if test="@source">
-          <xsl:attribute name="data-commits"><xsl:value-of select="@source"/></xsl:attribute>
-        </xsl:if>
         <xsl:apply-templates select="x:origin/x:origDate"/>
         <xsl:if test="x:origin/x:origPlace">
         <tr>
@@ -1318,7 +1315,11 @@
             <h3>Revision history</h3>
           </xsl:otherwise>
         </xsl:choose>
-        <p id="latestcommit"></p>
+      <p id="latestcommit">
+        <xsl:if test="@source">
+          <xsl:attribute name="data-commits"><xsl:value-of select="@source"/></xsl:attribute>
+        </xsl:if>
+      </p>
     </section>
 </xsl:template>
 
