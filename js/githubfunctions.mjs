@@ -19,11 +19,13 @@ const latestCommits = async () => {
         pathsplit.shift(); // pathname starts with a slash
         const repo = pathsplit.shift();
         const path = pathsplit.join('/');
+        const commiturl = document.getElementById('history')?.dataset.commits;
         const urls = [
           `https://api.github.com/repos/${sub}/${repo}/commits?path=${path}`,
           `https://api.github.com/repos/${sub}/${repo}/commits?path=docs/${path}`
         ];
-        const res = await fetchtry(urls);
+        const res = commiturl ? await fetchtry([commiturl]) : await fetchtry(urls);
+        if(!res) return;
         const date = new Date(res.commit.committer.date);
         const datestr = date.toLocaleString('en-GB', {
             weekday: 'long',
